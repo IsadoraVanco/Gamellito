@@ -1,16 +1,18 @@
 '''
-Exemplo de media player simples (sem som)
+Exemplo de video player 
 '''
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
-import cv2
+from moviepy.editor import VideoFileClip
+import pygame
 from PIL import Image, ImageTk
+import cv2
 
 class VideoPlayer:
     def __init__(self, root):
         self.root = root
-        self.root.title("Reprodutor de Vídeo Simples")
+        self.root.title("Reprodutor de Vídeo com Áudio")
 
         self.video_frame = tk.Label(root)
         self.video_frame.pack()
@@ -25,14 +27,31 @@ class VideoPlayer:
         self.btn_stop.pack(pady=5)
 
         self.video_path = ""
+        self.audio_path = ""
 
     def open_video(self):
         self.video_path = filedialog.askopenfilename(filetypes=[("Arquivos de Vídeo", "*.mp4;*.avi;*.mkv")])
+        self.audio_path = self.video_path
 
     def play_video(self):
         if not self.video_path:
             messagebox.showinfo("Aviso", "Selecione um vídeo primeiro.")
             return
+
+        video_clip = VideoFileClip(self.video_path)
+        audio_clip = video_clip.audio
+
+        # Inicializar o mixer do pygame para reprodução de áudio
+        pygame.mixer.init()
+
+        # Carregar o áudio do filme no pygame
+        pygame.mixer.music.load(self.audio_path)
+
+        # Definir o volume do áudio (opcional)
+        pygame.mixer.music.set_volume(0.5)
+
+        # Iniciar a reprodução do áudio
+        pygame.mixer.music.play()
 
         cap = cv2.VideoCapture(self.video_path)
 
@@ -49,9 +68,14 @@ class VideoPlayer:
             self.root.update_idletasks()
             self.root.update()
 
+        # Parar a reprodução do áudio ao encerrar o vídeo
+        pygame.mixer.music.stop()
+
         cap.release()
 
     def stop_video(self):
+        # Parar a reprodução do áudio se o vídeo estiver sendo interrompido
+        pygame.mixer.music.stop()
         messagebox.showinfo("Aviso", "Vídeo parado.")
 
 if __name__ == "__main__":
