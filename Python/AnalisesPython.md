@@ -21,4 +21,3 @@
 
 ## O que mais seria necessário?
 
-* Um gerenciador de dependências (Maven)

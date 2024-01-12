@@ -24,6 +24,7 @@ Algumas novidades que podem ajudar (ainda para pesquisar e testar):
 * Simular o sistema que será utilizado em Docker ou VM
 * Gerenciador de dependências
 * Embedar uma linguagem
+* Utilizar Docker
 * IDE para modificar as Interfaces utilizando Drag and Drop
 * Utilizar CSV para armazenar os dados selecionados pelo usuário
 
