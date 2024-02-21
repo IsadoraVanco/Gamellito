@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/imagens">
+        <file>gamellito.png</file>
+    </qresource>
+    <qresource prefix="/icones">
+        <file>som.png</file>
+        <file>sem-som.png</file>
+    </qresource>
+</RCC>
