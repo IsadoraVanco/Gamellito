@@ -1,0 +1,4 @@
+/home/game/Área de Trabalho/build-PaginasDinamicas-QT5-Desktop-MinSizeRel/CMakeFiles/PaginasDinamicas-QT5.dir
+/home/game/Área de Trabalho/build-PaginasDinamicas-QT5-Desktop-MinSizeRel/CMakeFiles/edit_cache.dir
+/home/game/Área de Trabalho/build-PaginasDinamicas-QT5-Desktop-MinSizeRel/CMakeFiles/rebuild_cache.dir
+/home/game/Área de Trabalho/build-PaginasDinamicas-QT5-Desktop-MinSizeRel/CMakeFiles/PaginasDinamicas-QT5_autogen.dir

@@ -1,0 +1,2 @@
+# Hashes of file build rules.
+70121e0546a28f1ecd4600918c94326f CMakeFiles/PaginasDinamicas-QT5_autogen

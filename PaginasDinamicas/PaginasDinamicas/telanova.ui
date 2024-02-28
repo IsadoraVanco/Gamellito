@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TelaNova</class>
+ <widget class="QWidget" name="TelaNova">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>725</width>
+    <height>427</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 144, 32);</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>30</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Tela nova </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>100</y>
+     <width>591</width>
+     <height>291</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="page">
+    <widget class="QProgressBar" name="progressBar">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>210</y>
+       <width>251</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+     <property name="format">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_voltar_nova">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>30</y>
+       <width>90</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Inicio</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_2_proximo_nova">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>30</y>
+       <width>90</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Proximo</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_2">
+    <widget class="QPushButton" name="pushButton_2_proximo_nova_2">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>30</y>
+       <width>90</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Proximo</string>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="listWidget">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>30</y>
+       <width>256</width>
+       <height>192</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>sdfsdfsd</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>sdfsdfsd</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>sdfsdfsdv</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>bfbgbbgbgb</string>
+      </property>
+     </item>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
