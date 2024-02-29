@@ -1,0 +1,26 @@
+{
+	"BUILD_DIR" : "/home/game/\u00c1rea de Trabalho/Menus/build-Menus-QT5-Desktop-MinSizeRel/Menus-QT5_autogen",
+	"CMAKE_BINARY_DIR" : "/home/game/\u00c1rea de Trabalho/Menus/build-Menus-QT5-Desktop-MinSizeRel",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/game/\u00c1rea de Trabalho/Menus/build-Menus-QT5-Desktop-MinSizeRel",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/game/\u00c1rea de Trabalho/Menus/Menus-QT5",
+	"CMAKE_SOURCE_DIR" : "/home/game/\u00c1rea de Trabalho/Menus/Menus-QT5",
+	"INCLUDE_DIR" : "/home/game/\u00c1rea de Trabalho/Menus/build-Menus-QT5-Desktop-MinSizeRel/Menus-QT5_autogen/include",
+	"INPUTS" : 
+	[
+		"/home/game/\u00c1rea de Trabalho/Menus/Menus-QT5/assets/gamellito.png",
+		"/home/game/\u00c1rea de Trabalho/Menus/Menus-QT5/assets/sem-som.png",
+		"/home/game/\u00c1rea de Trabalho/Menus/Menus-QT5/assets/som.png",
+		"/home/game/\u00c1rea de Trabalho/Menus/Menus-QT5/assets/funny-and-comical-melody-glide-synth-bass-and-trumpet-21398 (online-audio-converter.com).wav",
+		"/home/game/\u00c1rea de Trabalho/Menus/Menus-QT5/assets/funny-and-comical-melody-glide-synth-bass-and-trumpet-21398.mp3"
+	],
+	"LOCK_FILE" : "/home/game/\u00c1rea de Trabalho/Menus/build-Menus-QT5-Desktop-MinSizeRel/CMakeFiles/Menus-QT5_autogen.dir/AutoRcc_recursos_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "recursos" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_recursos.cpp",
+	"RCC_EXECUTABLE" : "/usr/lib/qt5/bin/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/home/game/\u00c1rea de Trabalho/Menus/build-Menus-QT5-Desktop-MinSizeRel/CMakeFiles/Menus-QT5_autogen.dir/AutoRcc_recursos_EWIEGA46WW_Used.txt",
+	"SOURCE" : "/home/game/\u00c1rea de Trabalho/Menus/Menus-QT5/recursos.qrc",
+	"VERBOSITY" : 0
+}

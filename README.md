@@ -50,3 +50,4 @@ Irei guardar cada teste para caso precise testar em um novo sistema operacional,
 
 1. **Roadmap** -> Um exemplo simples de tela inicial, com redimensionamento e botões que levam a novas janelas. Tamanho mínimo da tela: 960x540.
 2. **PaginasDinamicas** -> Apesar do nome, é um exemplo simples de aplicação que possui elementos estáticos, mas que navega entre widgets dentro de uma StackedWidgets, sem a necessidade de criar uma nova janela para alterar o conteúdo.
+3. **Menus** -> Um esboço de como imagino a aplicação (com exceção do reprodutor de vídeo). Este exemplo possui a navegação entre as telas (em StackedWidgets) e som ambiente no menu. Tamanho mínimo da tela: 800x600 (SVGA).

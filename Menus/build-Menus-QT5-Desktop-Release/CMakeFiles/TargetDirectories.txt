@@ -1,0 +1,4 @@
+/home/game/Área de Trabalho/Menus/build-Menus-QT5-Desktop-Release/CMakeFiles/Menus-QT5.dir
+/home/game/Área de Trabalho/Menus/build-Menus-QT5-Desktop-Release/CMakeFiles/edit_cache.dir
+/home/game/Área de Trabalho/Menus/build-Menus-QT5-Desktop-Release/CMakeFiles/rebuild_cache.dir
+/home/game/Área de Trabalho/Menus/build-Menus-QT5-Desktop-Release/CMakeFiles/Menus-QT5_autogen.dir

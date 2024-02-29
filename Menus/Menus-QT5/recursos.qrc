@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/icones">
+        <file>assets/som.png</file>
+        <file>assets/sem-som.png</file>
+    </qresource>
+    <qresource prefix="/imagens">
+        <file>assets/gamellito.png</file>
+    </qresource>
+    <qresource prefix="/sons">
+        <file>assets/funny-and-comical-melody-glide-synth-bass-and-trumpet-21398.mp3</file>
+        <file>assets/funny-and-comical-melody-glide-synth-bass-and-trumpet-21398 (online-audio-converter.com).wav</file>
+    </qresource>
+</RCC>

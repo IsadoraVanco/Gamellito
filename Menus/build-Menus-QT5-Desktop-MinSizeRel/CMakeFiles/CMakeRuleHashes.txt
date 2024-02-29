@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+8f9090ddcc4fc0d50c1a076be2325ad5 CMakeFiles/Menus-QT5_autogen
+b9d1d26f0b60e8442371b17f3a363c92 Menus-QT5_autogen/EWIEGA46WW/qrc_recursos.cpp
