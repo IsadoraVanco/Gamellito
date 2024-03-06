@@ -15,7 +15,7 @@ Para esta difícil tarefa, irei utilizar a linguagem **C++** e a biblioteca **Qt
 
 ### 1.2. Virtualização
 
-Como utilizo Windows no dia-a-dia, preciso de uma ferramenta para virtualizar o sistema Linux para compilar o código e testá-lo. Para isso, utilizarei o **VM Virtual Box** e nele virtualizo o **Linux Mint XFCE versão 21.2 (Victoria) (64bits)**.
+Como utilizo Windows no dia-a-dia, preciso de uma ferramenta para virtualizar o sistema Linux para compilar o código e testá-lo. Para isso, utilizarei o **VM Virtual Box** e nele virtualizo o **Linux Mint XFCE versão 21.2 (Victoria) (64bits)**. Utilizando 2 GB de RAM da máquina hospedeira e 1 núcleo de 1.80GHz do AMD Ryzen 7 5700U with Radeon Graphics.
 
 Cogitei utilizar Docker, mas creio que seria muito para a máquina Dino, além de não ser muito viável para o usuário replicar o programa em outra máquina (creio eu).
 
