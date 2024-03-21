@@ -1,0 +1,51 @@
+# dmidecode 3.3
+Getting SMBIOS data from sysfs.
+SMBIOS 2.3 present.
+
+Handle 0x1000, DMI type 16, 15 bytes
+Physical Memory Array
+	Location: System Board Or Motherboard
+	Use: System Memory
+	Error Correction Type: Single-bit ECC
+	Maximum Capacity: 1 GB
+	Error Information Handle: Not Provided
+	Number Of Devices: 2
+
+Handle 0x1100, DMI type 17, 27 bytes
+Memory Device
+	Array Handle: 0x1000
+	Error Information Handle: Not Provided
+	Total Width: 64 bits
+	Data Width: 64 bits
+	Size: 1 GB
+	Form Factor: DIMM
+	Set: None
+	Locator: DIMM_1
+	Bank Locator: Not Specified
+	Type: DDR
+	Type Detail: Synchronous
+	Speed: 533 MT/s
+	Manufacturer: FFFFFFFFFFFFFFFF
+	Serial Number: FFFFFFFF
+	Asset Tag: Not Specified
+	Part Number:                   
+
+Handle 0x1101, DMI type 17, 27 bytes
+Memory Device
+	Array Handle: 0x1000
+	Error Information Handle: Not Provided
+	Total Width: 64 bits
+	Data Width: 64 bits
+	Size: 2 GB
+	Form Factor: DIMM
+	Set: None
+	Locator: DIMM_2
+	Bank Locator: Not Specified
+	Type: DDR
+	Type Detail: Synchronous
+	Speed: 533 MT/s
+	Manufacturer: 7F98000000000000
+	Serial Number: 7812527E
+	Asset Tag: Not Specified
+	Part Number: KTC1G-UDIMM       
+

@@ -1,0 +1,30 @@
+$ sudo dmidecode -t baseboard
+# dmidecode 3.3
+Getting SMBIOS data from sysfs.
+SMBIOS 2.3 present.
+
+Handle 0x0200, DMI type 2, 8 bytes
+Base Board Information
+	Manufacturer: Dell Inc.          
+	Product Name: 0KG501
+	Version:    
+	Serial Number: ..BR481056CF1LFG.
+
+Handle 0x0A00, DMI type 10, 6 bytes
+On Board Device Information
+	Type: Video
+	Status: Enabled
+	Description: Intel Graphics Media Accelerator
+
+Handle 0x0A02, DMI type 10, 6 bytes
+On Board Device Information
+	Type: Ethernet
+	Status: Enabled
+	Description: Intel PRO/100 VE Network Connections
+
+Handle 0x0A03, DMI type 10, 6 bytes
+On Board Device Information
+	Type: Sound
+	Status: Enabled
+	Description: High Definition Audio Controller
+

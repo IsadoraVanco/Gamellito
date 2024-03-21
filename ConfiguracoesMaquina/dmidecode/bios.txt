@@ -1,0 +1,39 @@
+# dmidecode 3.3
+Getting SMBIOS data from sysfs.
+SMBIOS 2.3 present.
+
+Handle 0x0000, DMI type 0, 20 bytes
+BIOS Information
+	Vendor: Dell Inc.                
+	Version: A02
+	Release Date: 03/29/2006
+	Address: 0xF0000
+	Runtime Size: 64 kB
+	ROM Size: 512 kB
+	Characteristics:
+		PCI is supported
+		PNP is supported
+		APM is supported
+		BIOS is upgradeable
+		BIOS shadowing is allowed
+		Boot from CD is supported
+		Selectable boot is supported
+		EDD is supported
+		Japanese floppy for Toshiba 1.2 MB is supported (int 13h)
+		Print screen service is supported (int 5h)
+		8042 keyboard services are supported (int 9h)
+		Serial services are supported (int 14h)
+		Printer services are supported (int 17h)
+		ACPI is supported
+		USB legacy is supported
+		LS-120 boot is supported
+		BIOS boot specification is supported
+		Function key-initiated network boot is supported
+
+Handle 0x0D00, DMI type 13, 22 bytes
+BIOS Language Information
+	Language Description Format: Long
+	Installable Languages: 1
+		en|US|iso8859-1
+	Currently Installed Language: en|US|iso8859-1
+

@@ -1,0 +1,36 @@
+# dmidecode 3.3
+Getting SMBIOS data from sysfs.
+SMBIOS 2.3 present.
+
+Handle 0x0100, DMI type 1, 25 bytes
+System Information
+	Manufacturer: Dell Inc.                
+	Product Name: OptiPlex 210L                
+	Version: Not Specified
+	Serial Number: HX6T9C1
+	UUID: 44454c4c-5800-1036-8054-c8c04f394331
+	Wake-up Type: Power Switch
+
+Handle 0x0F00, DMI type 15, 29 bytes
+System Event Log
+	Area Length: 2049 bytes
+	Header Start Offset: 0x0000
+	Header Length: 16 bytes
+	Data Start Offset: 0x0010
+	Access Method: Memory-mapped physical 32-bit address
+	Access Address: 0xFFF81000
+	Status: Valid, Not Full
+	Change Token: 0x00000039
+	Header Format: Type 1
+	Supported Log Type Descriptors: 3
+	Descriptor 1: POST error
+	Data Format 1: POST results bitmap
+	Descriptor 2: System limit exceeded
+	Data Format 2: System management
+	Descriptor 3: Log area reset/cleared
+	Data Format 3: None
+
+Handle 0x2000, DMI type 32, 11 bytes
+System Boot Information
+	Status: Firmware-detected hardware failure
+

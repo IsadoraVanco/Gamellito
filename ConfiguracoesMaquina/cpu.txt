@@ -1,0 +1,37 @@
+$ lscpu
+Arquitetura:                  x86_64
+  Modo(s) operacional da CPU: 32-bit, 64-bit
+  Address sizes:              36 bits physical, 48 bits virtual
+  Ordem dos bytes:            Little Endian
+CPU(s):                       1
+  Lista de CPU(s) on-line:    0
+ID de fornecedor:             GenuineIntel
+  Nome do modelo:             Intel(R) Celeron(R) CPU 2.66GHz
+    Família da CPU:           15
+    Modelo:                   4
+    Thread(s) per núcleo:     1
+    Núcleo(s) por soquete:    1
+    Soquete(s):               1
+    Step:                     9
+    BogoMIPS:                 5319.96
+    Opções:                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm const
+                              ant_tsc pebs bts nopl cpuid pni dtes64 monitor ds_cpl tm2 cid cx16 xtpr lahf_lm pti
+Caches (sum of all):          
+  L1d:                        16 KiB (1 instance)
+  L2:                         256 KiB (1 instance)
+NUMA:                         
+  Nó(s) de NUMA:              1
+  CPU(s) de nó0 NUMA:         0
+Vulnerabilities:              
+  Itlb multihit:              KVM: Mitigation: VMX unsupported
+  L1tf:                       Mitigation; PTE Inversion
+  Mds:                        Vulnerable: Clear CPU buffers attempted, no microcode; SMT disabled
+  Meltdown:                   Mitigation; PTI
+  Mmio stale data:            Unknown: No mitigations
+  Retbleed:                   Not affected
+  Spec store bypass:          Vulnerable
+  Spectre v1:                 Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  Spectre v2:                 Mitigation; Retpolines, STIBP disabled, RSB filling, PBRSB-eIBRS Not affected
+  Srbds:                      Not affected
+  Tsx async abort:            Not affected
+

@@ -1,0 +1,36 @@
+# dmidecode 3.3
+Getting SMBIOS data from sysfs.
+SMBIOS 2.3 present.
+
+Handle 0x0700, DMI type 7, 19 bytes
+Cache Information
+	Socket Designation: Not Specified
+	Configuration: Enabled, Not Socketed, Level 1
+	Operational Mode: Write Back
+	Location: Internal
+	Installed Size: 16 kB
+	Maximum Size: 16 kB
+	Supported SRAM Types:
+		Other
+	Installed SRAM Type: Other
+	Speed: Unknown
+	Error Correction Type: None
+	System Type: Data
+	Associativity: 8-way Set-associative
+
+Handle 0x0701, DMI type 7, 19 bytes
+Cache Information
+	Socket Designation: Not Specified
+	Configuration: Enabled, Not Socketed, Level 2
+	Operational Mode: Varies With Memory Address
+	Location: Internal
+	Installed Size: 256 kB
+	Maximum Size: 256 kB
+	Supported SRAM Types:
+		Other
+	Installed SRAM Type: Other
+	Speed: Unknown
+	Error Correction Type: Single-bit ECC
+	System Type: Unified
+	Associativity: 4-way Set-associative
+

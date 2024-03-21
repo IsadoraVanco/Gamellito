@@ -1,0 +1,326 @@
+gamelito-optiplex-210l      
+    descrição: Computer
+    largura: 64 bits
+    capacidades: vsyscall32
+  *-core
+       descrição: Motherboard
+       ID físico: 0
+     *-memory
+          descrição: Memória do sistema
+          ID físico: 0
+          tamanho: 3GiB
+     *-cpu
+          produto: Intel(R) Celeron(R) CPU 2.66GHz
+          fabricante: Intel Corp.
+          ID físico: 1
+          informações do barramento: cpu@0
+          versão: 15.4.9
+          largura: 64 bits
+          capacidades: fpu fpu_exception wp vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx x86-64 constant_tsc pebs bts nopl cpuid pni dtes64 monitor ds_cpl tm2 cid cx16 xtpr lahf_lm pti
+          configuração: microcode=3
+     *-pci
+          descrição: Host bridge
+          produto: 82915G/P/GV/GL/PL/910GL Memory Controller Hub
+          fabricante: Intel Corporation
+          ID físico: 100
+          informações do barramento: pci@0000:00:00.0
+          versão: 04
+          largura: 32 bits
+          clock: 33MHz
+        *-display
+             descrição: VGA compatible controller
+             produto: 82915G/GV/910GL Integrated Graphics Controller
+             fabricante: Intel Corporation
+             ID físico: 2
+             informações do barramento: pci@0000:00:02.0
+             nome lógico: /dev/fb0
+             versão: 04
+             largura: 32 bits
+             clock: 33MHz
+             capacidades: vga_controller bus_master cap_list rom fb
+             configuração: depth=32 driver=i915 latency=0 resolution=1366,768
+             recursos: irq:16 memória:dff80000-dfffffff porta de E/S:ecd8(tamanho=8) memória:c0000000-cfffffff memória:dff40000-dff7ffff memória:c0000-dffff
+        *-multimedia
+             descrição: Audio device
+             produto: 82801FB/FBM/FR/FW/FRW (ICH6 Family) High Definition Audio Controller
+             fabricante: Intel Corporation
+             ID físico: 1b
+             informações do barramento: pci@0000:00:1b.0
+             nome lógico: card0
+             nome lógico: /dev/snd/controlC0
+             nome lógico: /dev/snd/hwC0D2
+             nome lógico: /dev/snd/pcmC0D0c
+             nome lógico: /dev/snd/pcmC0D0p
+             versão: 04
+             largura: 64 bits
+             clock: 33MHz
+             capacidades: bus_master cap_list
+             configuração: driver=snd_hda_intel latency=0
+             recursos: irq:24 memória:dff3c000-dff3ffff
+           *-input:0
+                produto: HDA Intel Mic
+                ID físico: 0
+                nome lógico: input15
+                nome lógico: /dev/input/event7
+           *-input:1
+                produto: HDA Intel Line
+                ID físico: 1
+                nome lógico: input16
+                nome lógico: /dev/input/event8
+           *-input:2
+                produto: HDA Intel Line Out
+                ID físico: 2
+                nome lógico: input17
+                nome lógico: /dev/input/event9
+           *-input:3
+                produto: HDA Intel Front Headphone
+                ID físico: 3
+                nome lógico: input18
+                nome lógico: /dev/input/event10
+        *-pci:0
+             descrição: PCI bridge
+             produto: 82801FB/FBM/FR/FW/FRW (ICH6 Family) PCI Express Port 1
+             fabricante: Intel Corporation
+             ID físico: 1c
+             informações do barramento: pci@0000:00:1c.0
+             versão: 04
+             largura: 32 bits
+             clock: 33MHz
+             capacidades: pci normal_decode bus_master cap_list
+             configuração: driver=pcieport
+             recursos: irq:16 porta de E/S:1000(tamanho=4096) memória:dfe00000-dfefffff porta de E/S:d0000000(tamanho=2097152)
+        *-pci:1
+             descrição: PCI bridge
+             produto: 82801FB/FBM/FR/FW/FRW (ICH6 Family) PCI Express Port 2
+             fabricante: Intel Corporation
+             ID físico: 1c.1
+             informações do barramento: pci@0000:00:1c.1
+             versão: 04
+             largura: 32 bits
+             clock: 33MHz
+             capacidades: pci normal_decode bus_master cap_list
+             configuração: driver=pcieport
+             recursos: irq:17 memória:dfd00000-dfdfffff
+        *-usb:0
+             descrição: USB controller
+             produto: 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB UHCI #1
+             fabricante: Intel Corporation
+             ID físico: 1d
+             informações do barramento: pci@0000:00:1d.0
+             versão: 04
+             largura: 32 bits
+             clock: 33MHz
+             capacidades: uhci bus_master
+             configuração: driver=uhci_hcd latency=0
+             recursos: irq:21 porta de E/S:ff80(tamanho=32)
+        *-usb:1
+             descrição: USB controller
+             produto: 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB UHCI #2
+             fabricante: Intel Corporation
+             ID físico: 1d.1
+             informações do barramento: pci@0000:00:1d.1
+             versão: 04
+             largura: 32 bits
+             clock: 33MHz
+             capacidades: uhci bus_master
+             configuração: driver=uhci_hcd latency=0
+             recursos: irq:22 porta de E/S:ff60(tamanho=32)
+        *-usb:2
+             descrição: USB controller
+             produto: 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB UHCI #3
+             fabricante: Intel Corporation
+             ID físico: 1d.2
+             informações do barramento: pci@0000:00:1d.2
+             versão: 04
+             largura: 32 bits
+             clock: 33MHz
+             capacidades: uhci bus_master
+             configuração: driver=uhci_hcd latency=0
+             recursos: irq:18 porta de E/S:ff40(tamanho=32)
+        *-usb:3
+             descrição: USB controller
+             produto: 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB UHCI #4
+             fabricante: Intel Corporation
+             ID físico: 1d.3
+             informações do barramento: pci@0000:00:1d.3
+             versão: 04
+             largura: 32 bits
+             clock: 33MHz
+             capacidades: uhci bus_master
+             configuração: driver=uhci_hcd latency=0
+             recursos: irq:23 porta de E/S:ff20(tamanho=32)
+        *-usb:4
+             descrição: USB controller
+             produto: 82801FB/FBM/FR/FW/FRW (ICH6 Family) USB2 EHCI Controller
+             fabricante: Intel Corporation
+             ID físico: 1d.7
+             informações do barramento: pci@0000:00:1d.7
+             versão: 04
+             largura: 32 bits
+             clock: 33MHz
+             capacidades: ehci bus_master cap_list
+             configuração: driver=ehci-pci latency=0
+             recursos: irq:21 memória:d0200000-d02003ff
+        *-pci:2
+             descrição: PCI bridge
+             produto: 82801 PCI Bridge
+             fabricante: Intel Corporation
+             ID físico: 1e
+             informações do barramento: pci@0000:00:1e.0
+             versão: d4
+             largura: 32 bits
+             clock: 33MHz
+             capacidades: pci subtractive_decode bus_master cap_list
+             recursos: porta de E/S:d000(tamanho=4096) memória:dfc00000-dfcfffff
+           *-network
+                descrição: Ethernet interface
+                produto: 82562ET/EZ/GT/GZ - PRO/100 VE (LOM) Ethernet Controller
+                fabricante: Intel Corporation
+                ID físico: 8
+                informações do barramento: pci@0000:03:08.0
+                nome lógico: enp3s8
+                versão: 04
+                serial: 00:15:c5:35:b0:e7
+                tamanho: 100Mbit/s
+                capacidade: 100Mbit/s
+                largura: 32 bits
+                clock: 33MHz
+                capacidades: bus_master cap_list ethernet physical tp mii 10bt 10bt-fd 100bt 100bt-fd autonegotiation
+                configuração: autonegotiation=on broadcast=yes driver=e100 driverversion=5.15.0-56-generic duplex=full ip=10.90.67.238 latency=64 link=yes maxlatency=56 mingnt=8 multicast=yes port=MII speed=100Mbit/s
+                recursos: irq:20 memória:dfcff000-dfcfffff porta de E/S:dcc0(tamanho=64)
+        *-isa
+             descrição: ISA bridge
+             produto: 82801FB/FR (ICH6/ICH6R) LPC Interface Bridge
+             fabricante: Intel Corporation
+             ID físico: 1f
+             informações do barramento: pci@0000:00:1f.0
+             versão: 04
+             largura: 32 bits
+             clock: 33MHz
+             capacidades: isa bus_master
+             configuração: driver=lpc_ich latency=0
+             recursos: irq:0
+           *-pnp00:00
+                produto: PnP device PNP0c01
+                ID físico: 0
+                capacidades: pnp
+                configuração: driver=system
+           *-pnp00:01
+                produto: PnP device PNP0b00
+                ID físico: 1
+                capacidades: pnp
+                configuração: driver=rtc_cmos
+           *-pnp00:02
+                produto: PnP device PNP0700
+                ID físico: 2
+                capacidades: pnp
+           *-pnp00:03
+                produto: PnP device PNP0401
+                ID físico: 3
+                capacidades: pnp
+                configuração: driver=parport_pc
+           *-pnp00:04
+                produto: PnP device PNP0501
+                ID físico: 4
+                capacidades: pnp
+                configuração: driver=serial
+           *-pnp00:05
+                produto: PnP device PNP0c01
+                ID físico: 5
+                capacidades: pnp
+                configuração: driver=system
+           *-pnp00:06
+                produto: PnP device PNP0c02
+                ID físico: 6
+                capacidades: pnp
+                configuração: driver=system
+        *-ide:0
+             descrição: IDE interface
+             produto: 82801FB/FBM/FR/FW/FRW (ICH6 Family) IDE Controller
+             fabricante: Intel Corporation
+             ID físico: 1f.1
+             informações do barramento: pci@0000:00:1f.1
+             versão: 04
+             largura: 32 bits
+             clock: 33MHz
+             capacidades: ide isa_compat_mode pci_native_mode bus_master
+             configuração: driver=ata_piix latency=0
+             recursos: irq:16 porta de E/S:1f0(tamanho=8) porta de E/S:3f6 porta de E/S:170(tamanho=8) porta de E/S:376 porta de E/S:ffa0(tamanho=16)
+        *-ide:1
+             descrição: IDE interface
+             produto: 82801FB/FW (ICH6/ICH6W) SATA Controller
+             fabricante: Intel Corporation
+             ID físico: 1f.2
+             informações do barramento: pci@0000:00:1f.2
+             versão: 04
+             largura: 32 bits
+             clock: 66MHz
+             capacidades: ide isa_compat_mode pci_native_mode bus_master cap_list
+             configuração: driver=ata_piix latency=0
+             recursos: irq:20 porta de E/S:fe00(tamanho=8) porta de E/S:fe10(tamanho=4) porta de E/S:fe20(tamanho=8) porta de E/S:fe30(tamanho=4) porta de E/S:fea0(tamanho=16)
+        *-serial
+             descrição: SMBus
+             produto: 82801FB/FBM/FR/FW/FRW (ICH6 Family) SMBus Controller
+             fabricante: Intel Corporation
+             ID físico: 1f.3
+             informações do barramento: pci@0000:00:1f.3
+             versão: 04
+             largura: 32 bits
+             clock: 33MHz
+             configuração: driver=i801_smbus latency=0
+             recursos: irq:17 porta de E/S:ece0(tamanho=32)
+  *-scsi
+       ID físico: 1
+       informações do barramento: scsi@4
+       nome lógico: scsi4
+       capacidades: scsi-host
+       configuração: driver=usb-storage
+  *-input:0
+       produto: Power Button
+       ID físico: 2
+       nome lógico: input0
+       nome lógico: /dev/input/event0
+       capacidades: platform
+  *-input:1
+       produto: Power Button
+       ID físico: 3
+       nome lógico: input1
+       nome lógico: /dev/input/event1
+       capacidades: platform
+  *-input:2
+       produto: USB USB Keyboard System Control
+       ID físico: 4
+       nome lógico: input10
+       nome lógico: /dev/input/event6
+       capacidades: usb
+  *-input:3
+       produto: Elo Touch Solutions Elo Touch Solutions Pcap USB Interface
+       ID físico: 5
+       nome lógico: input11
+       nome lógico: /dev/input/event2
+       nome lógico: /dev/input/mouse0
+       capacidades: usb
+  *-input:4
+       produto: Elo Touch Solutions Elo Touch Solutions Pcap USB Interface Stylus
+       ID físico: 6
+       nome lógico: input14
+       nome lógico: /dev/input/event3
+       nome lógico: /dev/input/mouse1
+       capacidades: usb
+  *-input:5
+       produto: USB USB Keyboard
+       ID físico: 7
+       nome lógico: input8
+       nome lógico: /dev/input/event4
+       nome lógico: input8::capslock
+       nome lógico: input8::numlock
+       nome lógico: input8::scrolllock
+       capacidades: usb
+  *-input:6
+       produto: USB USB Keyboard Consumer Control
+       ID físico: 8
+       nome lógico: input9
+       nome lógico: /dev/input/event5
+       capacidades: usb
+AVISO: a saída pode ser incompleta e imprecisa, você deveria executar este programa como superusuário.
+
