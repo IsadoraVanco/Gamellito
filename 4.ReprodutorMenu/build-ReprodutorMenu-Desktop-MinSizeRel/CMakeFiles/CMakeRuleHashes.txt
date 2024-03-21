@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+a1d0b7dc69e878a6d19a5b77c62dcf44 CMakeFiles/ReprodutorMenu_autogen
+a15730aa09b9a348ce7679fe9c230ec0 ReprodutorMenu_autogen/EWIEGA46WW/qrc_recursos.cpp

@@ -1,0 +1,4 @@
+/home/game/Área de Trabalho/ReprodutorMenu/build-ReprodutorMenu-Desktop-MinSizeRel/CMakeFiles/ReprodutorMenu.dir
+/home/game/Área de Trabalho/ReprodutorMenu/build-ReprodutorMenu-Desktop-MinSizeRel/CMakeFiles/edit_cache.dir
+/home/game/Área de Trabalho/ReprodutorMenu/build-ReprodutorMenu-Desktop-MinSizeRel/CMakeFiles/rebuild_cache.dir
+/home/game/Área de Trabalho/ReprodutorMenu/build-ReprodutorMenu-Desktop-MinSizeRel/CMakeFiles/ReprodutorMenu_autogen.dir

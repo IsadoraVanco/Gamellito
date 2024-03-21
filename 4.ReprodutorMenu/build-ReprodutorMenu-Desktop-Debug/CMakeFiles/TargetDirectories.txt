@@ -1,0 +1,4 @@
+/home/game/Área de Trabalho/ReprodutorMenu/build-ReprodutorMenu-Desktop-Debug/CMakeFiles/ReprodutorMenu.dir
+/home/game/Área de Trabalho/ReprodutorMenu/build-ReprodutorMenu-Desktop-Debug/CMakeFiles/edit_cache.dir
+/home/game/Área de Trabalho/ReprodutorMenu/build-ReprodutorMenu-Desktop-Debug/CMakeFiles/rebuild_cache.dir
+/home/game/Área de Trabalho/ReprodutorMenu/build-ReprodutorMenu-Desktop-Debug/CMakeFiles/ReprodutorMenu_autogen.dir

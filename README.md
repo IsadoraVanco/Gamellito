@@ -11,7 +11,14 @@ Pessoalmente, será um grande desafio, já que estou no início da programação
 ## 1. Ferramentas
 
 ### 1.1. Linguagem e biblioteca
-Para esta difícil tarefa, irei utilizar a linguagem **C++** e a biblioteca **Qt5** (no momento existe a 6, mas utiliza-lá ocasionaria outros problemas). A IDE utilizada será o **QtCreator**, que é responsável por compilar o código, além disso, nele é muito mais fácil criar as interfaces gráficas, já que possui o sistema Drag and Drop.
+Para esta difícil tarefa, irei utilizar a linguagem **C++** e a biblioteca [**Qt5 (versão 5.15)**](https://doc.qt.io/qt-5/modules-cpp.html) (no momento existe a 6, mas utiliza-lá ocasionaria outros problemas). A IDE utilizada será o **QtCreator**, que é responsável por compilar o código, além disso, nele é muito mais fácil criar as interfaces gráficas, já que possui o sistema Drag and Drop.
+
+#### Referências
+Para consultas futuras, aqui estão as documentações de cada classe utilizada:
+
+* [**QMultimedia**](https://doc.qt.io/qt-5/qtmultimedia-index.html)
+* [**QWidget**](https://doc.qt.io/qt-5/qwidget.html)
+* [**QVideoWidget**](https://doc.qt.io/qt-5/qvideowidget.html)
 
 ### 1.2. Virtualização
 
@@ -24,8 +31,49 @@ Algumas novidades que podem ajudar (ainda para pesquisar e testar):
 
 * Embedar uma linguagem para uma atividade específica
 * Utilizar CSV ou txt para armazenar os dados selecionados pelo usuário
+* Utilizar JSON para armazenar a sequência de vídeos e perguntas
 
-## 2. Hardware
+## 2. Estrutura do Software
+
+Estou percebendo que vou precisar ter uma estrutura definida de algumas coisas, principalmente para quando for replicar em outras máquinas. Por enquanto, pensei o seguinte:
+
+PastaDoProjeto{
+    PastaAssets{
+        somAmbiente.wav
+        ...
+    }
+    .executável
+    config.json
+    ...
+}
+
+Onde a `pastaDoProjeto` é a pasta da aplicação do Gamellito, e dentro dela contém o próprio executável do programa, o arquivo de configuração da sequência de vídeos e perguntas, e a `pastaAssets`, que contém sons e fotos para a aplicação.
+
+Além disso, `config.json` estará estruturado como:
+* Para o `vídeo`: 
+```
+{
+    "id":numero
+    "tipo":"video";
+    "caminho":"caminho/do/video"
+}
+```
+
+* Para a `pergunta`: 
+```
+{
+    "id":numero
+    "tipo":"pergunta";
+    "pergunta":"texto";
+    "respostaA":"texto";
+    "respostaB":"texto";
+    "respostaC":"texto";
+    "respostaD":"texto";
+    "correta":"A/B/C/D"
+}
+```
+
+## 3. Hardware
 
 Por enquanto, a máquina foi desbloqueada para utilizar sistemas operacionais. Procuro por sistemas Linux que são leves o suficientes para a máquina Dino.
 
@@ -47,10 +95,11 @@ Depois que estiver pronto (ou quase):
 * Formatar o HD utilizando software
 * Limpar a máquina Dino e trocar pasta térmica
 
-## 3. Testes
+## 4. Testes
 
 Irei guardar cada teste para caso precise testar em um novo sistema operacional, e assim eu posso comparar cada resultado. Por enquanto, temos:
 
 1. **Roadmap** -> Um exemplo simples de tela inicial, com redimensionamento e botões que levam a novas janelas. Tamanho mínimo da tela: 960x540.
 2. **PaginasDinamicas** -> Apesar do nome, é um exemplo simples de aplicação que possui elementos estáticos, sem responsividade, mas que navega entre widgets dentro de uma StackedWidgets, sem a necessidade de criar uma nova janela para alterar o conteúdo.
 3. **Menus** -> Um esboço de como imagino a aplicação (com exceção do reprodutor de vídeo), ainda sem as telas dinâmicamente alocadas. Este exemplo possui a navegação entre as telas (em StackedWidgets) e som ambiente no menu. A aplicação é ajustada conforme o tamanho do monitor e sem a barra de título da janela. Tamanho mínimo da tela: 800x600 (SVGA).
+4. **ReprodutorMenu** -> O nome é confuso, mas essa versão é um leve aprimoramento do "Menus". Armazena uma sequência de vídeos escolhidos em um arquivo JSON.
