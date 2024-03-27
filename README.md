@@ -37,6 +37,7 @@ Algumas novidades que podem ajudar (ainda para pesquisar e testar):
 
 Estou percebendo que vou precisar ter uma estrutura definida de algumas coisas, principalmente para quando for replicar em outras máquinas. Por enquanto, pensei o seguinte:
 
+```
 PastaDoProjeto{
     PastaAssets{
         somAmbiente.wav
@@ -46,6 +47,7 @@ PastaDoProjeto{
     config.json
     ...
 }
+```
 
 Onde a `pastaDoProjeto` é a pasta da aplicação do Gamellito, e dentro dela contém o próprio executável do programa, o arquivo de configuração da sequência de vídeos e perguntas, e a `pastaAssets`, que contém sons e fotos para a aplicação.
 
@@ -72,6 +74,18 @@ Além disso, `config.json` estará estruturado como:
     "correta":"A/B/C/D"
 }
 ```
+
+### Assets
+
+* Sons públicos:
+    - [Som ambiente do menu](https://pixabay.com/pt/sound-effects/funny-and-comical-melody-glide-synth-bass-and-trumpet-21398/)
+
+* Ícones/imagens públicas:
+    - [Home](https://www.freepik.com/icon/home_1946436#fromView=search&page=1&position=1&uuid=df718193-70a8-4e6c-bbb2-cfdbf124f5f0)
+    - [Voltar](https://www.freepik.com/icon/back_9126101#fromView=search&page=1&position=65&uuid=bf37574f-28a7-48f9-829d-081313cd83f3)
+    - [Próximo](https://www.freepik.com/icon/right-arrow_9125994#fromView=resource_detail&position=44)
+    - [Com som](freepik.com/icon/volume_727269#fromView=search&page=1&position=2&uuid=a5f213c1-6501-4e0d-9c22-7edddaeb7029)
+    - [Sem som](https://www.freepik.com/icon/mute_727240#fromView=search&page=1&position=3&uuid=a5f213c1-6501-4e0d-9c22-7edddaeb7029)
 
 ## 3. Hardware
 
