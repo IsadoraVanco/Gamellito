@@ -81,16 +81,23 @@ Além disso, `config.json` estará estruturado como:
     - [Som ambiente do menu](https://pixabay.com/pt/sound-effects/funny-and-comical-melody-glide-synth-bass-and-trumpet-21398/)
 
 * Ícones/imagens públicas:
+    
+    Menu:
+    - [Iniciar do Menu](https://br.freepik.com/icone/jogar-circulo_10435870#fromView=image_search_similar&page=1&position=10&uuid=40e7a8b3-175f-43da-9d45-47ff17ad6399)
+    - [Configurações](https://br.freepik.com/icone/chave-inglesa_11270131)
+    - [Informações](https://br.freepik.com/icone/informacoes_3916699#fromView=search&page=1&position=7&uuid=736630dc-7ab3-4b4b-842a-2bb19c458c58)
+
+    Geral:
     - [Home](https://www.freepik.com/icon/home_1946436#fromView=search&page=1&position=1&uuid=df718193-70a8-4e6c-bbb2-cfdbf124f5f0)
     - [Voltar](https://www.freepik.com/icon/back_9126101#fromView=search&page=1&position=65&uuid=bf37574f-28a7-48f9-829d-081313cd83f3)
     - [Próximo](https://www.freepik.com/icon/right-arrow_9125994#fromView=resource_detail&position=44)
-    - [Configurações](https://br.freepik.com/icone/chave-inglesa_11270131)
-    - [Informações](https://br.freepik.com/icone/informacoes_3916699#fromView=search&page=1&position=7&uuid=736630dc-7ab3-4b4b-842a-2bb19c458c58)
-    - [Iniciar do Menu](https://br.freepik.com/icone/jogar-circulo_10435870#fromView=image_search_similar&page=1&position=10&uuid=40e7a8b3-175f-43da-9d45-47ff17ad6399)
-
+    - [Lixeira](https://br.freepik.com/icone/lixo_3917378#fromView=search&page=1&position=0&uuid=f109c5d2-09ce-4fec-a0f1-a15a1aac6a9a)
+    - [Seta](https://br.freepik.com/icone/caret-up_3916917#fromView=search&page=1&position=2&uuid=ac09fa06-c342-4946-8d95-d4c28a6a72ef)
+    
+    Reprodutor:
     - [Com som](freepik.com/icon/volume_727269#fromView=search&page=1&position=2&uuid=a5f213c1-6501-4e0d-9c22-7edddaeb7029)
     - [Sem som](https://www.freepik.com/icon/mute_727240#fromView=search&page=1&position=3&uuid=a5f213c1-6501-4e0d-9c22-7edddaeb7029)
-    
+
 ## 3. Hardware
 
 Por enquanto, a máquina foi desbloqueada para utilizar sistemas operacionais. Procuro por sistemas Linux que são leves o suficientes para a máquina Dino.
