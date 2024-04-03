@@ -26,6 +26,13 @@ Como utilizo Windows no dia-a-dia, preciso de uma ferramenta para virtualizar o 
 
 Cogitei utilizar Docker, mas creio que seria muito para a máquina Dino, além de não ser muito viável para o usuário replicar o programa em outra máquina (creio eu).
 
+### 1.3 Papelada
+
+Assim como uma casa, um software também precisa de uma planta que foi planejada para poder ser estruturado de forma segura. E para fazer algumas partes do processo, utilizei (mesmo que tardio):
+
+- **Protipagem de telas**: [Figma](https://www.figma.com);
+- **Diagrama de caso de uso**: [Lucidchart](https://lucid.app/);
+
 ### Ainda para se pensar...
 Algumas novidades que podem ajudar (ainda para pesquisar e testar):
 
