@@ -1,6 +1,7 @@
 /**
  * Versão 3 (ReprodutorMenu):
- * O menu de stacked widgets, que salva o caminho dos videos
+ * O menu de stacked widgets, que salva o caminho dos videos.
+ * Responsável por manipular as telas
  */
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
@@ -21,14 +22,33 @@
 #include <QtMultimedia/QtMultimedia>
 #include <QtCore>
 #include <QtGui>
+#include <QGraphicsVideoItem>
 
 // Para o áudio
 #include <QtMultimedia/QSound>
 
+#include "videographicsview.h"
+
+// Para a manipulação de perfis
+#include "usuario.h"
+
 // Para a manipulação de arquivos
 #include "arquivos.h"
 
-#define ARQUIVO_CONFIGURACAO "config.json"
+/* ************************************************************
+ * DEFINIÇÕES
+ *************************************************************/
+
+// Armazena os nomes de todos arquivos
+#define ARQUIVO_CONFIGURACAO_GERAL "configs.json"
+
+// Páginas do reprodutor
+#define PAGINA_INICIAL 0
+#define PAGINA_SOBRE 1
+#define PAGINA_CONFIGURAR 2
+#define PAGINA_VIDEO 3
+#define PAGINA_QUESTIONARIO 4
+#define PAGINA_ADICIONAR_PERGUNTA 5
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -52,26 +72,55 @@ private slots:
      *************************************************************/
 
     /**
-     * @brief Inicializa o som ambiente do menu
+     * @brief Configura o som ambiente do menu e o inicializa
      */
-    void inicializaSomAmbiente();
+    void inicializarSomAmbiente();
 
     /**
      * @brief Liga o som ambiente e modifica o ícone do botão de som
      */
-    void ligaSomAmbiente();
+    void ligarSomAmbiente();
 
     /**
      * @brief Desliga o som ambiente e modifica o ícone do botão de som
      */
-    void desligaSomAmbiente();
+    void desligarSomAmbiente();
+
+    /* ************************************************************
+     * SEQUÊNCIA DE VÍDEO E PERGUNTA
+     *************************************************************/
+
+    /**
+     * @brief Carrega a sequência de vídeos e perguntas em uma estrutura
+     */
+    void carregarSequencia();
+
+    /**
+     * @brief Atualizar a página para o próximo item da sequência
+     */
+    void proximoDaSequencia();
+
+    /**
+     * @brief Atualizar a página para o item anterior da sequência
+     */
+    void anteriorDaSequencia();
 
     /* ************************************************************
      * TELA INICIAL (0)
      *************************************************************/
 
     /**
-     * @brief Manipula o som do menu
+     * @brief Volta para o a tela do menu e liga o som ambiente
+     */
+    void voltarInicio();
+
+    /**
+     * @brief Mostra a tela de "Inicio" da aplicação
+     */
+    void mostrarInicio();
+
+    /**
+     * @brief Manipula o som ambiente do menu
      */
     void on_pushButton_som_clicked();
 
@@ -91,14 +140,14 @@ private slots:
      */
     void on_pushButton_sobre_clicked();
 
-    /**
-     * @brief Volta para o início da aplicação
-     */
-    void voltarInicio();
-
     /* ************************************************************
      * TELA SOBRE (1)
      *************************************************************/
+
+    /**
+     * @brief Mostra a tela para a página "sobre"
+     */
+    void mostrarTelaSobre();
 
     /**
      * @brief Mostra a versão do Qt utilizada
@@ -113,6 +162,11 @@ private slots:
     /* ************************************************************
      * TELA CONFIGURAR (2)
      *************************************************************/
+
+    /**
+     * @brief Mostra a tela para a página "Configurar"
+     */
+    void mostrarTelaConfigurar();
 
     /**
      * @brief Volta para a tela inicial
@@ -133,7 +187,19 @@ private slots:
      * TELA REPRODUTOR (3)
      *************************************************************/
 
-    void iniciaVideo();
+    void mostrarTelaVideo();
+
+    /**
+     * @brief Reproduz o vídeo
+     */
+    void tocarVideo();
+
+    /**
+     * @brief Para o vídeo
+     */
+    void pararVideo();
+
+    void configuraVideo(QUrl pathVideo);
 
     void on_pushButton_video_tocar_clicked();
 
@@ -146,6 +212,16 @@ private slots:
      *************************************************************/
 
     /**
+     * @brief Mostra a tela do "Questionário"
+     */
+    void mostrarQuestionario();
+
+    /**
+     * @brief Configura a página do questionário
+     */
+    void configurarPergunta();
+
+    /**
      * @brief Volta para o início da aplicação
      */
     void on_pushButton_voltar_iniciar_clicked();
@@ -155,24 +231,38 @@ private slots:
      */
     void on_pushButton_voltar_video_clicked();
 
+    /**
+     * @brief Seleciona a opção A do questionário
+     */
+    void on_radioButton_opcao1_clicked();
+
     /* ************************************************************
      * TELA ADICIONAR PERGUNTA (5)
      *************************************************************/
 
+    /**
+     * @brief Mostra a tela de "Adicionar Pergunta"
+     */
+    void mostrarTelaAdicionarPergunta();
+
 private:
+    // O UI do programa
     Ui::MainWindow *ui;
 
-    // O caminho recebido em argc argv
-    char *caminho;
+    // Índice do vídeo ou pergunta atual
+    int indiceAtual = PAGINA_INICIAL;
+
+    // Sequência de vídeo e pergunta
+
 
     // Reprodutor
     QMediaPlayer *player;
-    QVideoWidget *video;
-    QMediaPlaylist *playlist;
+    QVideoWidget *videoWidget;
+    //QMediaPlaylist *playlist;
     QMediaPlayer::State estadoVideo;
 
     // Som ambiente
-    QMediaPlayer *som_ambiente;
+    //QMediaPlayer *som_ambiente;
     QSound *som;
     bool mutado = false;
 

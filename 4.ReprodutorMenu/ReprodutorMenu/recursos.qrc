@@ -3,7 +3,7 @@
         <file>assets/gamellito.png</file>
     </qresource>
     <qresource prefix="/sons">
-        <file>assets/funny-and-comical-melody-glide-synth-bass-and-trumpet-21398 (online-audio-converter.com).wav</file>
+        <file>assets/somAmbiente.wav</file>
     </qresource>
     <qresource prefix="/icones">
         <file>assets/sem-som.png</file>

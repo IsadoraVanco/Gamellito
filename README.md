@@ -19,6 +19,7 @@ Para consultas futuras, aqui estão as documentações de cada classe utilizada:
 * [**QMultimedia**](https://doc.qt.io/qt-5/qtmultimedia-index.html)
 * [**QWidget**](https://doc.qt.io/qt-5/qwidget.html)
 * [**QVideoWidget**](https://doc.qt.io/qt-5/qvideowidget.html)
+* [**QGraphcsVideoItem**](https://doc.qt.io/qt-5/qgraphicsvideoitem.html)
 
 ### 1.2. Virtualização
 

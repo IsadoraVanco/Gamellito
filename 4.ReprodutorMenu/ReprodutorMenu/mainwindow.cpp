@@ -7,27 +7,22 @@
 MainWindow::MainWindow(char* argv, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , caminho(argv) // Deve ser adicionado no .h (private)
 {
     ui->setupUi(this);
 
     /*
-     *  Ainda precisa trocar para um caminho relativo :P
      *  Utilizar quando a imagem estiver melhor >.< (tamanho minimo da label = 300)
     */
-    QPixmap gamellito("/home/game/Área de Trabalho/Menus/Menus-QT5/assets/gamellito.png");
+    //QPixmap gamellito("");
     //ui->label->setPixmap(gamellito.scaled(100, 100, Qt::KeepAspectRatio);
 
-    // Som ambiente do menu
-    inicializaSomAmbiente();
-
     // Inicializa o video (ainda não funcionando)
-    video = new QVideoWidget(this);
-    player = new QMediaPlayer(video);
-    playlist = new QMediaPlaylist;
+    videoWidget = new QVideoWidget;
+    player = new QMediaPlayer;
+    //playlist = new QMediaPlaylist;
 
-    // Inicializa o arquivo de configurações
-    if(!Arquivos::inicializarArquivo(QString(ARQUIVO_CONFIGURACAO))){
+    // Inicializa o arquivo de configurações gerais
+    if(!Arquivos::inicializarArquivo(QString(ARQUIVO_CONFIGURACAO_GERAL))){
         QMessageBox::information(this, "Erro", "Não foi possível carregar os arquivos de inicialização. Por favor, consulte o cara da TI!");
         close();
     }
@@ -35,8 +30,11 @@ MainWindow::MainWindow(char* argv, QWidget *parent)
     //Conexões
     connect(ui->pushButton_sair, SIGNAL(clicked()), this, SLOT(close()));
 
+    // Som ambiente do menu
+    inicializarSomAmbiente();
+
     // Inicializa a primeira tela
-    voltarInicio(); // Tela inicial
+    mostrarInicio(); // Tela inicial
 }
 
 MainWindow::~MainWindow()
@@ -48,69 +46,105 @@ MainWindow::~MainWindow()
  * SOM AMBIENTE
  *************************************************************/
 
-void MainWindow::inicializaSomAmbiente()
+void MainWindow::inicializarSomAmbiente()
 {
-    som = new QSound("/home/game/Área de Trabalho/Roadmap/Roadmap/assets/funny-and-comical-melody-glide-synth-bass-and-trumpet-21398 (online-audio-converter.com).wav");
+    // O arquivo de som deve estar na pasta de assets!
+    QDir dir = QDir::current();
+    QString caminho = dir.filePath("assets/somAmbiente.wav");
+    som = new QSound(QString(caminho));
     som->setLoops(QSound::Infinite);
-    ligaSomAmbiente();
+
+    qDebug() << caminho;
+
+    ligarSomAmbiente();
 }
 
-void MainWindow::ligaSomAmbiente()
+void MainWindow::ligarSomAmbiente()
 {
-    ui->pushButton_som->setIcon(QIcon(":/icones/assets/som.png"));
+    // O arquivo de icone deve estar na pasta de assets!
+    ui->pushButton_som->setIcon(QIcon("assets/som.png"));
     som->play();
     mutado = false;
 }
 
-void MainWindow::desligaSomAmbiente()
+void MainWindow::desligarSomAmbiente()
 {
-    ui->pushButton_som->setIcon(QIcon(":/icones/assets/sem-som.png"));
+    // O arquivo de icone deve estar na pasta de assets!
+    ui->pushButton_som->setIcon(QIcon("assets/sem-som.png"));
     som->stop();
     mutado = true;
+}
+
+/* ************************************************************
+ * SEQUÊNCIA DE VÍDEO E PERGUNTA
+ *************************************************************/
+
+void MainWindow::carregarSequencia(){
+
+}
+
+void MainWindow::proximoDaSequencia(){
+
+}
+
+void MainWindow::anteriorDaSequencia(){
+
 }
 
 /* ************************************************************
  * TELA INICIAL (0)
  *************************************************************/
 
+void MainWindow::voltarInicio(){
+    ligarSomAmbiente();
+    mostrarInicio();
+}
+
+void MainWindow::mostrarInicio()
+{
+     ui->stackedWidget->setCurrentIndex(PAGINA_INICIAL);
+}
+
 void MainWindow::on_pushButton_som_clicked()
 {
     if(mutado){
-        ligaSomAmbiente();
+        ligarSomAmbiente();
     }else{
-        desligaSomAmbiente();
+        desligarSomAmbiente();
     }
-}
-
-void MainWindow::voltarInicio()
-{
-    // Volta para a tela inicial e retorna a música
-     ui->stackedWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_pushButton_iniciar_clicked()
 {
-    // Vai para a tela "reprodutor" e para o som ambiente
-    desligaSomAmbiente();
-    iniciaVideo();
-    ui->stackedWidget->setCurrentIndex(3);
+    // Desliga o som ambiente do menu
+    //desligarSomAmbiente();
+
+    // Carrega a sequência => como?
+    //carregarSequencia();
+    configuraVideo(QUrl::fromLocalFile("/home/game/Vídeos/videos-exemplos/exemplo720.mp4"));
+    mostrarTelaVideo();
 }
 
+// Trocar para evento
 void MainWindow::on_pushButton_configurar_clicked()
 {
-    // Vai para a tela "configurar"
-    ui->stackedWidget->setCurrentIndex(2);
+    mostrarTelaConfigurar();
 }
 
+// Trocar para evento
 void MainWindow::on_pushButton_sobre_clicked()
 {
-    // Vai para a tela "sobre"
-    ui->stackedWidget->setCurrentIndex(1);
+    mostrarTelaSobre();
 }
 
 /* ************************************************************
  * TELA SOBRE (1)
  *************************************************************/
+
+void MainWindow::mostrarTelaSobre()
+{
+    ui->stackedWidget->setCurrentIndex(PAGINA_SOBRE);
+}
 
 void MainWindow::on_pushButton_versao_qt_clicked()
 {
@@ -118,6 +152,7 @@ void MainWindow::on_pushButton_versao_qt_clicked()
     QMessageBox::aboutQt(this, "Sobre o Qt");
 }
 
+// Trocar para evento
 void MainWindow::on_pushButton_voltar_sobre_clicked()
 {
     voltarInicio();
@@ -127,6 +162,12 @@ void MainWindow::on_pushButton_voltar_sobre_clicked()
  * TELA CONFIGURAR (2)
  *************************************************************/
 
+void MainWindow::mostrarTelaConfigurar()
+{
+    ui->stackedWidget->setCurrentIndex(PAGINA_CONFIGURAR);
+}
+
+// Trocar para evento
 void MainWindow::on_pushButton_voltar_configurar_clicked()
 {
     voltarInicio();
@@ -135,7 +176,7 @@ void MainWindow::on_pushButton_voltar_configurar_clicked()
 void MainWindow::on_pushButton_adicionar_video_clicked()
 {
     // Inicializa o arquivo de configurações
-    if(!Arquivos::inicializarArquivo(QString(ARQUIVO_CONFIGURACAO))){
+    if(!Arquivos::inicializarArquivo(QString(ARQUIVO_CONFIGURACAO_GERAL))){
         QMessageBox::information(this, "Erro", "Não foi possível carregar os arquivos de inicialização. Por favor, consulte o cara da TI!");
         close();
     }
@@ -150,82 +191,136 @@ void MainWindow::on_pushButton_adicionar_video_clicked()
     }
 
     // Carrega as informações do arquivo JSON para o array
-    QJsonArray arrayJson = Arquivos::converterJsonParaArray(QString(ARQUIVO_CONFIGURACAO));
+    QJsonArray arrayJson = Arquivos::converterJsonParaArray(QString(ARQUIVO_CONFIGURACAO_GERAL));
 
     // Cria um novo objeto JSON para o vídeo
     QJsonObject objetoJson;
-    objetoJson["id"] = arrayJson.size() + 1;
+    objetoJson["id"] = arrayJson.size() + 1; // Melhorar lógica para o ID
     objetoJson["tipo"] = "video";
     objetoJson["caminho"] = caminhoArquivo;
 
     // Adiciona no fim da lista
     arrayJson.append(objetoJson);
 
-    Arquivos::escreverJson(QString(ARQUIVO_CONFIGURACAO), arrayJson);
+    Arquivos::escreverJson(QString(ARQUIVO_CONFIGURACAO_GERAL), arrayJson);
 }
 
+// Trocar para evento
 void MainWindow::on_pushButton_adicionar_pergunta_clicked()
 {
-    // Vai para a tela "Adicionar pergunta"
-    ui->stackedWidget->setCurrentIndex(5);
+    mostrarTelaAdicionarPergunta();
 }
 
 /* ************************************************************
  * TELA VIDEO (3)
  *************************************************************/
 
-void MainWindow::iniciaVideo(){
-
-    //player->setMedia(QUrl::fromLocalFile("qrc:/videos/exemplo1080.mp4"));
-    player->setPlaylist(playlist);
-    ui->horizontalSlider->setRange(0,player->duration()/1000);
-
-    video->resize(600,300);
-    video->setGeometry(20, 20, 640, 480);
-    player->setVideoOutput(video);
-    player->setMedia(QUrl("qrc:/videos/exemplo1080.mp4"));
-
-    video->setParent(ui->stackedWidget);
-    video->show();
+void MainWindow::mostrarTelaVideo(){
+    ui->stackedWidget->setCurrentIndex(PAGINA_VIDEO);
 }
 
-void MainWindow::on_pushButton_video_tocar_clicked()
-{
-    estadoVideo = QMediaPlayer::PlayingState;
+void MainWindow::tocarVideo(){
+    // Troca o ícone do reprodutor
+
+    //estadoVideo = QMediaPlayer::PlayingState;
     player->play();
 }
 
+void MainWindow::pararVideo(){
+    // Trocar o ícone do reprodutor
+
+    //estadoVideo = QMediaPlayer::PlayingState;
+    player->stop();
+}
+
+void MainWindow::configuraVideo(QUrl pathVideo){
+
+    player->setMedia(pathVideo);
+
+    // Crie um QGraphicsVideoItem
+    QGraphicsVideoItem* videoItem = new QGraphicsVideoItem;
+
+    // Defina o QGraphicsVideoItem como a saída de vídeo do player
+    player->setVideoOutput(videoItem);
+
+    // Crie um QGraphicsScene e adicione o QGraphicsVideoItem a ele
+    QGraphicsScene* scene = new QGraphicsScene;
+    scene->addItem(videoItem);
+
+    // Crie um VideoGraphicsView e defina a QGraphicsScene para ele
+    //VideoGraphicsView* view = new VideoGraphicsView(videoItem);
+    //view->setScene(scene);
+
+    // Defina a QGraphicsScene para o seu QGraphicsView
+    ui->graficosVideo->setScene(scene);
+
+    // Defina o tamanho do QGraphicsVideoItem para o tamanho do QGraphicsView
+    //videoItem->setSize(ui->graficosVideo->size());
+
+    videoItem->setSize(QSizeF(480, 360)); // Substitua por seu tamanho desejado
+
+    // Defina o modo de proporção
+    //videoItem->setAspectRatioMode(Qt::KeepAspectRatio); // Mantém a proporção do vídeo
+}
+
+// Trocar para evento
+void MainWindow::on_pushButton_video_tocar_clicked()
+{
+    tocarVideo();
+}
+
+// Trocar para evento
 void MainWindow::on_pushButton_video_parar_clicked()
 {
-    estadoVideo = QMediaPlayer::PlayingState;
-    player->stop();
+    pararVideo();
 }
 
 void MainWindow::on_pushButton_video_proximo_clicked()
 {
-    estadoVideo = QMediaPlayer::PlayingState;
-    player->stop();
-    video->hide();
+    pararVideo();
 
-    ui->stackedWidget->setCurrentIndex(4);
+    //videoWidget->hide();
+
+    // Vai para o próximo item da sequência
+    //proximoDaSequencia();
+
+    voltarInicio();
 }
 
 /* ************************************************************
  * TELA QUESTIONARIO (4)
  *************************************************************/
 
-void MainWindow::on_pushButton_voltar_iniciar_clicked()
-{
-    // Volta para a tela inicial e liga o som ambiente
-     voltarInicio();
-     ligaSomAmbiente();
+void MainWindow::mostrarQuestionario(){
+    ui->stackedWidget->setCurrentIndex(PAGINA_QUESTIONARIO);
 }
 
+void MainWindow::configurarPergunta()
+{
+
+}
+
+// Trocar para evento
+void MainWindow::on_pushButton_voltar_iniciar_clicked()
+{
+    voltarInicio();
+}
+
+// Trocar para evento
 void MainWindow::on_pushButton_voltar_video_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(3);
+    anteriorDaSequencia();
+}
+
+void MainWindow::on_radioButton_opcao1_clicked()
+{
+
 }
 
 /* ************************************************************
  * TELA ADICIONAR PERGUNTA (5)
  *************************************************************/
+
+void MainWindow::mostrarTelaAdicionarPergunta(){
+    ui->stackedWidget->setCurrentIndex(PAGINA_ADICIONAR_PERGUNTA);
+}

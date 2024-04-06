@@ -13,6 +13,7 @@
 
 class Arquivos
 {
+
 public:
     // Construtor
     Arquivos();

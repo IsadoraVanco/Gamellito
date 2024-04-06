@@ -44,6 +44,9 @@ set(PROJECT_SOURCES
 
         arquivos.cpp
         arquivos.h
+
+        usuario.cpp
+        usuario.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

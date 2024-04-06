@@ -17,6 +17,8 @@ Arquivos::Arquivos()
 
 }
 
+// Métodos estáticos
+
 bool Arquivos::arquivoExiste(QString pathArquivo){
 
     QFile arquivo(QDir::current().absoluteFilePath(pathArquivo));
