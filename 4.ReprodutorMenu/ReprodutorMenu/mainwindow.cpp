@@ -3,6 +3,7 @@
 
 // Para fins de debugação
 #include <QDebug>
+#include <QMessageBox>
 
 MainWindow::MainWindow(char* argv, QWidget *parent)
     : QMainWindow(parent)
@@ -17,9 +18,15 @@ MainWindow::MainWindow(char* argv, QWidget *parent)
     //ui->label->setPixmap(gamellito.scaled(100, 100, Qt::KeepAspectRatio);
 
     // Inicializa o video (ainda não funcionando)
-    videoWidget = new QVideoWidget;
-    player = new QMediaPlayer;
+
+    //videoWidget = new QVideoWidget;
+    //player = new QMediaPlayer;
     //playlist = new QMediaPlaylist;
+
+
+
+    // Defina o modo de proporção
+    //videoItem->setAspectRatioMode(Qt::KeepAspectRatio); // Mantém a proporção do vídeo
 
     // Inicializa o arquivo de configurações gerais
     if(!Arquivos::inicializarArquivo(QString(ARQUIVO_CONFIGURACAO_GERAL))){
@@ -29,12 +36,14 @@ MainWindow::MainWindow(char* argv, QWidget *parent)
 
     //Conexões
     connect(ui->pushButton_sair, SIGNAL(clicked()), this, SLOT(close()));
+    //connect(ui->pushButton_configurar, SIGNAL(clicked()), this, mostrarTela(Pagina::Configurar));
+    //connect(ui->pushButton_sobre, SIGNAL(clicked()), this, mostrarTela(Pagina::Sobre));
 
     // Som ambiente do menu
     inicializarSomAmbiente();
 
     // Inicializa a primeira tela
-    mostrarInicio(); // Tela inicial
+    mostrarTela(Pagina::Inicial); // Tela inicial
 }
 
 MainWindow::~MainWindow()
@@ -43,14 +52,14 @@ MainWindow::~MainWindow()
 }
 
 /* ************************************************************
- * SOM AMBIENTE
+ * SOM AMBIENTE DO MENU
  *************************************************************/
 
 void MainWindow::inicializarSomAmbiente()
 {
     // O arquivo de som deve estar na pasta de assets!
     QDir dir = QDir::current();
-    QString caminho = dir.filePath("assets/somAmbiente.wav");
+    QString caminho = dir.filePath("assets/sons/som-ambiente.wav");
     som = new QSound(QString(caminho));
     som->setLoops(QSound::Infinite);
 
@@ -62,7 +71,7 @@ void MainWindow::inicializarSomAmbiente()
 void MainWindow::ligarSomAmbiente()
 {
     // O arquivo de icone deve estar na pasta de assets!
-    ui->pushButton_som->setIcon(QIcon("assets/som.png"));
+    ui->pushButton_som->setIcon(QIcon("assets/icones/som/com-som-preto.png"));
     som->play();
     mutado = false;
 }
@@ -70,7 +79,7 @@ void MainWindow::ligarSomAmbiente()
 void MainWindow::desligarSomAmbiente()
 {
     // O arquivo de icone deve estar na pasta de assets!
-    ui->pushButton_som->setIcon(QIcon("assets/sem-som.png"));
+    ui->pushButton_som->setIcon(QIcon("assets/icones/som/sem-som-preto.png"));
     som->stop();
     mutado = true;
 }
@@ -78,6 +87,11 @@ void MainWindow::desligarSomAmbiente()
 /* ************************************************************
  * SEQUÊNCIA DE VÍDEO E PERGUNTA
  *************************************************************/
+
+void MainWindow::mostrarTela(Pagina tipo){
+    // Converte o enum para int e carrega a página
+    ui->stackedWidget->setCurrentIndex(static_cast<int>(tipo));
+}
 
 void MainWindow::carregarSequencia(){
 
@@ -96,13 +110,11 @@ void MainWindow::anteriorDaSequencia(){
  *************************************************************/
 
 void MainWindow::voltarInicio(){
-    ligarSomAmbiente();
-    mostrarInicio();
-}
+    if(mutado){
+        ligarSomAmbiente();
+    }
 
-void MainWindow::mostrarInicio()
-{
-     ui->stackedWidget->setCurrentIndex(PAGINA_INICIAL);
+    mostrarTela(Pagina::Inicial);
 }
 
 void MainWindow::on_pushButton_som_clicked()
@@ -114,37 +126,46 @@ void MainWindow::on_pushButton_som_clicked()
     }
 }
 
+
 void MainWindow::on_pushButton_iniciar_clicked()
 {
-    // Desliga o som ambiente do menu
-    //desligarSomAmbiente();
+    // A sequência já estará carregada na memória
 
-    // Carrega a sequência => como?
-    //carregarSequencia();
-    configuraVideo(QUrl::fromLocalFile("/home/game/Vídeos/videos-exemplos/exemplo720.mp4"));
-    mostrarTelaVideo();
+    // Desliga o som ambiente do menu (talvez não precise)
+    desligarSomAmbiente();
+
+    QDir dir = QDir::current();
+    QString pathVideo = dir.filePath("assets/videos/exemplo720.mp4");
+
+    QFileInfo check_file(QUrl(pathVideo).toLocalFile());
+
+    qDebug() << "Caminho absoluto do arquivo:" << check_file.absoluteFilePath();
+
+    //if (check_file.exists() &&  check_file.isFile()) {
+    if(QFile::exists(pathVideo)){
+        QMessageBox::about(this, "OK", "Arquivo encontrado: " + pathVideo);
+        configurarVideo(QUrl::fromLocalFile(pathVideo));
+        mostrarTela(Pagina::Video);
+    }else{
+        QMessageBox::critical(this, "ERRO", "Arquivo não encontrado: " + pathVideo);
+    }
 }
 
 // Trocar para evento
 void MainWindow::on_pushButton_configurar_clicked()
 {
-    mostrarTelaConfigurar();
+    mostrarTela(Pagina::Configurar);
 }
 
 // Trocar para evento
 void MainWindow::on_pushButton_sobre_clicked()
 {
-    mostrarTelaSobre();
+    mostrarTela(Pagina::Sobre);
 }
 
 /* ************************************************************
  * TELA SOBRE (1)
  *************************************************************/
-
-void MainWindow::mostrarTelaSobre()
-{
-    ui->stackedWidget->setCurrentIndex(PAGINA_SOBRE);
-}
 
 void MainWindow::on_pushButton_versao_qt_clicked()
 {
@@ -161,11 +182,6 @@ void MainWindow::on_pushButton_voltar_sobre_clicked()
 /* ************************************************************
  * TELA CONFIGURAR (2)
  *************************************************************/
-
-void MainWindow::mostrarTelaConfigurar()
-{
-    ui->stackedWidget->setCurrentIndex(PAGINA_CONFIGURAR);
-}
 
 // Trocar para evento
 void MainWindow::on_pushButton_voltar_configurar_clicked()
@@ -215,9 +231,8 @@ void MainWindow::on_pushButton_adicionar_pergunta_clicked()
  * TELA VIDEO (3)
  *************************************************************/
 
-void MainWindow::mostrarTelaVideo(){
-    ui->stackedWidget->setCurrentIndex(PAGINA_VIDEO);
-}
+// Depois serão enviados para a classe reprodutor
+
 
 void MainWindow::tocarVideo(){
     // Troca o ícone do reprodutor
@@ -226,6 +241,7 @@ void MainWindow::tocarVideo(){
     player->play();
 }
 
+
 void MainWindow::pararVideo(){
     // Trocar o ícone do reprodutor
 
@@ -233,34 +249,31 @@ void MainWindow::pararVideo(){
     player->stop();
 }
 
-void MainWindow::configuraVideo(QUrl pathVideo){
+void MainWindow::configurarVideo(QUrl pathVideo){
+
+    player = new QMediaPlayer;
 
     player->setMedia(pathVideo);
 
     // Crie um QGraphicsVideoItem
-    QGraphicsVideoItem* videoItem = new QGraphicsVideoItem;
+    videoItem = new QGraphicsVideoItem;
 
     // Defina o QGraphicsVideoItem como a saída de vídeo do player
     player->setVideoOutput(videoItem);
 
     // Crie um QGraphicsScene e adicione o QGraphicsVideoItem a ele
-    QGraphicsScene* scene = new QGraphicsScene;
+    scene = new QGraphicsScene;
     scene->addItem(videoItem);
-
-    // Crie um VideoGraphicsView e defina a QGraphicsScene para ele
-    //VideoGraphicsView* view = new VideoGraphicsView(videoItem);
-    //view->setScene(scene);
 
     // Defina a QGraphicsScene para o seu QGraphicsView
     ui->graficosVideo->setScene(scene);
 
     // Defina o tamanho do QGraphicsVideoItem para o tamanho do QGraphicsView
-    //videoItem->setSize(ui->graficosVideo->size());
+    videoItem->setSize(ui->graficosVideo->size());
 
-    videoItem->setSize(QSizeF(480, 360)); // Substitua por seu tamanho desejado
+    //videoItem->setSize(QSizeF(480, 360)); // Substitua por seu tamanho desejado
 
-    // Defina o modo de proporção
-    //videoItem->setAspectRatioMode(Qt::KeepAspectRatio); // Mantém a proporção do vídeo
+    qDebug() << "Configuração pronta";
 }
 
 // Trocar para evento
@@ -290,10 +303,6 @@ void MainWindow::on_pushButton_video_proximo_clicked()
 /* ************************************************************
  * TELA QUESTIONARIO (4)
  *************************************************************/
-
-void MainWindow::mostrarQuestionario(){
-    ui->stackedWidget->setCurrentIndex(PAGINA_QUESTIONARIO);
-}
 
 void MainWindow::configurarPergunta()
 {

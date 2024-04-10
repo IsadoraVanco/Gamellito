@@ -10,9 +10,9 @@ int main(int argc, char *argv[])
     MainWindow w(argv[0]);
 
     // Deixa a tela cheia
-    w.setWindowState(Qt::WindowFullScreen);
+    //w.setWindowState(Qt::WindowFullScreen);
     // Some com a barra de título da janela
-    w.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    //w.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
     w.show();
     return a.exec();

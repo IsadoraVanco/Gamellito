@@ -15,7 +15,7 @@
 // Para o stackedwidgets
 #include <QtWidgets>
 
-// Para o vídeo
+// Para o video
 #include <QtMultimedia/QMediaPlayer>
 #include <QtMultimedia/QAudio>
 #include <QtMultimediaWidgets/QVideoWidget>
@@ -26,8 +26,6 @@
 
 // Para o áudio
 #include <QtMultimedia/QSound>
-
-#include "videographicsview.h"
 
 // Para a manipulação de perfis
 #include "usuario.h"
@@ -42,12 +40,16 @@
 // Armazena os nomes de todos arquivos
 #define ARQUIVO_CONFIGURACAO_GERAL "configs.json"
 
-// Páginas do reprodutor
-#define PAGINA_INICIAL 0
-#define PAGINA_SOBRE 1
-#define PAGINA_CONFIGURAR 2
-#define PAGINA_VIDEO 3
-#define PAGINA_QUESTIONARIO 4
+// Páginas do programa
+enum class Pagina{
+    Inicial,    // 0
+    Sobre,      // 1
+    Configurar, // 2
+    Video,      // 3
+    Pergunta    // 4
+};
+
+// Deve ser adicionado na stacked widgets de "Configurar"
 #define PAGINA_ADICIONAR_PERGUNTA 5
 
 QT_BEGIN_NAMESPACE
@@ -68,7 +70,7 @@ public:
 private slots:
 
     /* ************************************************************
-     * SOM AMBIENTE
+     * SOM AMBIENTE DO MENU
      *************************************************************/
 
     /**
@@ -89,6 +91,12 @@ private slots:
     /* ************************************************************
      * SEQUÊNCIA DE VÍDEO E PERGUNTA
      *************************************************************/
+
+    /**
+     * @brief Mostra uma tela definida do programa
+     * @param tipo A tela que será mostrada
+     */
+    void mostrarTela(Pagina tipo);
 
     /**
      * @brief Carrega a sequência de vídeos e perguntas em uma estrutura
@@ -115,14 +123,14 @@ private slots:
     void voltarInicio();
 
     /**
-     * @brief Mostra a tela de "Inicio" da aplicação
-     */
-    void mostrarInicio();
-
-    /**
      * @brief Manipula o som ambiente do menu
      */
     void on_pushButton_som_clicked();
+
+    /**
+     * @brief Mainwindow::iniciarSequencia
+     */
+    //void Mainwindow::iniciarSequencia();
 
     /**
      * @brief Inicia a sequência de vídeos e perguntas
@@ -145,11 +153,6 @@ private slots:
      *************************************************************/
 
     /**
-     * @brief Mostra a tela para a página "sobre"
-     */
-    void mostrarTelaSobre();
-
-    /**
      * @brief Mostra a versão do Qt utilizada
      */
     void on_pushButton_versao_qt_clicked();
@@ -162,11 +165,6 @@ private slots:
     /* ************************************************************
      * TELA CONFIGURAR (2)
      *************************************************************/
-
-    /**
-     * @brief Mostra a tela para a página "Configurar"
-     */
-    void mostrarTelaConfigurar();
 
     /**
      * @brief Volta para a tela inicial
@@ -187,8 +185,6 @@ private slots:
      * TELA REPRODUTOR (3)
      *************************************************************/
 
-    void mostrarTelaVideo();
-
     /**
      * @brief Reproduz o vídeo
      */
@@ -199,7 +195,13 @@ private slots:
      */
     void pararVideo();
 
-    void configuraVideo(QUrl pathVideo);
+    /**
+     * @brief Configura o vídeo que será tocado
+     * @param pathVideo Caminho completo do vídeo
+     */
+    void configurarVideo(QUrl pathVideo);
+
+    // trocar para eventos
 
     void on_pushButton_video_tocar_clicked();
 
@@ -210,11 +212,6 @@ private slots:
     /* ************************************************************
      * TELA QUESTIONARIO (4)
      *************************************************************/
-
-    /**
-     * @brief Mostra a tela do "Questionário"
-     */
-    void mostrarQuestionario();
 
     /**
      * @brief Configura a página do questionário
@@ -249,17 +246,20 @@ private:
     // O UI do programa
     Ui::MainWindow *ui;
 
-    // Índice do vídeo ou pergunta atual
-    int indiceAtual = PAGINA_INICIAL;
+    // Página atual
+    Pagina paginaAtual {Pagina::Inicial};
 
     // Sequência de vídeo e pergunta
 
-
     // Reprodutor
     QMediaPlayer *player;
+
+    // Widget de vídeo
     QVideoWidget *videoWidget;
-    //QMediaPlaylist *playlist;
-    QMediaPlayer::State estadoVideo;
+
+    QGraphicsVideoItem* videoItem;
+    QGraphicsScene* scene;
+
 
     // Som ambiente
     //QMediaPlayer *som_ambiente;

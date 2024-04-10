@@ -18,8 +18,8 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 find_package(Qt5 ${USED_QT_VERSION} REQUIRED COMPONENTS
     Core
+    Gui
     Widgets
-    #Svg
     Multimedia
     MultimediaWidgets
 )
@@ -47,6 +47,12 @@ set(PROJECT_SOURCES
 
         usuario.cpp
         usuario.h
+
+        videographicsview.cpp
+        videographicsview.h
+
+        reprodutor.h
+        reprodutor.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -76,6 +82,7 @@ endif()
 target_link_libraries(ReprodutorMenu PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(ReprodutorMenu PRIVATE Qt${QT_VERSION_MAJOR}::Multimedia)
 target_link_libraries(ReprodutorMenu PRIVATE Qt5::Core)
+target_link_libraries(ReprodutorMenu PRIVATE Qt5::Gui)
 target_link_libraries(ReprodutorMenu PRIVATE Qt${QT_VERSION_MAJOR}::MultimediaWidgets)
 
 set_target_properties(ReprodutorMenu PROPERTIES
