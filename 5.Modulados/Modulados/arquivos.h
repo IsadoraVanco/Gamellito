@@ -15,17 +15,48 @@
 
 #define ARQUIVO_CONFIGURACAO_GERAL "config.json"
 
-//Arquivos que serão utilizados
+// Arquivos que serão utilizados
 typedef struct{
     QString sequencia;
     QString respostas;
+    QString pasta;
 }structArquivos;
+
+// Pastas para organização dos arquivos
+typedef struct{
+    QString configuracoes;
+    QString backups;
+}structPastas;
 
 class Arquivos
 {
 public:
     // Construtor
     Arquivos();
+
+    /* ************************************************************
+     * AUXILIARES
+     *************************************************************/
+
+    /**
+     * @brief
+     * @return
+     */
+    static QString carregarDataAtual();
+
+    /* ************************************************************
+     * PASTAS
+     *************************************************************/
+
+    /**
+     * @brief
+     * @param nomePasta
+     */
+    static void criarPasta(QString nomePasta);
+
+    /* ************************************************************
+     * ARQUIVOS GERAIS
+     *************************************************************/
 
     /**
      * @brief Verifica se o arquivo de existe, se não, exibe uma mensagem de erro
@@ -49,9 +80,60 @@ public:
      */
     static bool inicializarArquivo(QString pathArquivo);
 
+    /**
+     * @brief
+     * @param fonte
+     * @param destino
+     * @return
+     */
+    static bool copiarArquivo(QString fonte, QString destino);
+
     /* ************************************************************
      * ARQUIVOS JSON
      *************************************************************/
+
+    /**
+     * @brief
+     * @param pathArquivo
+     * @param propriedade
+     * @return
+     */
+    static QString carregarPropriedadeJson(QString pathArquivo, QString propriedade);
+
+    /**
+     * @brief
+     * @param jsonObject
+     * @param propriedade
+     * @param novoValor
+     */
+    static void modificarPropriedade(QJsonObject &jsonObject, QString propriedade, QString novoValor);
+
+    // **** OBJETO ************************************************
+
+    /**
+     * @brief
+     * @param pathArquivo
+     * @return
+     */
+    static QJsonObject carregarObjetoJson(QString pathArquivo);
+
+    /**
+     * @brief Escreve um objeto JSON em um arquivo .json
+     * @param objetoJson O Objeto JSON
+     * @param pathArquivo O caminho do arquivo .json
+     * @return True caso dê tudo certo, false para caso contrário
+     */
+    static bool escreverObjetoJson(QJsonObject &objetoJson, QString pathArquivo);
+
+    /**
+     * @brief
+     * @param objetoJson
+     * @param chave
+     * @return
+     */
+    static QString retornarValorChaveObjeto(QJsonObject objetoJson, QString chave);
+
+    // **** ARRAY ************************************************
 
     /**
      * @brief Converte o arquivo JSON para um Array de JSON
@@ -67,14 +149,6 @@ public:
      */
     static void escreverArrayJson(QString pathArquivoJson, QJsonArray arrayJson);
 
-    /**
-     * @brief Escreve um objeto JSON em um arquivo .json
-     * @param objetoJson O Objeto JSON
-     * @param pathArquivo O caminho do arquivo .json
-     * @return True caso dê tudo certo, false para caso contrário
-     */
-    static bool escreverObjetoJson(QJsonObject objetoJson, QString pathArquivo);
-
     /* ************************************************************
      * ARQUIVO DE CONFIGURAÇÃO GERAL
      *************************************************************/
@@ -87,6 +161,65 @@ public:
      */
     static bool preencherArquivoGeral(QString novaSenha, structArquivos paciente,
                          structArquivos responsavel, structArquivos profissional);
+
+    // **** VISITAS ************************************************
+
+    /**
+     * @brief
+     */
+    static void aumentarVisitas();
+
+    /**
+     * @brief
+     */
+    static void aumentarReproducoes();
+
+    /**
+     * @brief
+     */
+    static void atualizarUltimoAcesso();
+
+    // **** EXPORTAÇÃO ************************************************
+
+    /**
+     * @brief
+     */
+    static void atualizarUltimaExportacao();
+
+    // **** SENHA ************************************************
+
+    /**
+     * @brief
+     * @return
+     */
+    static QString carregarSenha();
+
+    /**
+     * @brief
+     * @param novaSenha
+     */
+    static void alterarSenha(QString novaSenha);
+
+    /* ************************************************************
+     * ARQUIVO DE CONFIGURAÇÃO DE SEQUÊNCIA
+     *************************************************************/
+
+    /**
+     * @brief
+     * @param sequencia
+     * @return
+     */
+    static int calcularId(QJsonArray sequencia);
+
+    // **** VIDEO ************************************************
+
+    /**
+     * @brief
+     * @param caminhoDestino
+     * @param nomeArquivo
+     * @return
+     */
+    static QJsonArray adicionarVideo(QString caminhoDestino, QString nomeArquivo);
 
 private:
 

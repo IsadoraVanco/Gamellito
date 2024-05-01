@@ -22,8 +22,22 @@ class Reprodutor : public QWidget
 
     // Por ser widget, não aceita slots
 public:
+
+    /* ************************************************************
+     * CONSTRUTOR
+     *************************************************************/
+
     explicit Reprodutor(QWidget *parent = nullptr);
+
+    /* ************************************************************
+     * DESTRUTOR
+     *************************************************************/
+
     ~Reprodutor();
+
+    /* ************************************************************
+     * REPRODUÇÃO DO VÍDEO
+     *************************************************************/
 
     /**
      * @brief Reproduz o vídeo
@@ -37,16 +51,32 @@ public:
 
     /**
      * @brief Configura o vídeo que será tocado
-     * @param pathVideo Caminho completo do vídeo
+     * @param caminhoVideo
      */
-    void configurarVideo(QUrl pathVideo);
+    void configurarVideo(QString caminhoVideo);
+
+private slots:
+
+    /* ************************************************************
+     * AÇÕES
+     *************************************************************/
+
+    /**
+     * @brief
+     */
+    void on_pushButton_video_tocar_clicked();
 
 private:
+
+    /* ************************************************************
+     * CONSTANTES E ATRIBUTOS
+     *************************************************************/
+
     Ui::Reprodutor *ui;
 
     // Reprodutor
     QMediaPlayer *player;
-    bool videoParado = false;
+    bool videoParado = true;
 
     // Widget de vídeo
     QVideoWidget *videoWidget;
