@@ -221,6 +221,21 @@ public:
      */
     static QJsonArray adicionarVideo(QString caminhoDestino, QString nomeArquivo);
 
+    // **** PERGUNTA ************************************************
+
+    /**
+     * @brief
+     * @param caminhoDestino
+     * @param pergunta
+     * @param opcao1
+     * @param opcao2
+     * @param opcao3
+     * @param opcao4
+     * @param correta
+     * @return
+     */
+    static QJsonArray adicionarPergunta(QString caminhoDestino, QString pergunta, QString opcao1, QString opcao2, QString opcao3, QString opcao4, int correta);
+
 private:
 
 };

@@ -25,7 +25,8 @@ enum class Pagina{
     Sobre,      // 1
     Configurar, // 2
     Video,      // 3
-    Pergunta    // 4
+    Pergunta,   // 4
+    AdicionarPergunta   //5
 };
 
 // Perfis disponíveis
@@ -143,6 +144,11 @@ private slots:
     /**
      * @brief
      */
+    void on_pushButton_adicionar_pergunta_clicked();
+
+    /**
+     * @brief
+     */
     void on_pushButton_salvar_video_clicked();
 
     // ***** REPRODUTOR *********************************************
@@ -164,11 +170,37 @@ private slots:
 
     // ***** PERGUNTA *********************************************
 
+    /**
+     * @brief
+     */
     void on_pushButton_pergunta_inicio_clicked();
 
+    /**
+     * @brief
+     */
     void on_pushButton_voltar_pergunta_clicked();
 
+    /**
+     * @brief
+     */
     void on_pushButton_proximo_pergunta_clicked();
+
+    // ***** ADICIONAR PERGUNTA *********************************************
+
+    /**
+     * @brief
+     */
+    void on_pushButton_inicial_adicionar_pergunta_clicked();
+
+    /**
+     * @brief
+     */
+    void on_pushButton_voltar_adicionar_pergunta_clicked();
+
+    /**
+     * @brief
+     */
+    void on_pushButton_salvar_pergunta_clicked();
 
     /* ************************************************************
      * GERENCIAMENTO DA SENHA
@@ -269,6 +301,31 @@ private slots:
      * @brief
      */
     void configurarTelaVideo(QJsonObject objetoAtual);
+
+    // ***** PERGUNTA *********************************************
+
+    /**
+     * @brief
+     * @return
+     */
+    bool mostrarConfirmarSairPergunta();
+
+    /**
+     * @brief
+     */
+    void limparCamposPergunta();
+
+    /**
+     * @brief
+     * @return
+     */
+    bool verificarCamposVazios();
+
+    /**
+     * @brief
+     * @return
+     */
+    bool salvarPergunta();
 
     // ***** VIDEO *********************************************
 

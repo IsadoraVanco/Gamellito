@@ -428,3 +428,34 @@ QJsonArray Arquivos::adicionarVideo(QString caminhoDestino, QString nomeArquivo)
 
     return sequencia;
 }
+
+// **** PERGUNTA ************************************************
+
+QJsonArray Arquivos::adicionarPergunta(QString caminhoDestino, QString pergunta, QString opcao1, QString opcao2, QString opcao3, QString opcao4, int correta){
+
+    // Carrega a sequencia do arquivo
+    QJsonArray sequencia = converterJsonParaArray(caminhoDestino);
+
+    // Calcula o id para o novo item
+    int id = calcularId(sequencia);
+
+    // Cria um novo objeto JSON para a pergunta
+    QJsonObject novaPergunta;
+
+    novaPergunta["id"] = id;
+    novaPergunta["tipo"] = "pergunta";
+    novaPergunta["pergunta"] = pergunta;
+    novaPergunta["opcao1"] = opcao1;
+    novaPergunta["opcao2"] = opcao2;
+    novaPergunta["opcao3"] = opcao3;
+    novaPergunta["opcao4"] = opcao4;
+    novaPergunta["correta"] = correta;
+
+    // Adiciona o novo video no fim do array
+    sequencia.append(novaPergunta);
+
+    // Salva a sequencia novamente
+    escreverArrayJson(caminhoDestino, sequencia);
+
+    return sequencia;
+}

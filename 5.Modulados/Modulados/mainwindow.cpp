@@ -218,6 +218,12 @@ void MainWindow::on_pushButton_adicionar_video_clicked()
     qDebug() << "[Main] [INFO] Vídeo adicionado na sequência";
 }
 
+void MainWindow::on_pushButton_adicionar_pergunta_clicked()
+{
+    limparCamposPergunta();
+    mostrarTela(Pagina::AdicionarPergunta);
+}
+
 void MainWindow::on_pushButton_salvar_video_clicked()
 {
     salvarVideoBackup();
@@ -260,6 +266,37 @@ void MainWindow::on_pushButton_voltar_pergunta_clicked()
 void MainWindow::on_pushButton_proximo_pergunta_clicked()
 {
     mostrarProximaTela();
+}
+
+// ***** ADICIONAR PERGUNTA *********************************************
+
+void MainWindow::on_pushButton_inicial_adicionar_pergunta_clicked()
+{
+    if(verificarCamposVazios()){
+        mostrarTela(Pagina::Inicial);
+    }else{
+        if(mostrarConfirmarSairPergunta()){
+            mostrarTela(Pagina::Inicial);
+        }
+    }
+}
+
+void MainWindow::on_pushButton_voltar_adicionar_pergunta_clicked()
+{
+    if(verificarCamposVazios()){
+        mostrarTela(Pagina::Configurar);
+    }else{
+        if(mostrarConfirmarSairPergunta()){
+            mostrarTela(Pagina::Configurar);
+        }
+    }
+}
+
+void MainWindow::on_pushButton_salvar_pergunta_clicked()
+{
+    if(salvarPergunta()){
+        mostrarTela(Pagina::Configurar);
+    }
 }
 
 /* ************************************************************
@@ -474,6 +511,105 @@ void MainWindow::configurarTelaVideo(QJsonObject objetoAtual){
     reprodutor->tocarVideo();
 }
 
+// ***** PERGUNTA *********************************************
+
+bool MainWindow::mostrarConfirmarSairPergunta(){
+    // Crie a caixa de diálogo
+    QMessageBox msgBox;
+    msgBox.setText("Existem alterações que não foram salvas. Gostaria de sair mesmo assim?");
+
+    // Adicione os botões personalizados
+    QPushButton *simButton = msgBox.addButton(tr("Sim"), QMessageBox::YesRole);
+    QPushButton *naoButton = msgBox.addButton(tr("Não"), QMessageBox::NoRole);
+
+    // Defina o botão padrão (geralmente o "Não")
+    msgBox.setDefaultButton(naoButton);
+
+    // Exiba a caixa de diálogo e espere por uma resposta
+    msgBox.exec();
+
+    return msgBox.clickedButton() == simButton;
+}
+
+void MainWindow::limparCamposPergunta(){
+    ui->textEdit_pergunta->setText("");
+    ui->textEdit_opcao1->setText("");
+    ui->textEdit_opcao2->setText("");
+    ui->textEdit_opcao3->setText("");
+    ui->textEdit_opcao4->setText("");
+}
+
+bool MainWindow::verificarCamposVazios(){
+
+    QString pergunta = ui->textEdit_pergunta->toPlainText();
+    if(pergunta == ""){
+        qDebug() << "[Main] [ERRO] O campo de pergunta está vazio";
+        return true;
+    }
+
+    QString opcao1 = ui->textEdit_opcao1->toPlainText();
+    if(opcao1 == ""){
+        qDebug() << "[Main] [ERRO] O campo da opção 1 está vazio";
+        return true;
+    }
+
+    QString opcao2 = ui->textEdit_opcao2->toPlainText();
+    if(opcao2 == ""){
+        qDebug() << "[Main] [ERRO] O campo da opção 2 está vazio";
+        return true;
+    }
+
+    QString opcao3 = ui->textEdit_opcao3->toPlainText();
+    if(opcao3 == ""){
+        qDebug() << "[Main] [ERRO] O campo da opção 3 está vazio";
+        return true;
+    }
+
+    QString opcao4 = ui->textEdit_opcao4->toPlainText();
+    if(opcao4 == ""){
+        qDebug() << "[Main] [ERRO] O campo da opção 4 está vazio";
+        return true;
+    }
+
+    return false;
+}
+
+bool MainWindow::salvarPergunta(){
+    // Verifica se todos os campos foram preenchidos
+    if(verificarCamposVazios()){
+        QMessageBox::about(this, "Campos vazios", "Existem campos que estão vazios. Por favor, complete-os antes de salvar.");
+
+        return false;
+    }
+
+    // Verificar qual a correta
+    int correta = 0;
+
+    // Cria a pasta de configurações caso não exista
+    Arquivos::criarPasta(pastas.configuracoes);
+
+    // Adiciona a pergunta no arquivo de sequencia
+    QString caminho = pastas.configuracoes + '/' + arquivos[perfilAtual].sequencia;
+
+    QString pergunta = ui->textEdit_pergunta->toPlainText();
+    QString opcao1 = ui->textEdit_opcao1->toPlainText();
+    QString opcao2 = ui->textEdit_opcao2->toPlainText();
+    QString opcao3 = ui->textEdit_opcao3->toPlainText();
+    QString opcao4 = ui->textEdit_opcao4->toPlainText();
+
+    sequencias[perfilAtual] = Arquivos::adicionarPergunta(caminho, pergunta, opcao1, opcao2, opcao3, opcao4, correta);
+
+    if(ehSequenciaVazia(sequencias[perfilAtual])){
+        QMessageBox::critical(this, "ERRO", "Ocorreu um erro ao salvar a pergunta. Entre em contato com o suporte.");
+        return false;
+    }
+
+    QMessageBox::about(this, "Pergunta salva", "A pergunta foi salva na sequência");
+    qDebug() << "[Main] [OK] Pergunta adicionada na sequência";
+
+    return true;
+}
+
 // ***** VIDEO *********************************************
 
 QString MainWindow::selecionarVideo(){
@@ -570,6 +706,3 @@ void MainWindow::configurarPerfis(){
                             selecionarPerfil(ui->comboBox_perfis->itemText(index));
                          });
 }
-
-
-
