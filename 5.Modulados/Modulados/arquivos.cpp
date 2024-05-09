@@ -66,11 +66,11 @@ bool Arquivos::criarArquivo(QString pathArquivo){
 
     // Caso haja erro ao criar o arquivo
     if(!arquivo.open(QIODevice::WriteOnly | QIODevice::Text)){
-        qDebug() << "Erro ao criar arquivo " + pathArquivo;
+        qDebug() << "[Arquivos] [ERRO] Erro ao criar arquivo" << pathArquivo;
         return false;
     }
 
-    qDebug() << "Arquivo " + pathArquivo + " criado!";
+    qDebug() << "[Arquivos] [OK] Arquivo" << pathArquivo << "criado!";
     arquivo.close();
 
     return true;
@@ -196,7 +196,7 @@ QJsonArray Arquivos::converterJsonParaArray(QString pathArquivoJson){
 
     // Caso haja erro para abrir o arquivo
     if (!arquivo.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug() << "[Arquivos] [ERRO] Falha ao abrir arquivo JSON:" << pathArquivoJson;
+        qDebug() << "[Arquivos] [ERRO] Falha ao abrir arquivo JSON para conversão para Array:" << pathArquivoJson;
         return QJsonArray();
     }
 
@@ -237,7 +237,7 @@ void Arquivos::escreverArrayJson(QString pathArquivoJson, QJsonArray arrayJson){
 
     arquivo.close();
 
-    qDebug() << "[Arquivos] [OK] Array JSON salvo em: " << pathArquivoJson;
+    qDebug() << "[Arquivos] [OK] Array JSON salvo em:" << pathArquivoJson;
 }
 
 /* ************************************************************
@@ -458,4 +458,71 @@ QJsonArray Arquivos::adicionarPergunta(QString caminhoDestino, QString pergunta,
     escreverArrayJson(caminhoDestino, sequencia);
 
     return sequencia;
+}
+
+int Arquivos::encontrarRespostaExistente(QJsonArray respostas, QJsonObject pergunta){
+    // Percorre o array procurando um objeto que seja igual
+    for(int i = 0; i < respostas.size(); i++){
+
+        QJsonObject item = respostas.at(i).toObject();
+
+        if(item["pergunta"] == pergunta["pergunta"] &&
+           item["resposta1"] == pergunta["opcao1"] &&
+           item["resposta2"] == pergunta["opcao2"] &&
+           item["resposta3"] == pergunta["opcao3"] &&
+           item["resposta4"] == pergunta["opcao4"]){
+            qDebug() << "[Arquivos] [INFO] A pergunta já foi respondida";
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void Arquivos::salvarResposta(QJsonObject objetoPergunta, QString caminhoDestino, int selecionada){
+
+    // Carrega a sequencia do arquivo
+    QJsonArray sequenciaRespostas = converterJsonParaArray(caminhoDestino);
+
+    int indice = encontrarRespostaExistente(sequenciaRespostas, objetoPergunta);
+
+    if(indice < 0){
+        // Cria um novo e adiciona
+        QJsonObject novaResposta;
+
+        novaResposta["pergunta"] = objetoPergunta["pergunta"];
+        novaResposta["correta"] = objetoPergunta["correta"];
+
+        for(int i = 1; i <= 4; i++){
+           QString resposta = "resposta" + QString::number(i);
+           QString opcao = "opcao" + QString::number(i);
+           QString qtd = "qtd" + QString::number(i);
+
+           novaResposta[resposta] = objetoPergunta[opcao];
+
+           if(i == selecionada){
+                novaResposta[qtd] = 1;
+           }else{
+               novaResposta[qtd] = 0;
+           }
+        }
+
+        sequenciaRespostas.append(novaResposta);
+    }else{
+        // Atualiza a quantidade que foi respondida
+        QString qtd = "qtd" + QString::number(selecionada);
+
+        QJsonObject objeto = sequenciaRespostas.at(indice).toObject();
+
+        int valor = objeto[qtd].toInt();
+
+        qDebug() << "valor " + QString(valor);
+
+        sequenciaRespostas.at(indice).toObject()[qtd] = valor + 1;
+    }
+
+    // Salva a sequencia novamente
+    escreverArrayJson(caminhoDestino, sequenciaRespostas);
+
+    qDebug() << "[Arquivos] [OK] A resposta foi salva no arquivo";
 }

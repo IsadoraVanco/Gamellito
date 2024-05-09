@@ -236,6 +236,22 @@ public:
      */
     static QJsonArray adicionarPergunta(QString caminhoDestino, QString pergunta, QString opcao1, QString opcao2, QString opcao3, QString opcao4, int correta);
 
+    /**
+     * @brief
+     * @param array
+     * @param objeto
+     * @return
+     */
+    static int encontrarRespostaExistente(QJsonArray array, QJsonObject objeto);
+
+    /**
+     * @brief
+     * @param objetoJson
+     * @param caminhoDestino
+     * @param selecionada
+     */
+    static void salvarResposta(QJsonObject objetoJson, QString caminhoDestino, int selecionada);
+
 private:
 
 };

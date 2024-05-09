@@ -9,7 +9,7 @@
 
 #include "reprodutor.h"
 #include "arquivos.h"
-
+#include "senha.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -203,43 +203,6 @@ private slots:
     void on_pushButton_salvar_pergunta_clicked();
 
     /* ************************************************************
-     * GERENCIAMENTO DA SENHA
-     *************************************************************/
-
-    /**
-     * @brief
-     * @param senha
-     * @return
-     */
-    bool ehSenhaValida(QString senha);
-
-    /**
-     * @brief
-     * @param input
-     * @return
-     */
-    bool compararSenha(QString input);
-
-    /**
-     * @brief
-     * @return
-     */
-    bool autenticarSenha();
-
-    /**
-     * @brief
-     * @param textoInicio
-     * @param verificarTamanho
-     * @return
-     */
-    QString definirSenha(QString textoInicio, bool verificarTamanho);
-
-    /**
-     * @brief
-     */
-    void alterarSenha();
-
-    /* ************************************************************
      * GERENCIAMENTO DAS CONFIGURAÇÕES
      *************************************************************/
 
@@ -302,7 +265,13 @@ private slots:
      */
     void configurarTelaVideo(QJsonObject objetoAtual);
 
-    // ***** PERGUNTA *********************************************
+    /**
+     * @brief
+     * @param objetoAtual
+     */
+    void configurarTelaPergunta(QJsonObject objetoAtual);
+
+    // ***** ADICIONAR PERGUNTA *********************************************
 
     /**
      * @brief
@@ -325,7 +294,31 @@ private slots:
      * @brief
      * @return
      */
+    bool verificarCamposPreenchidos();
+
+    /**
+     * @brief
+     * @return
+     */
     bool salvarPergunta();
+
+    // ***** PERGUNTA *********************************************
+
+    /**
+     * @brief
+     * @return
+     */
+    int verificarRespostaSelecionada();
+
+    /**
+     * @brief
+     */
+    bool criarArquivoRespostas();
+
+    /**
+     * @brief
+     */
+    void salvarResposta();
 
     // ***** VIDEO *********************************************
 
@@ -387,8 +380,7 @@ private:
     structPastas pastas = {"configuracoes", "backups"};
 
     // Senha para as configurações
-    const int tamanhoMinSenha = 4;
-    QString senhaArquivo = "";
+    Senha *senha = new Senha(this);
 
     // ***** SEQUÊNCIA *********************************************
 

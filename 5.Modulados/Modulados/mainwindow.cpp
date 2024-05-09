@@ -9,7 +9,6 @@
 
 // Caixas de diálogo
 #include <QMessageBox>
-#include <QInputDialog>
 #include <QFileDialog>
 
 
@@ -97,7 +96,6 @@ void MainWindow::mostrarTela(Pagina tipo){
 
 void MainWindow::configurarTelas(){
 
-    // A página de Inicio, Sobre e Configurações já estão configuradas!
     // O índice das páginas foram definidos manualmente na edição do design dos mesmos
     // Não mudar as páginas de lugar!
     // A sequência deve ser a mesma do enum Pagina
@@ -131,6 +129,15 @@ void MainWindow::configurarTelas(){
     //QVBoxLayout *layoutReprodutor = new QVBoxLayout(ui->reprodutor);
     //ui->reprodutor->setLayout(layoutReprodutor);
     //layoutReprodutor->addWidget(reprodutor);
+
+    // Configura os RadioButtons para edição de pergunta
+    QString estiloRadioButton = "QRadioButton{ color: black; }"
+                                    "QRadioButton::indicator { width: 30px; height: 30px; }"
+                                    "QRadioButton::indicator:checked { background-color: light-blue;}";
+    ui->radioButton_opcao1->setStyleSheet(estiloRadioButton);
+    ui->radioButton_opcao2->setStyleSheet(estiloRadioButton);
+    ui->radioButton_opcao3->setStyleSheet(estiloRadioButton);
+    ui->radioButton_opcao4->setStyleSheet(estiloRadioButton);
 
     // Adiciona as páginas dinamicamente, passando o index da stack e o widget a ser adicionado
     //ui->stackedWidget->insertWidget(Pagina::Configurar, widget);
@@ -170,9 +177,7 @@ void MainWindow::on_pushButton_som_clicked()
 
 void MainWindow::on_pushButton_configurar_clicked()
 {
-    bool senhaAutenticada = autenticarSenha();
-
-    if(senhaAutenticada){
+    if(senha->autenticarSenha()){
         mostrarTela(Pagina::Configurar);
     }
 }
@@ -193,7 +198,7 @@ void MainWindow::on_pushButton_voltar_configurar_clicked()
 
 void MainWindow::on_pushButton_alterar_senha_clicked()
 {
-    alterarSenha();
+    senha->alterarSenha();
 }
 
 void MainWindow::on_pushButton_adicionar_video_clicked()
@@ -265,6 +270,7 @@ void MainWindow::on_pushButton_voltar_pergunta_clicked()
 
 void MainWindow::on_pushButton_proximo_pergunta_clicked()
 {
+    salvarResposta();
     mostrarProximaTela();
 }
 
@@ -272,23 +278,23 @@ void MainWindow::on_pushButton_proximo_pergunta_clicked()
 
 void MainWindow::on_pushButton_inicial_adicionar_pergunta_clicked()
 {
-    if(verificarCamposVazios()){
-        mostrarTela(Pagina::Inicial);
-    }else{
+    if(verificarCamposPreenchidos()){
         if(mostrarConfirmarSairPergunta()){
             mostrarTela(Pagina::Inicial);
         }
+    }else{
+        mostrarTela(Pagina::Inicial);
     }
 }
 
 void MainWindow::on_pushButton_voltar_adicionar_pergunta_clicked()
 {
-    if(verificarCamposVazios()){
-        mostrarTela(Pagina::Configurar);
-    }else{
+    if(verificarCamposPreenchidos()){
         if(mostrarConfirmarSairPergunta()){
             mostrarTela(Pagina::Configurar);
         }
+    }else{
+        mostrarTela(Pagina::Configurar);
     }
 }
 
@@ -300,58 +306,6 @@ void MainWindow::on_pushButton_salvar_pergunta_clicked()
 }
 
 /* ************************************************************
- * GERENCIAMENTO DA SENHA
- *************************************************************/
-
-bool MainWindow::ehSenhaValida(QString senha){
-    return senha.length() >= tamanhoMinSenha;
-}
-
-bool MainWindow::compararSenha(QString input){
-    return senhaArquivo == input;
-}
-
-bool MainWindow::autenticarSenha(){
-    // A senha do arquivo estará necessariamente carregada em "senhaArquivo"!
-
-    QString input = QInputDialog::getText(nullptr, "Autenticação", "Digite a senha para acessar as configurações:");
-
-    bool senhaVerificada = compararSenha(input);
-
-    // Senha não digitada ou botão "cancelar"
-    if(input != "" && !senhaVerificada){
-        QMessageBox::about(this, "Senha incorreta", "A senha digitada está incorrreta. Caso tenha perdido a senha, consulte o manual do programa ou entre em contato com o suporte.");
-    }
-
-    return senhaVerificada;
-}
-
-QString MainWindow::definirSenha(QString textoInicio, bool verificarTamanho){
-    QString input = QInputDialog::getText(nullptr, "Definição de senha", textoInicio);
-
-    while(!ehSenhaValida(input) && verificarTamanho){
-        input = QInputDialog::getText(nullptr, "Definição de senha", QString("Senha muito curta! Utilize no mínimo %1 caracteres quaisquer").arg(tamanhoMinSenha));
-    }
-
-    if(verificarTamanho && ehSenhaValida(input)){
-        QMessageBox::about(this, "Senha cadastrada", "Sua senha foi cadastrada com sucesso! Não a esqueça e não conte para ninguém :)");
-    }
-
-    return input;
-}
-
-void MainWindow::alterarSenha(){
-    QString novaSenha = definirSenha("Digite sua nova senha: ", false);
-
-    if(ehSenhaValida(novaSenha)){
-        // Salva a senha no arquivo
-        senhaArquivo = novaSenha;
-        Arquivos::alterarSenha(novaSenha);
-        QMessageBox::about(this, "Senha cadastrada", "Sua nova senha foi cadastrada com sucesso!");
-    }
-}
-
-/* ************************************************************
  * GERENCIAMENTO DAS CONFIGURAÇÕES
  *************************************************************/
 
@@ -359,7 +313,7 @@ void MainWindow::alterarSenha(){
 
 void MainWindow::criarArquivoGeral(){
     // Lê uma nova senha válida
-    QString senha = definirSenha("Olá profissional! Vamos definir sua senha? Ela será necessária para as configurações do programa e para a troca de usuário", true);
+    QString input = senha->definirSenha("Olá profissional! Vamos definir sua senha? Ela será necessária para as configurações do programa e para a troca de usuário");
 
     // Cria um arquivo
     if(!Arquivos::criarArquivo(QString(ARQUIVO_CONFIGURACAO_GERAL))){
@@ -369,33 +323,20 @@ void MainWindow::criarArquivoGeral(){
     }
 
     // Preenche com as configs
-    if(!Arquivos::preencherArquivoGeral(senha, arquivos[Perfil::Paciente], arquivos[Perfil::Responsavel], arquivos[Perfil::Profissional])){
+    if(!Arquivos::preencherArquivoGeral(input, arquivos[Perfil::Paciente], arquivos[Perfil::Responsavel], arquivos[Perfil::Profissional])){
         QMessageBox::critical(this, "ERRO", "Não foi possível preencher o arquivo de configurações iniciais. Por favor, entre em contato com o suporte");
         this->close();
         return;
     }
 
     QMessageBox::about(this, "Pronto :)", "Os arquivos de configuração inicial do programa foram criados. Aproveite o software! :)");
-
-    // Carrega a nova senha do arquivo
-    senhaArquivo = senha;
 }
 
 void MainWindow::configurarArquivoGeral(){
     if(!Arquivos::arquivoExiste(ARQUIVO_CONFIGURACAO_GERAL)){
         criarArquivoGeral();
     }else{
-        // Carrega a senha do arquivo
-        senhaArquivo = Arquivos::carregarSenha();
-
-        qDebug() << "[Main] [INFO] Senha atual:" << senhaArquivo;
-
-        // Caso a senha tenha sido alterada, ou houve algum erro ao carregar
-        if(!ehSenhaValida(senhaArquivo)){
-            senhaArquivo = definirSenha("Ops! Parece que sua senha não está definida. Por favor, defina uma nova senha: ", true);
-            // Salva a senha no arquivo
-            Arquivos::alterarSenha(senhaArquivo);
-        }
+        senha->carregarSenha();
 
         // Aumenta o número de "visitas"
         Arquivos::aumentarVisitas();
@@ -477,7 +418,8 @@ void MainWindow::carregarTelaAtual(){
         mostrarTela(Pagina::Video);
         configurarTelaVideo(objetoJson);
     }else if(tipo == "pergunta"){
-
+        configurarTelaPergunta(objetoJson);
+        mostrarTela(Pagina::Pergunta);
     }
 }
 
@@ -511,11 +453,43 @@ void MainWindow::configurarTelaVideo(QJsonObject objetoAtual){
     reprodutor->tocarVideo();
 }
 
-// ***** PERGUNTA *********************************************
+void MainWindow::configurarTelaPergunta(QJsonObject objetoAtual){
+    // Muda as configurações da pergunta do questionário
+    QString pergunta = Arquivos::retornarValorChaveObjeto(objetoAtual, "pergunta");
+    ui->label_pergunta->setText(pergunta);
+
+    // Muda as respostas
+    QString opcao1 = Arquivos::retornarValorChaveObjeto(objetoAtual, "opcao1");
+    ui->radioButton_resposta1->setText(opcao1);
+    ui->radioButton_resposta1->setAutoExclusive(false);
+    ui->radioButton_resposta1->setChecked(false);
+    ui->radioButton_resposta1->setAutoExclusive(true);
+
+    QString opcao2 = Arquivos::retornarValorChaveObjeto(objetoAtual, "opcao2");
+    ui->radioButton_resposta2->setText(opcao2);
+    ui->radioButton_resposta2->setAutoExclusive(false);
+    ui->radioButton_resposta2->setChecked(false);
+    ui->radioButton_resposta2->setAutoExclusive(true);
+
+    QString opcao3 = Arquivos::retornarValorChaveObjeto(objetoAtual, "opcao3");
+    ui->radioButton_resposta3->setText(opcao3);
+    ui->radioButton_resposta3->setAutoExclusive(false);
+    ui->radioButton_resposta3->setChecked(false);
+    ui->radioButton_resposta3->setAutoExclusive(true);
+
+    QString opcao4 = Arquivos::retornarValorChaveObjeto(objetoAtual, "opcao4");
+    ui->radioButton_resposta4->setText(opcao4);
+    ui->radioButton_resposta4->setAutoExclusive(false);
+    ui->radioButton_resposta4->setChecked(false);
+    ui->radioButton_resposta4->setAutoExclusive(true);
+}
+
+// ***** ADICIONAR PERGUNTA *********************************************
 
 bool MainWindow::mostrarConfirmarSairPergunta(){
     // Crie a caixa de diálogo
     QMessageBox msgBox;
+    msgBox.setWindowTitle("Certeza que quer sair?");
     msgBox.setText("Existem alterações que não foram salvas. Gostaria de sair mesmo assim?");
 
     // Adicione os botões personalizados
@@ -534,9 +508,53 @@ bool MainWindow::mostrarConfirmarSairPergunta(){
 void MainWindow::limparCamposPergunta(){
     ui->textEdit_pergunta->setText("");
     ui->textEdit_opcao1->setText("");
+    ui->radioButton_opcao1->setAutoExclusive(false);
+    ui->radioButton_opcao1->setChecked(false);
+    ui->radioButton_opcao1->setAutoExclusive(true);
+
     ui->textEdit_opcao2->setText("");
+    ui->radioButton_opcao2->setAutoExclusive(false);
+    ui->radioButton_opcao2->setChecked(false);
+    ui->radioButton_opcao2->setAutoExclusive(true);
+
     ui->textEdit_opcao3->setText("");
+    ui->radioButton_opcao3->setAutoExclusive(false);
+    ui->radioButton_opcao3->setChecked(false);
+    ui->radioButton_opcao3->setAutoExclusive(true);
+
     ui->textEdit_opcao4->setText("");
+    ui->radioButton_opcao4->setAutoExclusive(false);
+    ui->radioButton_opcao4->setChecked(false);
+    ui->radioButton_opcao4->setAutoExclusive(true);
+}
+
+bool MainWindow::verificarCamposPreenchidos(){
+    QString pergunta = ui->textEdit_pergunta->toPlainText();
+    if(pergunta != ""){
+        return true;
+    }
+
+    QString opcao1 = ui->textEdit_opcao1->toPlainText();
+    if(opcao1 != ""){
+        return true;
+    }
+
+    QString opcao2 = ui->textEdit_opcao2->toPlainText();
+    if(opcao2 != ""){
+        return true;
+    }
+
+    QString opcao3 = ui->textEdit_opcao3->toPlainText();
+    if(opcao3 != ""){
+        return true;
+    }
+
+    QString opcao4 = ui->textEdit_opcao4->toPlainText();
+    if(opcao4 != ""){
+        return true;
+    }
+
+    return false;
 }
 
 bool MainWindow::verificarCamposVazios(){
@@ -585,6 +603,16 @@ bool MainWindow::salvarPergunta(){
     // Verificar qual a correta
     int correta = 0;
 
+    if(ui->radioButton_opcao1->isChecked()){
+        correta = 1;
+    }else if(ui->radioButton_opcao2->isChecked()){
+        correta = 2;
+    }else if(ui->radioButton_opcao3->isChecked()){
+        correta = 3;
+    }else if(ui->radioButton_opcao4->isChecked()){
+        correta = 4;
+    }
+
     // Cria a pasta de configurações caso não exista
     Arquivos::criarPasta(pastas.configuracoes);
 
@@ -608,6 +636,65 @@ bool MainWindow::salvarPergunta(){
     qDebug() << "[Main] [OK] Pergunta adicionada na sequência";
 
     return true;
+}
+
+// ***** PERGUNTA *********************************************
+
+int MainWindow::verificarRespostaSelecionada(){
+    // Verifica se alguma resposta foi selecionada
+    int selecionada = 0;
+
+    if(ui->radioButton_resposta1->isChecked()){
+        selecionada = 1;
+    }else if(ui->radioButton_resposta2->isChecked()){
+        selecionada = 2;
+    }else if(ui->radioButton_resposta3->isChecked()){
+        selecionada = 3;
+    }else if(ui->radioButton_resposta4->isChecked()){
+        selecionada = 4;
+    }
+
+    return selecionada;
+}
+
+bool MainWindow::criarArquivoRespostas(){
+    // Cria pasta de configurações
+    Arquivos::criarPasta(pastas.configuracoes);
+
+    QString caminho = pastas.configuracoes + '/' + arquivos[perfilAtual].respostas;
+
+    // Se houver problema ao criar o arquivo
+    if(!Arquivos::criarArquivo(caminho)){
+        QMessageBox::critical(this, "ERRO", "O arquivo de respostas não pôde ser criado. Por favor, entre em contato com o suporte.");
+        return false;
+    }
+
+    return true;
+}
+
+void MainWindow::salvarResposta(){
+
+    int selecionada = verificarRespostaSelecionada();
+
+    if(selecionada <= 0){
+        return;
+    }
+
+    // Arquivo de respostas
+    QString arquivo = pastas.configuracoes + '/' + arquivos[perfilAtual].respostas;
+
+    if(!Arquivos::arquivoExiste(arquivo)){
+        // Cria um arquivo vazio para a resposta
+        criarArquivoRespostas();
+    }else{
+        // E se o arquivo existe mas está corrompido?
+    }
+
+    QJsonObject objeto = sequencias[perfilAtual][indiceAtual].toObject();
+
+    // Salva a resposta no arquivo
+    Arquivos::salvarResposta(objeto, arquivo, selecionada);
+
 }
 
 // ***** VIDEO *********************************************
