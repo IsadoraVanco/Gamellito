@@ -7,6 +7,9 @@
 // Para o som ambiente
 #include <QtMultimedia/QSound>
 
+// Para a lista da sequência
+#include <QListWidget>
+
 #include "reprodutor.h"
 #include "arquivos.h"
 #include "senha.h"
@@ -243,6 +246,12 @@ private slots:
      */
     void carregarSequencias();
 
+    /**
+     * @brief
+     * @return
+     */
+    bool mostrarConfirmarRemoverItem();
+
     // ***** TELAS *********************************************
 
     /**
@@ -345,10 +354,18 @@ private slots:
 
     /**
      * @brief
-     * @param perfil
-     * @return
      */
-    void encontrarPerfil(QString perfil);
+    void removerItemSelecionado();
+
+    /**
+     * @brief
+     */
+    void editarItemSelecionado() ;
+
+    /**
+     * @brief
+     */
+    void carregarListaPerfil();
 
     /**
      * @brief
@@ -360,6 +377,10 @@ private slots:
      * @brief
      */
     void configurarPerfis();
+
+    void on_pushButton_editarItem_clicked();
+
+    void on_pushButton_removerItem_clicked();
 
 private:
 

@@ -46,12 +46,16 @@ set(PROJECT_SOURCES
         reprodutor.cpp
         reprodutor.ui
 
-        questionario.h
-        questionario.cpp
-        questionario.ui
+#        questionario.h
+#        questionario.cpp
+#        questionario.ui
 
         senha.h
         senha.cpp
+
+#        listaitens.h
+#        listaitens.cpp
+#        listaitens.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

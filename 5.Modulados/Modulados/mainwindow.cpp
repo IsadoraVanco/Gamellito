@@ -22,12 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Inicializa a primeira tela
-    configurarTelas();
-
-    // Tela inicial
-    mostrarTela(Pagina::Inicial);
-
     // Verifica os arquivos de configurações
     configurarArquivoGeral();
 
@@ -36,6 +30,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Carrega as sequências
     carregarSequencias();
+
+    // Inicializa a primeira tela
+    configurarTelas();
+
+    // Tela inicial
+    mostrarTela(Pagina::Inicial);
 
     // Configura o som ambiente
     configurarSomAmbiente("assets/sons/som-ambiente.wav");
@@ -206,8 +206,8 @@ void MainWindow::on_pushButton_adicionar_video_clicked()
     // Copia um vídeo no backup
     QString nomeArquivoVideo = salvarVideoBackup();
 
-    // Caso não tenha sido selecionado nenhum arquivo
-    if(nomeArquivoVideo == ""){
+    // Caso não tenha sido selecionado nenhum arquivo ("")
+    if(nomeArquivoVideo.isEmpty()){
         return;
     }
 
@@ -221,6 +221,8 @@ void MainWindow::on_pushButton_adicionar_video_clicked()
     sequencias[perfilAtual] = Arquivos::adicionarVideo(caminho, nomeArquivoVideo);
 
     qDebug() << "[Main] [INFO] Vídeo adicionado na sequência";
+
+    carregarListaPerfil();
 }
 
 void MainWindow::on_pushButton_adicionar_pergunta_clicked()
@@ -233,6 +235,20 @@ void MainWindow::on_pushButton_salvar_video_clicked()
 {
     salvarVideoBackup();
 }
+
+void MainWindow::on_pushButton_editarItem_clicked()
+{
+    // Confirma se gostaria de remover
+    if(mostrarConfirmarRemoverItem()){
+        removerItemSelecionado();
+    }
+}
+
+void MainWindow::on_pushButton_removerItem_clicked()
+{
+    editarItemSelecionado();
+}
+
 
 // ***** REPRODUTOR *********************************************
 
@@ -301,6 +317,7 @@ void MainWindow::on_pushButton_voltar_adicionar_pergunta_clicked()
 void MainWindow::on_pushButton_salvar_pergunta_clicked()
 {
     if(salvarPergunta()){
+        carregarListaPerfil();
         mostrarTela(Pagina::Configurar);
     }
 }
@@ -403,6 +420,27 @@ void MainWindow::carregarSequencias(){
         // Atualiza o mapeamento 'sequencias' com a sequência carregada
         sequencias[perfil.first] = sequencia;
     }
+
+    carregarListaPerfil();
+}
+
+bool MainWindow::mostrarConfirmarRemoverItem(){
+    // Crie a caixa de diálogo
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Certeza que quer remover?");
+    msgBox.setText("Tem certeza que gostaria de remover o item? A ação não poderá ser desfeita.");
+
+    // Adicione os botões personalizados
+    QPushButton *simButton = msgBox.addButton(tr("Sim"), QMessageBox::YesRole);
+    QPushButton *naoButton = msgBox.addButton(tr("Não"), QMessageBox::NoRole);
+
+    // Defina o botão padrão (geralmente o "Não")
+    msgBox.setDefaultButton(naoButton);
+
+    // Exiba a caixa de diálogo e espere por uma resposta
+    msgBox.exec();
+
+    return msgBox.clickedButton() == simButton;
 }
 
 // ***** TELAS *********************************************
@@ -756,22 +794,71 @@ QString MainWindow::capitalizarTexto(QString texto){
     return texto.left(1).toUpper() + texto.right(texto.length() - 1).toLower();
 }
 
-void MainWindow::encontrarPerfil(QString perfil){
-    QString perfilCapitalizado = capitalizarTexto(perfil);
+void MainWindow::removerItemSelecionado(){
+    // Remove o item da lista de edição
+    QListWidgetItem *item = ui->listWidget->currentItem();
+    if(item){
+        delete item;
+    }
 
-    for(const auto& item : arquivos){
-        if(perfilCapitalizado == capitalizarTexto(item.second.pasta)){
-            perfilAtual = item.first;
-            qDebug() << "[Main] [INFO] Perfil selecionado:" << perfilCapitalizado;
-            break;
+    // Procura e remove o item na lista da sequência real
+}
+
+void MainWindow::editarItemSelecionado(){
+    // Edita o item da lista de edição
+    QListWidgetItem *item = ui->listWidget->currentItem();
+    if(item){
+
+        item->setText("");
+    }
+
+    // Edita da lista real
+}
+
+void MainWindow::carregarListaPerfil(){
+    // Limpa a lista
+    ui->listWidget->clear();
+
+    QJsonArray array = sequencias[perfilAtual];
+
+    for(int i = 0; i < array.size(); i++){
+        QJsonObject objetoJson = array[i].toObject();
+
+        QString tipo = Arquivos::retornarValorChaveObjeto(objetoJson, "tipo");
+
+        QListWidgetItem *item = new QListWidgetItem();
+
+        if(tipo == "video"){
+            QString caminho = Arquivos::retornarValorChaveObjeto(objetoJson, "caminho");
+            item->setText(caminho);
+            qDebug() << "Video na lista";
+        }else if(tipo == "pergunta"){
+            QString pergunta = Arquivos::retornarValorChaveObjeto(objetoJson, "pergunta");
+            item->setText(pergunta);
+            qDebug() << "Pergunta na lista";
         }
+
+        ui->listWidget->addItem(item);
     }
 }
 
 void MainWindow::selecionarPerfil(QString perfil){
 
-    encontrarPerfil(perfil);
-    // Talvez haja mais coisas aqui ...
+    QString perfilCapitalizado = capitalizarTexto(perfil);
+
+    for(const auto& item : arquivos){
+        if(perfilCapitalizado == capitalizarTexto(item.second.pasta)){
+            // Atualiza o perfil atual
+            perfilAtual = item.first;
+
+            // Carrega a sequência na lista de itens aparentes
+            carregarListaPerfil();
+
+            qDebug() << "[Main] [INFO] Perfil selecionado:" << perfilCapitalizado;
+
+            break;
+        }
+    }
 }
 
 void MainWindow::configurarPerfis(){
