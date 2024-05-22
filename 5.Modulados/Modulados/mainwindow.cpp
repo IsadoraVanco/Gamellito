@@ -238,15 +238,15 @@ void MainWindow::on_pushButton_salvar_video_clicked()
 
 void MainWindow::on_pushButton_editarItem_clicked()
 {
-    // Confirma se gostaria de remover
-    if(mostrarConfirmarRemoverItem()){
-        removerItemSelecionado();
-    }
+    editarItemSelecionado();
 }
 
 void MainWindow::on_pushButton_removerItem_clicked()
 {
-    editarItemSelecionado();
+    // Confirma se gostaria de remover
+    if(ui->listWidget->currentItem() && mostrarConfirmarRemoverItem()){
+        removerItemSelecionado();
+    }
 }
 
 
@@ -386,14 +386,13 @@ bool MainWindow::configurarSequenciaAtual(){
 
     // Verifica se a sequencia está definida
     if(ehSequenciaVazia(sequencias[perfilAtual])){
+        // Caso a sequência esteja corrompida, também será tratada como sequencia vazia
 
         QString caminho = pastas.configuracoes + '/' + arquivos[perfilAtual].sequencia;
 
         if(!Arquivos::arquivoExiste(caminho)){
             // Cria um arquivo vazio para a sequência
             criarArquivoSequencia();
-        }else{
-            // E se o arquivo existe mas está corrompido?
         }
 
         QMessageBox::about(this, "Sequência não definida", "A sequência de vídeos e perguntas para o perfil atual não foi definida! Por favor, acesse o menu de configurações para definir a sequência.");
@@ -485,7 +484,7 @@ void MainWindow::configurarTelaVideo(QJsonObject objetoAtual){
 
     QString nomeVideo = Arquivos::retornarValorChaveObjeto(objetoAtual, "caminho");
 
-    QString caminhoVideo = "./backups/" + arquivos[perfilAtual].pasta + '/' + nomeVideo;
+    QString caminhoVideo = pastas.backups + '/' + arquivos[perfilAtual].pasta + '/' + nomeVideo;
 
     reprodutor->configurarVideo(caminhoVideo);
     reprodutor->tocarVideo();
@@ -724,8 +723,6 @@ void MainWindow::salvarResposta(){
     if(!Arquivos::arquivoExiste(arquivo)){
         // Cria um arquivo vazio para a resposta
         criarArquivoRespostas();
-    }else{
-        // E se o arquivo existe mas está corrompido?
     }
 
     QJsonObject objeto = sequencias[perfilAtual][indiceAtual].toObject();
@@ -797,6 +794,7 @@ QString MainWindow::capitalizarTexto(QString texto){
 void MainWindow::removerItemSelecionado(){
     // Remove o item da lista de edição
     QListWidgetItem *item = ui->listWidget->currentItem();
+
     if(item){
         delete item;
     }
@@ -807,12 +805,13 @@ void MainWindow::removerItemSelecionado(){
 void MainWindow::editarItemSelecionado(){
     // Edita o item da lista de edição
     QListWidgetItem *item = ui->listWidget->currentItem();
+
     if(item){
 
-        item->setText("");
-    }
+        // Edita o item da lista
 
-    // Edita da lista real
+        // Edita do JSON
+    }
 }
 
 void MainWindow::carregarListaPerfil(){

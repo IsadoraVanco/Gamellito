@@ -471,7 +471,7 @@ int Arquivos::encontrarRespostaExistente(QJsonArray respostas, QJsonObject pergu
            item["resposta2"] == pergunta["opcao2"] &&
            item["resposta3"] == pergunta["opcao3"] &&
            item["resposta4"] == pergunta["opcao4"]){
-            qDebug() << "[Arquivos] [INFO] A pergunta já foi respondida";
+            qDebug() << "[Arquivos] [INFO] A pergunta já foi respondida em" << i;
             return i;
         }
     }
@@ -515,10 +515,15 @@ void Arquivos::salvarResposta(QJsonObject objetoPergunta, QString caminhoDestino
         QJsonObject objeto = sequenciaRespostas.at(indice).toObject();
 
         int valor = objeto[qtd].toInt();
+        objeto[qtd] = valor + 1;
 
-        qDebug() << "valor " + QString(valor);
+        qDebug() << "valor " + QString::number(valor);
 
-        sequenciaRespostas.at(indice).toObject()[qtd] = valor + 1;
+        // O objeto do array não pode ser modificado diretamente,
+        // por isso, retira o item e o reinsere modificado
+
+        sequenciaRespostas.removeAt(indice);
+        sequenciaRespostas.insert(indice, objeto);
     }
 
     // Salva a sequencia novamente
