@@ -46,24 +46,55 @@ Algumas novidades que podem ajudar (ainda para pesquisar e testar):
 Estou percebendo que vou precisar ter uma estrutura definida de algumas coisas, principalmente para quando for replicar em outras máquinas. Por enquanto, pensei o seguinte:
 
 ```
-PastaDoProjeto{
-    PastaAssets{
+projeto{
+    assets{
         somAmbiente.wav
         ...
     }
+
+    backups{
+        paciente{
+            videos.mp4
+            ...
+        }
+        profissional{
+            videos.mp4
+            ...
+        }
+        responsavel{
+            videos.mp4
+            ...
+        }
+    }
+    
+    configuracoes{
+        spa.json
+        spr.json
+        sre.json
+
+        rpa.json
+        rpr.json
+        rre.json
+    }
+
     .executável
     config.json
     ...
 }
 ```
 
-Onde a `pastaDoProjeto` é a pasta da aplicação do Gamellito, e dentro dela contém o próprio executável do programa, o arquivo de configuração da sequência de vídeos e perguntas, e a `pastaAssets`, que contém sons e fotos para a aplicação.
+Onde `projeto` é a pasta da aplicação do Gamellito, e dentro dela contém o arquivo de configuração geral, que armazena as seguintes informações:
+```
+
+```
+
+da sequência de vídeos e perguntas, e a `pastaAssets`, que contém sons e fotos para a aplicação.
 
 Além disso, `config.json` estará estruturado como:
 * Para o `vídeo`: 
 ```
 {
-    "id":numero
+    "id": numero
     "tipo":"video";
     "caminho":"caminho/do/video"
 }
@@ -72,14 +103,14 @@ Além disso, `config.json` estará estruturado como:
 * Para a `pergunta`: 
 ```
 {
-    "id":numero
+    "id": numero
     "tipo":"pergunta";
     "pergunta":"texto";
-    "respostaA":"texto";
-    "respostaB":"texto";
-    "respostaC":"texto";
-    "respostaD":"texto";
-    "correta":"A/B/C/D"
+    "opcao1":"texto";
+    "opcao2":"texto";
+    "opcao3":"texto";
+    "opcao4":"texto";
+    "correta":0-4
 }
 ```
 
@@ -101,6 +132,7 @@ Além disso, `config.json` estará estruturado como:
     - [Próximo](https://www.freepik.com/icon/right-arrow_9125994#fromView=resource_detail&position=44)
     - [Lixeira](https://br.freepik.com/icone/lixo_3917378#fromView=search&page=1&position=0&uuid=f109c5d2-09ce-4fec-a0f1-a15a1aac6a9a)
     - [Seta](https://br.freepik.com/icone/caret-up_3916917#fromView=search&page=1&position=2&uuid=ac09fa06-c342-4946-8d95-d4c28a6a72ef)
+    - [Sair](https://br.freepik.com/icone/relogio-seis_7602707)
     
     Reprodutor:
     - [Com som](freepik.com/icon/volume_727269#fromView=search&page=1&position=2&uuid=a5f213c1-6501-4e0d-9c22-7edddaeb7029)
