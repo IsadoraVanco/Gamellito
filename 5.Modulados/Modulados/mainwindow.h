@@ -4,15 +4,13 @@
 #include <QMainWindow>
 #include <QString>
 
-// Para o som ambiente
-#include <QtMultimedia/QSound>
-
 // Para a lista da sequência
 #include <QListWidget>
 
 #include "reprodutor.h"
 #include "arquivos.h"
 #include "senha.h"
+#include "somambiente.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -60,26 +58,6 @@ public:
 private slots:
 
     /* ************************************************************
-     * SOM AMBIENTE DO MENU
-     *************************************************************/
-
-    /**
-     * @brief Configura o som ambiente do menu
-     * @param path O caminho relativo do arquivo
-     */
-    void configurarSomAmbiente(QString path);
-
-    /**
-     * @brief Liga o som ambiente e modifica o ícone do botão de som
-     */
-    void ligarSomAmbiente();
-
-    /**
-     * @brief Desliga o som ambiente e modifica o ícone do botão de som
-     */
-    void desligarSomAmbiente();
-
-    /* ************************************************************
      * GERENCIAMENTO DE TELAS
      *************************************************************/
 
@@ -90,9 +68,15 @@ private slots:
     void mostrarTela(Pagina tipo);
 
     /**
-     * @brief MainWindow Configura todas as telas dinamicamente
+     * @brief Configura todas as telas dinamicamente
      */
     void configurarTelas();
+
+    /* ************************************************************
+     * ICONES
+     *************************************************************/
+
+    void atualizarIconeSom();
 
     /* ************************************************************
      * BOTÕES E AÇÕES
@@ -433,9 +417,7 @@ private:
 
     // ***** SOM AMBIENTE *********************************************
 
-    QSound *somAmbiente;
-
-    bool somAmbienteMutado = false;
+    SomAmbiente *somAmbiente = new SomAmbiente();
 
 };
 #endif // MAINWINDOW_H

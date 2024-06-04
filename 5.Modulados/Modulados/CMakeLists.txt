@@ -56,6 +56,12 @@ set(PROJECT_SOURCES
 #        listaitens.h
 #        listaitens.cpp
 #        listaitens.ui
+
+#        sequencia.h
+#        sequencia.cpp
+
+        somambiente.h
+        somambiente.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

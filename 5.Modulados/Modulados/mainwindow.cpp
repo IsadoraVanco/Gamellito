@@ -4,9 +4,6 @@
 // Para debugar
 #include <QDebug>
 
-// Para manipular diretorios
-#include <QtCore>
-
 // Caixas de diálogo
 #include <QMessageBox>
 #include <QFileDialog>
@@ -38,8 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
     mostrarTela(Pagina::Inicial);
 
     // Configura o som ambiente
-    configurarSomAmbiente("assets/sons/som-ambiente.wav");
-    ligarSomAmbiente();
+    somAmbiente->configurar("som-ambiente.wav");
+    somAmbiente->ligar();
 
     //Conexões
     connect(ui->pushButton_sair, SIGNAL(clicked()), this, SLOT(close()));
@@ -52,37 +49,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-/* ************************************************************
- * SOM AMBIENTE DO MENU
- *************************************************************/
-
-void MainWindow::configurarSomAmbiente(QString path)
-{
-    // O arquivo de som deve estar na pasta de assets!
-    QDir dir = QDir::current();
-    QString caminho = dir.filePath("assets/sons/som-ambiente.wav");
-    somAmbiente = new QSound(QString(caminho));
-    somAmbiente->setLoops(QSound::Infinite);
-
-    //qDebug() << caminho;
-}
-
-void MainWindow::ligarSomAmbiente()
-{
-    // O arquivo de icone deve estar na pasta de assets!
-    ui->pushButton_som->setIcon(QIcon("assets/icones/som/com-som-preto.png"));
-    somAmbiente->play();
-    somAmbienteMutado = false;
-}
-
-void MainWindow::desligarSomAmbiente()
-{
-    // O arquivo de icone deve estar na pasta de assets!
-    ui->pushButton_som->setIcon(QIcon("assets/icones/som/sem-som-preto.png"));
-    somAmbiente->stop();
-    somAmbienteMutado = true;
 }
 
 /* ************************************************************
@@ -99,6 +65,9 @@ void MainWindow::configurarTelas(){
     // O índice das páginas foram definidos manualmente na edição do design dos mesmos
     // Não mudar as páginas de lugar!
     // A sequência deve ser a mesma do enum Pagina
+
+    // icone do botão de som
+    ui->pushButton_som->setIcon(QIcon("assets/icones/som/com-som-preto.png"));
 
     // Adiciona a imagem do menu
     QPixmap gamellito("assets/gamellito.png");
@@ -145,6 +114,18 @@ void MainWindow::configurarTelas(){
 }
 
 /* ************************************************************
+ * ICONES
+ *************************************************************/
+
+void MainWindow::atualizarIconeSom(){
+    if(somAmbiente->estaMutado()){
+        ui->pushButton_som->setIcon(QIcon("assets/icones/som/sem-som-preto.png"));
+    }else{
+        ui->pushButton_som->setIcon(QIcon("assets/icones/som/com-som-preto.png"));
+    }
+}
+
+/* ************************************************************
  * BOTÕES E AÇÕES
  *************************************************************/
 
@@ -156,7 +137,7 @@ void MainWindow::on_pushButton_iniciar_clicked()
     indiceAtual = 0;
 
     if(configurarSequenciaAtual()){
-        desligarSomAmbiente();
+        somAmbiente->desligar();
         carregarTelaAtual();
     }
 }
@@ -168,11 +149,13 @@ void MainWindow::on_pushButton_sobre_clicked()
 
 void MainWindow::on_pushButton_som_clicked()
 {
-    if(somAmbienteMutado){
-        ligarSomAmbiente();
+    if(somAmbiente->estaMutado()){
+        somAmbiente->ligar();
     }else{
-        desligarSomAmbiente();
+        somAmbiente->desligar();
     }
+
+    atualizarIconeSom();
 }
 
 void MainWindow::on_pushButton_configurar_clicked()
@@ -254,9 +237,12 @@ void MainWindow::on_pushButton_removerItem_clicked()
 
 void MainWindow::on_pushButton_inicio_reprodutor_clicked()
 {
-    mostrarTela(Pagina::Inicial);
     reprodutor->pararVideo();
-    ligarSomAmbiente();
+
+    somAmbiente->ligar();
+    atualizarIconeSom();
+
+    mostrarTela(Pagina::Inicial);
 }
 
 void MainWindow::on_pushButton_voltar_reprodutor_clicked()
@@ -276,7 +262,9 @@ void MainWindow::on_pushButton_proximo_reprodutor_clicked()
 void MainWindow::on_pushButton_pergunta_inicio_clicked()
 {
     mostrarTela(Pagina::Inicial);
-    ligarSomAmbiente();
+    somAmbiente->ligar();
+    atualizarIconeSom();
+//    ligarSomAmbiente();
 }
 
 void MainWindow::on_pushButton_voltar_pergunta_clicked()
@@ -463,7 +451,9 @@ void MainWindow::carregarTelaAtual(){
 void MainWindow::mostrarProximaTela(){
     if(indiceAtual + 1 >= sequencias[perfilAtual].size()){
         mostrarTela(Pagina::Inicial);
-        ligarSomAmbiente();
+        somAmbiente->ligar();
+        atualizarIconeSom();
+//        ligarSomAmbiente();
     }else{
         indiceAtual++;
         carregarTelaAtual();
@@ -473,7 +463,9 @@ void MainWindow::mostrarProximaTela(){
 void MainWindow::mostrarTelaAnterior(){
     if(indiceAtual - 1 < 0){
         mostrarTela(Pagina::Inicial);
-        ligarSomAmbiente();
+        somAmbiente->ligar();
+        atualizarIconeSom();
+//        ligarSomAmbiente();
     }else{
         indiceAtual--;
         carregarTelaAtual();
