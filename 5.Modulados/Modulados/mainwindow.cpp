@@ -22,8 +22,10 @@ MainWindow::MainWindow(QWidget *parent)
     // Verifica os arquivos de configurações
     configurarArquivoGeral();
 
-    // Configura os perfis para selecionar
     configurarPerfis();
+
+    // Configura os perfis para selecionar
+    adicionarSequenciaLista();
 
     // Carrega as sequências
     carregarSequencias();
@@ -67,7 +69,7 @@ void MainWindow::configurarTelas(){
     // A sequência deve ser a mesma do enum Pagina
 
     // icone do botão de som
-    ui->pushButton_som->setIcon(QIcon("assets/icones/som/com-som-preto.png"));
+    atualizarIconeSom();
 
     // Adiciona a imagem do menu
     QPixmap gamellito("assets/gamellito.png");
@@ -264,7 +266,6 @@ void MainWindow::on_pushButton_pergunta_inicio_clicked()
     mostrarTela(Pagina::Inicial);
     somAmbiente->ligar();
     atualizarIconeSom();
-//    ligarSomAmbiente();
 }
 
 void MainWindow::on_pushButton_voltar_pergunta_clicked()
@@ -366,10 +367,6 @@ bool MainWindow::criarArquivoSequencia(){
     return true;
 }
 
-bool MainWindow::ehSequenciaVazia(QJsonArray sequencia){
-    return sequencia.isEmpty();
-}
-
 bool MainWindow::configurarSequenciaAtual(){
 
     // Verifica se a sequencia está definida
@@ -450,10 +447,10 @@ void MainWindow::carregarTelaAtual(){
 
 void MainWindow::mostrarProximaTela(){
     if(indiceAtual + 1 >= sequencias[perfilAtual].size()){
-        mostrarTela(Pagina::Inicial);
         somAmbiente->ligar();
         atualizarIconeSom();
-//        ligarSomAmbiente();
+
+        mostrarTela(Pagina::Inicial);
     }else{
         indiceAtual++;
         carregarTelaAtual();
@@ -462,10 +459,10 @@ void MainWindow::mostrarProximaTela(){
 
 void MainWindow::mostrarTelaAnterior(){
     if(indiceAtual - 1 < 0){
-        mostrarTela(Pagina::Inicial);
         somAmbiente->ligar();
         atualizarIconeSom();
-//        ligarSomAmbiente();
+
+        mostrarTela(Pagina::Inicial);
     }else{
         indiceAtual--;
         carregarTelaAtual();
@@ -742,10 +739,10 @@ QString MainWindow::selecionarVideo(){
 
 QString MainWindow::salvarVideoBackup(){
     // Cria pasta de backup geral
-    Arquivos::criarPasta(pastas.backups);
+    Arquivos::criarPasta(arquivos->pastas.backups);
 
     // Pasta do perfil
-    QString pastaPerfil = pastas.backups + '/' + arquivos[perfilAtual].pasta + '/';
+    QString pastaPerfil = arquivos->pastas.backups + '/' + arquivos[perfilAtual].pasta + '/';
 
     // Cria pasta de backup do perfil
     Arquivos::criarPasta(pastaPerfil);
@@ -767,11 +764,11 @@ QString MainWindow::salvarVideoBackup(){
 
     if(Arquivos::copiarArquivo(caminhoArquivo, destinoCompleto)) {
         QMessageBox::about(this, "Arquivo copiado", "Arquivo copiado para o backup!");
-        qDebug() << "[Main] [OK] Arquivo copiado com sucesso:" << caminhoArquivo;
+        qDebug() << "[Main][OK] Arquivo copiado com sucesso:" << caminhoArquivo;
     }else{
         //QMessageBox::critical(this, "ERRO", "Erro ao copiar o arquivo para o backup. Por favor, tente novamente.");
         QMessageBox::about(this, "Arquivo duplicado", "O arquivo já está no backup");
-        qDebug() << "[Main] [ERRO] Falha ao copiar o arquivo:" << caminhoArquivo;
+        qDebug() << "[Main][ERRO] Falha ao copiar o arquivo:" << caminhoArquivo;
     }
 
     return nomeArquivo;
@@ -779,8 +776,23 @@ QString MainWindow::salvarVideoBackup(){
 
 // ***** PERFIS *********************************************
 
-QString MainWindow::capitalizarTexto(QString texto){
-    return texto.left(1).toUpper() + texto.right(texto.length() - 1).toLower();
+void MainWindow::configurarPerfis(){
+
+    // Configurando o nome de cada arquivo para os perfis
+    paciente->nome = "Paciente";
+    paciente->arquivos.pasta = "paciente";
+    paciente->arquivos.respostas = "rpa.json";
+    paciente->arquivos.sequencia = "spa.json";
+
+    responsavel->nome = "Responsável";
+    responsavel->arquivos.pasta = "responsavel";
+    responsavel->arquivos.respostas = "rre.json";
+    responsavel->arquivos.sequencia = "sre.json";
+
+    profissional->nome = "Profissional";
+    profissional->arquivos.pasta = "profissional";
+    profissional->arquivos.respostas = "rpr.json";
+    profissional->arquivos.sequencia = "spr.json";
 }
 
 void MainWindow::removerItemSelecionado(){
@@ -789,9 +801,10 @@ void MainWindow::removerItemSelecionado(){
 
     if(item){
         delete item;
-    }
 
-    // Procura e remove o item na lista da sequência real
+        // Procura e remove o item na lista da sequência real
+
+    }
 }
 
 void MainWindow::editarItemSelecionado(){
@@ -806,63 +819,52 @@ void MainWindow::editarItemSelecionado(){
     }
 }
 
-void MainWindow::carregarListaPerfil(){
-    // Limpa a lista
+void MainWindow::carregarListaPerfilAtual(){
+    // Limpa a lista do widget
     ui->listWidget->clear();
 
-    QJsonArray array = sequencias[perfilAtual];
+    Perfil *perfil = perfis[perfilAtual];
+    int tamanho = perfil->sequencia->tamanho();
 
-    for(int i = 0; i < array.size(); i++){
-        QJsonObject objetoJson = array[i].toObject();
-
-        QString tipo = Arquivos::retornarValorChaveObjeto(objetoJson, "tipo");
+    for(int i = 0; i < tamanho; i++){
 
         QListWidgetItem *item = new QListWidgetItem();
 
-        if(tipo == "video"){
-            QString caminho = Arquivos::retornarValorChaveObjeto(objetoJson, "caminho");
-            item->setText(caminho);
-            qDebug() << "Video na lista";
-        }else if(tipo == "pergunta"){
-            QString pergunta = Arquivos::retornarValorChaveObjeto(objetoJson, "pergunta");
-            item->setText(pergunta);
-            qDebug() << "Pergunta na lista";
-        }
+        QString texto = perfil->sequencia->valorItem(i);
 
+        item->setText(texto);
         ui->listWidget->addItem(item);
     }
 }
 
-void MainWindow::selecionarPerfil(QString perfil){
+void MainWindow::selecionarPerfil(QString nomePerfil){
+    // Percorre o mapeamento procurando o perfil selecionado
+    for(const auto& user : perfis){
+        Perfil *perfil = user.second;
+        QString nome = perfil->nome;
 
-    QString perfilCapitalizado = capitalizarTexto(perfil);
-
-    for(const auto& item : arquivos){
-        if(perfilCapitalizado == capitalizarTexto(item.second.pasta)){
+        if(nomePerfil == nome){
             // Atualiza o perfil atual
-            perfilAtual = item.first;
+            perfilAtual = user.first;
 
             // Carrega a sequência na lista de itens aparentes
-            carregarListaPerfil();
+            carregarListaPerfilAtual();
 
-            qDebug() << "[Main] [INFO] Perfil selecionado:" << perfilCapitalizado;
+            qDebug() << "[Main][INFO] Perfil selecionado:" << perfil;
 
             break;
         }
     }
 }
 
-void MainWindow::configurarPerfis(){
+void MainWindow::adicionarPerfisParaSelecao(){
+    // Percorre todo o mapeamento adicionando os perfis no widget
+    for(const auto& user : perfis){
+        Perfil *perfil = user.second;
 
-    // Adiciona os perfis para seleção (utiliza o nome das pastas capitalizado)
-    for(const auto& item : arquivos){
-        structArquivos dadosArquivos = item.second;
-        QString nome = dadosArquivos.pasta;
+        QString nome = perfil->nome;
 
-        // Transforma em um texto capitalizado
-        QString nomecapitalizado = capitalizarTexto(nome);
-
-        ui->comboBox_perfis->addItem(nomecapitalizado);
+        ui->comboBox_perfis->addItem(nome);
     }
 
     // Evento para quando selecionar outro perfil

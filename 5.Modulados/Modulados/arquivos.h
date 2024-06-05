@@ -15,7 +15,7 @@
 
 #define ARQUIVO_CONFIGURACAO_GERAL "config.json"
 
-// Arquivos que serão utilizados
+// Arquivos que serão utilizados para cada perfil
 typedef struct{
     QString sequencia;
     QString respostas;
@@ -252,6 +252,8 @@ public:
      */
     static void salvarResposta(QJsonObject objetoJson, QString caminhoDestino, int selecionada);
 
+    // Nome das pastas (por enquanto, publico)
+    structPastas pastas = {"configuracoes", "backups"};
 private:
 
 };

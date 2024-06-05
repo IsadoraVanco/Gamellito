@@ -11,6 +11,7 @@
 #include "arquivos.h"
 #include "senha.h"
 #include "somambiente.h"
+#include "perfil.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -68,7 +69,7 @@ private slots:
     void mostrarTela(Pagina tipo);
 
     /**
-     * @brief Configura todas as telas dinamicamente
+     * @brief MainWindow Configura todas as telas dinamicamente
      */
     void configurarTelas();
 
@@ -188,6 +189,10 @@ private slots:
      * @brief
      */
     void on_pushButton_salvar_pergunta_clicked();
+
+    void on_pushButton_editarItem_clicked();
+
+    void on_pushButton_removerItem_clicked();
 
     /* ************************************************************
      * GERENCIAMENTO DAS CONFIGURAÇÕES
@@ -331,13 +336,6 @@ private slots:
 
     /**
      * @brief
-     * @param texto
-     * @return
-     */
-    QString capitalizarTexto(QString texto);
-
-    /**
-     * @brief
      */
     void removerItemSelecionado();
 
@@ -349,22 +347,20 @@ private slots:
     /**
      * @brief
      */
-    void carregarListaPerfil();
+    void carregarListaPerfilAtual();
 
     /**
      * @brief
-     * @param perfil
+     * @param nomePerfil
      */
-    void selecionarPerfil(QString perfil);
+    void selecionarPerfil(QString nomePerfil);
 
     /**
      * @brief
      */
     void configurarPerfis();
 
-    void on_pushButton_editarItem_clicked();
-
-    void on_pushButton_removerItem_clicked();
+    void adicionarPerfisParaSelecao();
 
 private:
 
@@ -374,37 +370,26 @@ private:
 
     // ***** CONFIGURAÇÕES *********************************************
 
-    // Mapeamento entre os perfis e os arquivos/pasta
-    std::map<Perfil, structArquivos> arquivos = {
-        {Perfil::Paciente, {"spa.json", "rpa.json", "paciente"}},
-        {Perfil::Responsavel, {"sre.json", "rre.json", "responsavel"}},
-        {Perfil::Profissional, {"spr.json", "rpr.json", "profissional"}}
-    };
-
-    // Nome das pastas que serão utilizadas
-    structPastas pastas = {"configuracoes", "backups"};
-
     // Senha para as configurações
     Senha *senha = new Senha(this);
+
+    Arquivos *arquivos = new Arquivos();
 
     // ***** SEQUÊNCIA *********************************************
 
     // Marca qual o perfil atual da sequência
-    Perfil perfilAtual = Perfil::Paciente;
-
-    // Marca qual o índice do elemento atual da sequência
-    int indiceAtual = 0;
+    TipoPerfil perfilAtual = TipoPerfil::Paciente;
 
     // Sequências de vídeos e perguntas
-    QJsonArray paciente;
-    QJsonArray responsavel;
-    QJsonArray profissional;
+    Perfil *paciente = new Perfil();
+    Perfil *responsavel = new Perfil();
+    Perfil *profissional = new Perfil();
 
-    // Mapeamento entre os perfis e sequências
-    std::map<Perfil, QJsonArray> sequencias = {
-        {Perfil::Paciente, paciente},
-        {Perfil::Responsavel, responsavel},
-        {Perfil::Profissional, profissional}
+    // Mapeamento entre o nome do Perfil e o próprio perfil
+    std::map<TipoPerfil, Perfil*> perfis = {
+        {TipoPerfil::Paciente, paciente},
+        {TipoPerfil::Responsavel, responsavel},
+        {TipoPerfil::Profissional, profissional}
     };
 
     // ***** INTERFACE *********************************************
