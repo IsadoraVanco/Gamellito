@@ -4,13 +4,29 @@
 #include <QtCore>
 #include <QFile>
 
+// Escolha de arquivo
+#include <QFileDialog>
+
+// Caixa de diálogo
+#include <QMessageBox>
+
 // Para o JSON
 #include <QJsonDocument>
 
 // Para a manipulação de data e hora
 #include <QDateTime>
 
-Arquivos::Arquivos(){}
+/* ************************************************************
+ * CONSTRUTOR
+ *************************************************************/
+
+Arquivos::Arquivos(QWidget *parent): QDialog(parent){}
+
+/* ************************************************************
+ * DESTRUTOR
+ *************************************************************/
+
+Arquivos::~Arquivos(){}
 
 /* ************************************************************
  * AUXILIARES
@@ -31,17 +47,70 @@ QString Arquivos::carregarDataAtual(){
  *************************************************************/
 
 void Arquivos::criarPasta(QString nomePasta){
+
     // Verificar se a pasta já existe
-    if (QDir(nomePasta).exists()) {
-        qDebug() << "[Arquivos] A pasta" << nomePasta << "já existe";
-    } else {
-        // Criar a pasta
-        if (QDir().mkdir(nomePasta)) {
-            qDebug() << "[Arquivos] [OK] Pasta" << nomePasta << "criada com sucesso.";
-        } else {
-            qDebug() << "[Arquivos] [ERRO] Falha ao criar a pasta" << nomePasta;
+    if(QDir(nomePasta).exists()){
+        qDebug() << "[Arquivos][INFO] A pasta" << nomePasta << "já existe";
+
+    }else{
+        if(QDir().mkdir(nomePasta)){
+            qDebug() << "[Arquivos][OK] Pasta" << nomePasta << "criada com sucesso.";
+        }else{
+            qDebug() << "[Arquivos][ERRO] Falha ao criar a pasta" << nomePasta;
         }
     }
+}
+
+/* ************************************************************
+ * BACKUP DE VÍDEO
+ *************************************************************/
+
+QString Arquivos::selecionarVideo(){
+    QString diretorioInicial = QDir::homePath();
+
+    // Adiciona uma barra no final se não houver
+    if (!diretorioInicial.endsWith(QDir::separator())) {
+        diretorioInicial += QDir::separator();
+    }
+
+    QString caminhoArquivo = QFileDialog::getOpenFileName(this, tr("Selecione o video"), diretorioInicial, tr("MP4 (*.mp4);; MKV (*.mkv)"));
+
+    return caminhoArquivo;
+}
+
+QString Arquivos::salvarVideoBackup(QString pasta){
+    // Seleciona o vídeo
+    QString caminhoArquivo = selecionarVideo();
+
+    // Verifica se o arquivo foi escolhido e existe
+    if(caminhoArquivo == "" || !arquivoExiste(caminhoArquivo)){
+        return QString();
+    }
+
+    // Cria a pasta de backup geral
+    criarPasta(pastas.backups);
+
+    // Cria a pasta do perfil
+    QString pastaPerfil = pastas.backups + '/' + pasta + '/';
+    criarPasta(pastaPerfil);
+
+    // Copia o nome do arquivo
+    QFileInfo arquivo(caminhoArquivo);
+    QString nomeArquivo = arquivo.fileName();
+
+    // Monta o caminho completo de destino
+    QString destinoCompleto = pastaPerfil + nomeArquivo;
+
+    if(Arquivos::copiarArquivo(caminhoArquivo, destinoCompleto)) {
+        QMessageBox::about(this, "Arquivo copiado", "Arquivo copiado para o backup!");
+        qDebug() << "[Arquivos][OK] Arquivo copiado com sucesso:" << caminhoArquivo;
+    }else{
+        //QMessageBox::critical(this, "ERRO", "Erro ao copiar o arquivo para o backup. Por favor, tente novamente.");
+        QMessageBox::about(this, "Arquivo duplicado", "O arquivo já está no backup");
+        qDebug() << "[Arquivos][ERRO] Falha ao copiar o arquivo:" << caminhoArquivo;
+    }
+
+    return nomeArquivo;
 }
 
 /* ************************************************************
@@ -53,11 +122,11 @@ bool Arquivos::arquivoExiste(QString pathArquivo){
     QFile arquivo(QDir::current().absoluteFilePath(pathArquivo));
 
     if(!arquivo.exists()){
-        qDebug() << "[Arquivos] [ERRO] O arquivo" << pathArquivo << "não foi encontrado!";
+        qDebug() << "[Arquivos][ERRO] O arquivo" << pathArquivo << "não existe!";
         return false;
     }
 
-    qDebug() << "[Arquivos] [OK] O arquivo" << pathArquivo << "existe!";
+    qDebug() << "[Arquivos][OK] O arquivo" << pathArquivo << "existe!";
     return true;
 }
 
@@ -66,11 +135,11 @@ bool Arquivos::criarArquivo(QString pathArquivo){
 
     // Caso haja erro ao criar o arquivo
     if(!arquivo.open(QIODevice::WriteOnly | QIODevice::Text)){
-        qDebug() << "[Arquivos] [ERRO] Erro ao criar arquivo" << pathArquivo;
+        qDebug() << "[Arquivos][ERRO] Erro ao criar arquivo:" << pathArquivo;
         return false;
     }
 
-    qDebug() << "[Arquivos] [OK] Arquivo" << pathArquivo << "criado!";
+    qDebug() << "[Arquivos][OK] Arquivo" << pathArquivo << "criado!";
     arquivo.close();
 
     return true;
@@ -375,90 +444,40 @@ void Arquivos::alterarSenha(QString novaSenha){
  * ARQUIVO DE CONFIGURAÇÃO DE SEQUÊNCIA
  *************************************************************/
 
-int Arquivos::calcularId(QJsonArray sequencia){
-    int id = 0;
+void Arquivos::salvarSequenciaNoArquivo(QJsonArray sequencia, QString pasta, QString nomeArquivo){
 
-    // Percorre o array e encontra o maior id
-    for(const QJsonValue& valor : sequencia){
+    //Cria as pastas para salvar o arquivo
+    criarPasta(pastas.configuracoes);
 
-        // Verifica se o valor é um objeto
-        if(valor.isObject()){
+    QString caminho = pastas.configuracoes + '/' + pasta;
+    criarPasta(caminho);
 
-            // Converte o valor para um objeto
-            QJsonObject objeto = valor.toObject();
+    // Cria um documento JSON a partir do array JSON
+    QJsonDocument doc(sequencia);
 
-            // Verifica se o objeto possui a chave "id"
-            if(objeto.contains("id")){
-                int idAtual = objeto["id"].toInt();
+    // Converte o documento JSON em uma string
+    QString strJson(doc.toJson(QJsonDocument::Compact));
 
-                // Atualiza o valor de id se o id atual for maior
-                if (idAtual > id) {
-                    id = idAtual;
-                }
-            }
-        }
+    // Cria um objeto QFile com o nome do arquivo
+    QString pathArquivo = caminho + '/' + nomeArquivo;
+    QFile arquivo(QDir::current().absoluteFilePath(pathArquivo));
+
+    // Abre o arquivo para escrita
+    if (!arquivo.open(QIODevice::WriteOnly | QIODevice::Text)){
+        qDebug() << "[Arquivos][ERRO] Erro ao salvar sequência em:" << pathArquivo;
+        return;
     }
 
-    // Retorna um id maior para o novo
-    return id + 1;
-}
+    // Escreve a string no arquivo
+    QTextStream saida(&arquivo);
+    saida << strJson;
 
-// **** VIDEO ************************************************
+    arquivo.close();
 
-QJsonArray Arquivos::adicionarVideo(QString caminhoDestino, QString nomeArquivo){
-
-    // Carrega a sequencia do arquivo
-    QJsonArray sequencia = converterJsonParaArray(caminhoDestino);
-
-    // Calcula o id para o novo item
-    int id = calcularId(sequencia);
-
-    // Cria um novo objeto JSON para o vídeo
-    QJsonObject novoVideo;
-
-    novoVideo["id"] = id;
-    novoVideo["tipo"] = "video";
-    novoVideo["caminho"] = nomeArquivo;
-
-    // Adiciona o novo video no fim do array
-    sequencia.append(novoVideo);
-
-    // Salva a sequencia novamente
-    escreverArrayJson(caminhoDestino, sequencia);
-
-    return sequencia;
+    qDebug() << "[Arquivos][OK] Sequência salva em:" << pathArquivo;
 }
 
 // **** PERGUNTA ************************************************
-
-QJsonArray Arquivos::adicionarPergunta(QString caminhoDestino, QString pergunta, QString opcao1, QString opcao2, QString opcao3, QString opcao4, int correta){
-
-    // Carrega a sequencia do arquivo
-    QJsonArray sequencia = converterJsonParaArray(caminhoDestino);
-
-    // Calcula o id para o novo item
-    int id = calcularId(sequencia);
-
-    // Cria um novo objeto JSON para a pergunta
-    QJsonObject novaPergunta;
-
-    novaPergunta["id"] = id;
-    novaPergunta["tipo"] = "pergunta";
-    novaPergunta["pergunta"] = pergunta;
-    novaPergunta["opcao1"] = opcao1;
-    novaPergunta["opcao2"] = opcao2;
-    novaPergunta["opcao3"] = opcao3;
-    novaPergunta["opcao4"] = opcao4;
-    novaPergunta["correta"] = correta;
-
-    // Adiciona o novo video no fim do array
-    sequencia.append(novaPergunta);
-
-    // Salva a sequencia novamente
-    escreverArrayJson(caminhoDestino, sequencia);
-
-    return sequencia;
-}
 
 int Arquivos::encontrarRespostaExistente(QJsonArray respostas, QJsonObject pergunta){
     // Percorre o array procurando um objeto que seja igual
@@ -471,7 +490,7 @@ int Arquivos::encontrarRespostaExistente(QJsonArray respostas, QJsonObject pergu
            item["resposta2"] == pergunta["opcao2"] &&
            item["resposta3"] == pergunta["opcao3"] &&
            item["resposta4"] == pergunta["opcao4"]){
-            qDebug() << "[Arquivos] [INFO] A pergunta já foi respondida em" << i;
+            qDebug() << "[Arquivos][INFO] A pergunta já foi respondida em" << i;
             return i;
         }
     }
@@ -479,10 +498,19 @@ int Arquivos::encontrarRespostaExistente(QJsonArray respostas, QJsonObject pergu
     return -1;
 }
 
-void Arquivos::salvarResposta(QJsonObject objetoPergunta, QString caminhoDestino, int selecionada){
+void Arquivos::salvarResposta(QJsonObject objetoPergunta, int selecionada, QString nomeArquivo){
+
+    //Cria as pastas para salvar o arquivo
+    criarPasta(pastas.configuracoes);
+
+    QString caminho = pastas.configuracoes + '/' + nomeArquivo;
+
+    if(!arquivoExiste(caminho)){
+        criarArquivo(caminho);
+    }
 
     // Carrega a sequencia do arquivo
-    QJsonArray sequenciaRespostas = converterJsonParaArray(caminhoDestino);
+    QJsonArray sequenciaRespostas = converterJsonParaArray(caminho);
 
     int indice = encontrarRespostaExistente(sequenciaRespostas, objetoPergunta);
 
@@ -527,7 +555,7 @@ void Arquivos::salvarResposta(QJsonObject objetoPergunta, QString caminhoDestino
     }
 
     // Salva a sequencia novamente
-    escreverArrayJson(caminhoDestino, sequenciaRespostas);
+    escreverArrayJson(caminho, sequenciaRespostas);
 
-    qDebug() << "[Arquivos] [OK] A resposta foi salva no arquivo";
+    qDebug() << "[Arquivos][OK] A resposta foi salva no arquivo";
 }

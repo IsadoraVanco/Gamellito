@@ -1,9 +1,11 @@
 #ifndef ARQUIVOS_H
 #define ARQUIVOS_H
 
+#include <QDialog>
+#include <QInputDialog>
+
 // Para a String
 #include <QString>
-#include <string>
 
 // Para o JSON
 #include <QJsonArray>
@@ -28,31 +30,56 @@ typedef struct{
     QString backups;
 }structPastas;
 
-class Arquivos
+namespace Ui {
+class Senha;
+}
+
+class Arquivos : public QDialog
 {
+    Q_OBJECT
+
 public:
-    // Construtor
-    Arquivos();
+    /* ************************************************************
+     * CONSTRUTOR
+     *************************************************************/
+
+    explicit Arquivos(QWidget *parent = nullptr);
+
+    /* ************************************************************
+     * DESTRUTOR
+     *************************************************************/
+
+    ~Arquivos();
 
     /* ************************************************************
      * AUXILIARES
      *************************************************************/
 
-    /**
-     * @brief
-     * @return
-     */
     static QString carregarDataAtual();
 
     /* ************************************************************
      * PASTAS
      *************************************************************/
 
-    /**
-     * @brief
-     * @param nomePasta
-     */
     static void criarPasta(QString nomePasta);
+
+    /* ************************************************************
+     * BACKUP DE VÍDEO
+     *************************************************************/
+
+    /**
+     * @brief Abre uma caixa de diálogo para selecionar um vídeo
+     * dos arquivos locais
+     * @return O nome do arquivo escolhido
+     */
+    QString selecionarVideo();
+
+    /**
+     * @brief Salva um vídeo nas pastas de backup
+     * @param pasta Nome da pasta final
+     * @return O nome do arquivo salvo
+     */
+    QString salvarVideoBackup(QString pasta);
 
     /* ************************************************************
      * ARQUIVOS GERAIS
@@ -164,40 +191,21 @@ public:
 
     // **** VISITAS ************************************************
 
-    /**
-     * @brief
-     */
+
     static void aumentarVisitas();
 
-    /**
-     * @brief
-     */
     static void aumentarReproducoes();
 
-    /**
-     * @brief
-     */
     static void atualizarUltimoAcesso();
 
     // **** EXPORTAÇÃO ************************************************
 
-    /**
-     * @brief
-     */
     static void atualizarUltimaExportacao();
 
     // **** SENHA ************************************************
 
-    /**
-     * @brief
-     * @return
-     */
     static QString carregarSenha();
 
-    /**
-     * @brief
-     * @param novaSenha
-     */
     static void alterarSenha(QString novaSenha);
 
     /* ************************************************************
@@ -205,52 +213,23 @@ public:
      *************************************************************/
 
     /**
-     * @brief
-     * @param sequencia
-     * @return
+     * @brief Salva uma sequência em um arquivo Json
+     * @param sequencia A sequência a ser salva
+     * @param pasta A pasta que o arquivo estará salvo
+     * @param nomeArquivo O nome do arquivo que será salvo
      */
-    static int calcularId(QJsonArray sequencia);
+    void salvarSequenciaNoArquivo(QJsonArray sequencia, QString pasta, QString nomeArquivo);
 
     // **** VIDEO ************************************************
 
-    /**
-     * @brief
-     * @param caminhoDestino
-     * @param nomeArquivo
-     * @return
-     */
+
     static QJsonArray adicionarVideo(QString caminhoDestino, QString nomeArquivo);
 
     // **** PERGUNTA ************************************************
 
-    /**
-     * @brief
-     * @param caminhoDestino
-     * @param pergunta
-     * @param opcao1
-     * @param opcao2
-     * @param opcao3
-     * @param opcao4
-     * @param correta
-     * @return
-     */
-    static QJsonArray adicionarPergunta(QString caminhoDestino, QString pergunta, QString opcao1, QString opcao2, QString opcao3, QString opcao4, int correta);
+    int encontrarRespostaExistente(QJsonArray array, QJsonObject objeto);
 
-    /**
-     * @brief
-     * @param array
-     * @param objeto
-     * @return
-     */
-    static int encontrarRespostaExistente(QJsonArray array, QJsonObject objeto);
-
-    /**
-     * @brief
-     * @param objetoJson
-     * @param caminhoDestino
-     * @param selecionada
-     */
-    static void salvarResposta(QJsonObject objetoJson, QString caminhoDestino, int selecionada);
+    void salvarResposta(QJsonObject objetoJson, int selecionada, QString nomeArquivo);
 
     // Nome das pastas (por enquanto, publico)
     structPastas pastas = {"configuracoes", "backups"};

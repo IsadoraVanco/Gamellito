@@ -31,13 +31,6 @@ enum class Pagina{
     AdicionarPergunta   //5
 };
 
-// Perfis disponíveis
-enum class Perfil{
-    Paciente,       // 0
-    Responsavel,    // 1
-    Profissional    // 2
-};
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -68,131 +61,16 @@ private slots:
      */
     void mostrarTela(Pagina tipo);
 
-    /**
-     * @brief MainWindow Configura todas as telas dinamicamente
-     */
     void configurarTelas();
 
     /* ************************************************************
      * ICONES
      *************************************************************/
 
+    /**
+     * @brief Atualiza o ícone do botão de som do menu
+     */
     void atualizarIconeSom();
-
-    /* ************************************************************
-     * BOTÕES E AÇÕES
-     *************************************************************/
-
-    // ***** INICIAR *********************************************
-
-    /**
-     * @brief
-     */
-    void on_pushButton_iniciar_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_sobre_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_som_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_configurar_clicked();
-
-    // ***** SOBRE *********************************************
-
-    /**
-     * @brief
-     */
-    void on_pushButton_voltar_sobre_clicked();
-
-    // ***** CONFIGURAR *********************************************
-
-    /**
-     * @brief
-     */
-    void on_pushButton_voltar_configurar_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_alterar_senha_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_adicionar_video_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_adicionar_pergunta_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_salvar_video_clicked();
-
-    // ***** REPRODUTOR *********************************************
-
-    /**
-     * @brief
-     */
-    void on_pushButton_inicio_reprodutor_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_voltar_reprodutor_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_proximo_reprodutor_clicked();
-
-    // ***** PERGUNTA *********************************************
-
-    /**
-     * @brief
-     */
-    void on_pushButton_pergunta_inicio_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_voltar_pergunta_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_proximo_pergunta_clicked();
-
-    // ***** ADICIONAR PERGUNTA *********************************************
-
-    /**
-     * @brief
-     */
-    void on_pushButton_inicial_adicionar_pergunta_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_voltar_adicionar_pergunta_clicked();
-
-    /**
-     * @brief
-     */
-    void on_pushButton_salvar_pergunta_clicked();
-
-    void on_pushButton_editarItem_clicked();
-
-    void on_pushButton_removerItem_clicked();
 
     /* ************************************************************
      * GERENCIAMENTO DAS CONFIGURAÇÕES
@@ -200,167 +78,194 @@ private slots:
 
     // ***** GERAL *********************************************
 
-    /**
-     * @brief
-     */
     void criarArquivoGeral();
 
-    /**
-     * @brief Faz a configuração do arquivo geral de configurações do programa
-     */
     void configurarArquivoGeral();
 
     // ***** SEQUÊNCIAS *********************************************
 
-    /**
-     * @brief
-     */
     bool criarArquivoSequencia();
 
-    /**
-     * @brief
-     * @param sequencia
-     * @return
-     */
     bool ehSequenciaVazia(QJsonArray sequencia);
 
-    /**
-     * @brief
-     * @return
-     */
     bool configurarSequenciaAtual();
 
-    /**
-     * @brief
-     */
     void carregarSequencias();
 
     /**
-     * @brief
-     * @return
+     * @brief Mostra uma caixa de diálogo para confirmar a exclusão
+     * de um item da sequência.
+     * @return true caso confirme, false para caso contrárioS
      */
     bool mostrarConfirmarRemoverItem();
 
     // ***** TELAS *********************************************
 
-    /**
-     * @brief
-     */
     void carregarTelaAtual();
 
-    /**
-     * @brief
-     */
     void mostrarProximaTela();
 
-    /**
-     * @brief
-     */
     void mostrarTelaAnterior();
 
-    /**
-     * @brief
-     */
     void configurarTelaVideo(QJsonObject objetoAtual);
 
-    /**
-     * @brief
-     * @param objetoAtual
-     */
     void configurarTelaPergunta(QJsonObject objetoAtual);
 
     // ***** ADICIONAR PERGUNTA *********************************************
 
-    /**
-     * @brief
-     * @return
-     */
     bool mostrarConfirmarSairPergunta();
 
     /**
-     * @brief
+     * @brief Retira todo texto ou seleção feita no formulário de perguntas
      */
     void limparCamposPergunta();
 
     /**
-     * @brief
-     * @return
+     * @brief Verifica se existem campos que não foram preenchidos no fomulário
+     * @return True caso exista algum campo vazio, false para caso contrário
      */
-    bool verificarCamposVazios();
+    bool existemCamposVazios();
 
     /**
-     * @brief
-     * @return
+     * @brief Verifica se todos os campos foram preenchidos no formulário
+     * @return True caso todos estejam preenchidos, false para caso contrário
      */
-    bool verificarCamposPreenchidos();
+    bool todosCamposPreenchidos();
 
     /**
-     * @brief
-     * @return
+     * @brief Adiciona uma pergunta na sequência do perfil selecionado
+     * @return True caso o processo tenha sido concluído com sucesso,
+     * false para caso contrário
      */
     bool salvarPergunta();
 
     // ***** PERGUNTA *********************************************
 
     /**
-     * @brief
-     * @return
+     * @brief Verifica qual resposta foi selecionada
+     * @return O número da resposta selecionada
      */
     int verificarRespostaSelecionada();
 
     /**
-     * @brief
-     */
-    bool criarArquivoRespostas();
-
-    /**
-     * @brief
+     * @brief Salva a resposta escolhida em um arquivo
      */
     void salvarResposta();
-
-    // ***** VIDEO *********************************************
-
-    /**
-     * @brief
-     * @return
-     */
-    QString selecionarVideo();
-
-    /**
-     * @brief
-     * @return
-     */
-    QString salvarVideoBackup();
 
     // ***** PERFIS *********************************************
 
     /**
-     * @brief
+     * @brief Configura as propriedades de cada perfil existente no sistema.
      */
+    void configurarPerfis();
+
     void removerItemSelecionado();
 
-    /**
-     * @brief
-     */
-    void editarItemSelecionado() ;
+    void editarItemSelecionado();
 
     /**
-     * @brief
+     * @brief Atualiza a lista do perfil atual no widget de seleção.
      */
     void carregarListaPerfilAtual();
 
     /**
-     * @brief
-     * @param nomePerfil
+     * @brief Modifica o usuário selecionado para a exibição da sequência.
+     * @param nomePerfil O texto do perfil selecionado no widget.
      */
     void selecionarPerfil(QString nomePerfil);
 
     /**
-     * @brief
+     * @brief Adiciona os perfis existentes no widget de seleção de usuário.
      */
-    void configurarPerfis();
-
     void adicionarPerfisParaSelecao();
+
+    /* ************************************************************
+     * BOTÕES E AÇÕES
+     *************************************************************/
+
+    // ***** INICIAR *********************************************
+
+    void on_pushButton_iniciar_clicked();
+
+    /**
+     * @brief Mostra a página de "sobre o programa"
+     */
+    void on_pushButton_sobre_clicked();
+
+    /**
+     * @brief Manipula o som ambiente do menu
+     */
+    void on_pushButton_som_clicked();
+
+    void on_pushButton_configurar_clicked();
+
+    // ***** SOBRE *********************************************
+
+    /**
+     * @brief Volta para o início do menu
+     */
+    void on_pushButton_voltar_sobre_clicked();
+
+    // ***** CONFIGURAR *********************************************
+
+    /**
+     * @brief Volta para o início do menu
+     */
+    void on_pushButton_voltar_configurar_clicked();
+
+    /**
+     * @brief Altera a senha de acesso às configurações
+     */
+    void on_pushButton_alterar_senha_clicked();
+
+    /**
+     * @brief Adiciona um vídeo na sequência selecionada
+     */
+    void on_pushButton_adicionar_video_clicked();
+
+    /**
+     * @brief Adiciona uma pergunta na sequência selecionada
+     */
+    void on_pushButton_adicionar_pergunta_clicked();
+
+    /**
+     * @brief Salva um vídeo nas pastas de backup do perfil selecionado
+     */
+    void on_pushButton_salvar_video_clicked();
+
+    /**
+     * @brief Edita um item da sequência selecionada
+     */
+    void on_pushButton_editarItem_clicked();
+
+    /**
+     * @brief Remove um item da sequência selecionada
+     */
+    void on_pushButton_removerItem_clicked();
+
+    // ***** REPRODUTOR *********************************************
+
+    void on_pushButton_inicio_reprodutor_clicked();
+
+    void on_pushButton_voltar_reprodutor_clicked();
+
+    void on_pushButton_proximo_reprodutor_clicked();
+
+    // ***** PERGUNTA *********************************************
+
+    void on_pushButton_pergunta_inicio_clicked();
+
+    void on_pushButton_voltar_pergunta_clicked();
+
+    void on_pushButton_proximo_pergunta_clicked();
+
+    // ***** ADICIONAR PERGUNTA *********************************************
+
+    void on_pushButton_inicial_adicionar_pergunta_clicked();
+
+    void on_pushButton_voltar_adicionar_pergunta_clicked();
+
+    void on_pushButton_salvar_pergunta_clicked();
 
 private:
 
@@ -373,7 +278,7 @@ private:
     // Senha para as configurações
     Senha *senha = new Senha(this);
 
-    Arquivos *arquivos = new Arquivos();
+    Arquivos *arquivos = new Arquivos(this);
 
     // ***** SEQUÊNCIA *********************************************
 

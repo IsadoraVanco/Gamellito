@@ -22,13 +22,11 @@ MainWindow::MainWindow(QWidget *parent)
     // Verifica os arquivos de configurações
     configurarArquivoGeral();
 
+    // Faz a configuração dos atributos dos perfis
     configurarPerfis();
 
-    // Configura os perfis para selecionar
-    adicionarSequenciaLista();
-
-    // Carrega as sequências
-    carregarSequencias();
+    // Configura os perfis para selecionar no widget
+    adicionarPerfisParaSelecao();
 
     // Inicializa a primeira tela
     configurarTelas();
@@ -128,190 +126,6 @@ void MainWindow::atualizarIconeSom(){
 }
 
 /* ************************************************************
- * BOTÕES E AÇÕES
- *************************************************************/
-
-// ***** INICIAR *********************************************
-
-void MainWindow::on_pushButton_iniciar_clicked()
-{
-    Arquivos::aumentarReproducoes();
-    indiceAtual = 0;
-
-    if(configurarSequenciaAtual()){
-        somAmbiente->desligar();
-        carregarTelaAtual();
-    }
-}
-
-void MainWindow::on_pushButton_sobre_clicked()
-{
-    mostrarTela(Pagina::Sobre);
-}
-
-void MainWindow::on_pushButton_som_clicked()
-{
-    if(somAmbiente->estaMutado()){
-        somAmbiente->ligar();
-    }else{
-        somAmbiente->desligar();
-    }
-
-    atualizarIconeSom();
-}
-
-void MainWindow::on_pushButton_configurar_clicked()
-{
-    if(senha->autenticarSenha()){
-        mostrarTela(Pagina::Configurar);
-    }
-}
-
-// ***** SOBRE *********************************************
-
-void MainWindow::on_pushButton_voltar_sobre_clicked()
-{
-    mostrarTela(Pagina::Inicial);
-}
-
-// ***** CONFIGURAR *********************************************
-
-void MainWindow::on_pushButton_voltar_configurar_clicked()
-{
-    mostrarTela(Pagina::Inicial);
-}
-
-void MainWindow::on_pushButton_alterar_senha_clicked()
-{
-    senha->alterarSenha();
-}
-
-void MainWindow::on_pushButton_adicionar_video_clicked()
-{
-    // Copia um vídeo no backup
-    QString nomeArquivoVideo = salvarVideoBackup();
-
-    // Caso não tenha sido selecionado nenhum arquivo ("")
-    if(nomeArquivoVideo.isEmpty()){
-        return;
-    }
-
-    // Cria a pasta de configurações caso não exista
-    Arquivos::criarPasta(pastas.configuracoes);
-
-    // Adiciona o vídeo no arquivo de sequencia
-    QString caminho = pastas.configuracoes + '/' + arquivos[perfilAtual].sequencia;
-
-    // Adiciona o vídeo na sequência
-    sequencias[perfilAtual] = Arquivos::adicionarVideo(caminho, nomeArquivoVideo);
-
-    qDebug() << "[Main] [INFO] Vídeo adicionado na sequência";
-
-    carregarListaPerfil();
-}
-
-void MainWindow::on_pushButton_adicionar_pergunta_clicked()
-{
-    limparCamposPergunta();
-    mostrarTela(Pagina::AdicionarPergunta);
-}
-
-void MainWindow::on_pushButton_salvar_video_clicked()
-{
-    salvarVideoBackup();
-}
-
-void MainWindow::on_pushButton_editarItem_clicked()
-{
-    editarItemSelecionado();
-}
-
-void MainWindow::on_pushButton_removerItem_clicked()
-{
-    // Confirma se gostaria de remover
-    if(ui->listWidget->currentItem() && mostrarConfirmarRemoverItem()){
-        removerItemSelecionado();
-    }
-}
-
-
-// ***** REPRODUTOR *********************************************
-
-void MainWindow::on_pushButton_inicio_reprodutor_clicked()
-{
-    reprodutor->pararVideo();
-
-    somAmbiente->ligar();
-    atualizarIconeSom();
-
-    mostrarTela(Pagina::Inicial);
-}
-
-void MainWindow::on_pushButton_voltar_reprodutor_clicked()
-{
-    reprodutor->pararVideo();
-    mostrarTelaAnterior();
-}
-
-void MainWindow::on_pushButton_proximo_reprodutor_clicked()
-{
-    reprodutor->pararVideo();
-    mostrarProximaTela();
-}
-
-// ***** PERGUNTA *********************************************
-
-void MainWindow::on_pushButton_pergunta_inicio_clicked()
-{
-    mostrarTela(Pagina::Inicial);
-    somAmbiente->ligar();
-    atualizarIconeSom();
-}
-
-void MainWindow::on_pushButton_voltar_pergunta_clicked()
-{
-    mostrarTelaAnterior();
-}
-
-void MainWindow::on_pushButton_proximo_pergunta_clicked()
-{
-    salvarResposta();
-    mostrarProximaTela();
-}
-
-// ***** ADICIONAR PERGUNTA *********************************************
-
-void MainWindow::on_pushButton_inicial_adicionar_pergunta_clicked()
-{
-    if(verificarCamposPreenchidos()){
-        if(mostrarConfirmarSairPergunta()){
-            mostrarTela(Pagina::Inicial);
-        }
-    }else{
-        mostrarTela(Pagina::Inicial);
-    }
-}
-
-void MainWindow::on_pushButton_voltar_adicionar_pergunta_clicked()
-{
-    if(verificarCamposPreenchidos()){
-        if(mostrarConfirmarSairPergunta()){
-            mostrarTela(Pagina::Configurar);
-        }
-    }else{
-        mostrarTela(Pagina::Configurar);
-    }
-}
-
-void MainWindow::on_pushButton_salvar_pergunta_clicked()
-{
-    if(salvarPergunta()){
-        carregarListaPerfil();
-        mostrarTela(Pagina::Configurar);
-    }
-}
-
-/* ************************************************************
  * GERENCIAMENTO DAS CONFIGURAÇÕES
  *************************************************************/
 
@@ -405,7 +219,7 @@ void MainWindow::carregarSequencias(){
         sequencias[perfil.first] = sequencia;
     }
 
-    carregarListaPerfil();
+    carregarListaPerfilAtual();
 }
 
 bool MainWindow::mostrarConfirmarRemoverItem(){
@@ -533,6 +347,7 @@ bool MainWindow::mostrarConfirmarSairPergunta(){
 
 void MainWindow::limparCamposPergunta(){
     ui->textEdit_pergunta->setText("");
+
     ui->textEdit_opcao1->setText("");
     ui->radioButton_opcao1->setAutoExclusive(false);
     ui->radioButton_opcao1->setChecked(false);
@@ -554,7 +369,7 @@ void MainWindow::limparCamposPergunta(){
     ui->radioButton_opcao4->setAutoExclusive(true);
 }
 
-bool MainWindow::verificarCamposPreenchidos(){
+bool MainWindow::todosCamposPreenchidos(){
     QString pergunta = ui->textEdit_pergunta->toPlainText();
     if(pergunta != ""){
         return true;
@@ -583,35 +398,35 @@ bool MainWindow::verificarCamposPreenchidos(){
     return false;
 }
 
-bool MainWindow::verificarCamposVazios(){
+bool MainWindow::existemCamposVazios(){
 
     QString pergunta = ui->textEdit_pergunta->toPlainText();
     if(pergunta == ""){
-        qDebug() << "[Main] [ERRO] O campo de pergunta está vazio";
+        qDebug() << "[Main][ERRO] O campo de pergunta está vazio";
         return true;
     }
 
     QString opcao1 = ui->textEdit_opcao1->toPlainText();
     if(opcao1 == ""){
-        qDebug() << "[Main] [ERRO] O campo da opção 1 está vazio";
+        qDebug() << "[Main][ERRO] O campo da opção 1 está vazio";
         return true;
     }
 
     QString opcao2 = ui->textEdit_opcao2->toPlainText();
     if(opcao2 == ""){
-        qDebug() << "[Main] [ERRO] O campo da opção 2 está vazio";
+        qDebug() << "[Main][ERRO] O campo da opção 2 está vazio";
         return true;
     }
 
     QString opcao3 = ui->textEdit_opcao3->toPlainText();
     if(opcao3 == ""){
-        qDebug() << "[Main] [ERRO] O campo da opção 3 está vazio";
+        qDebug() << "[Main][ERRO] O campo da opção 3 está vazio";
         return true;
     }
 
     QString opcao4 = ui->textEdit_opcao4->toPlainText();
     if(opcao4 == ""){
-        qDebug() << "[Main] [ERRO] O campo da opção 4 está vazio";
+        qDebug() << "[Main][ERRO] O campo da opção 4 está vazio";
         return true;
     }
 
@@ -619,12 +434,20 @@ bool MainWindow::verificarCamposVazios(){
 }
 
 bool MainWindow::salvarPergunta(){
+
     // Verifica se todos os campos foram preenchidos
-    if(verificarCamposVazios()){
+    if(existemCamposVazios()){
         QMessageBox::about(this, "Campos vazios", "Existem campos que estão vazios. Por favor, complete-os antes de salvar.");
 
         return false;
     }
+
+    // Converte textos
+    QString pergunta = ui->textEdit_pergunta->toPlainText();
+    QString opcao1 = ui->textEdit_opcao1->toPlainText();
+    QString opcao2 = ui->textEdit_opcao2->toPlainText();
+    QString opcao3 = ui->textEdit_opcao3->toPlainText();
+    QString opcao4 = ui->textEdit_opcao4->toPlainText();
 
     // Verificar qual a correta
     int correta = 0;
@@ -639,27 +462,17 @@ bool MainWindow::salvarPergunta(){
         correta = 4;
     }
 
-    // Cria a pasta de configurações caso não exista
-    Arquivos::criarPasta(pastas.configuracoes);
+    // Adiciona a pergunta na sequência
+    perfis[perfilAtual]->sequencia->adicionarPergunta(pergunta, opcao1, opcao2, opcao3, opcao4, correta);
 
-    // Adiciona a pergunta no arquivo de sequencia
-    QString caminho = pastas.configuracoes + '/' + arquivos[perfilAtual].sequencia;
+    // Atualiza a sequência no arquivo
+    arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.pasta, perfis[perfilAtual]->arquivos.sequencia);
 
-    QString pergunta = ui->textEdit_pergunta->toPlainText();
-    QString opcao1 = ui->textEdit_opcao1->toPlainText();
-    QString opcao2 = ui->textEdit_opcao2->toPlainText();
-    QString opcao3 = ui->textEdit_opcao3->toPlainText();
-    QString opcao4 = ui->textEdit_opcao4->toPlainText();
-
-    sequencias[perfilAtual] = Arquivos::adicionarPergunta(caminho, pergunta, opcao1, opcao2, opcao3, opcao4, correta);
-
-    if(ehSequenciaVazia(sequencias[perfilAtual])){
-        QMessageBox::critical(this, "ERRO", "Ocorreu um erro ao salvar a pergunta. Entre em contato com o suporte.");
-        return false;
-    }
+    // Recarrega a lista do widget
+    carregarListaPerfilAtual();
 
     QMessageBox::about(this, "Pergunta salva", "A pergunta foi salva na sequência");
-    qDebug() << "[Main] [OK] Pergunta adicionada na sequência";
+    qDebug() << "[Main][OK] Pergunta adicionada na sequência";
 
     return true;
 }
@@ -683,21 +496,6 @@ int MainWindow::verificarRespostaSelecionada(){
     return selecionada;
 }
 
-bool MainWindow::criarArquivoRespostas(){
-    // Cria pasta de configurações
-    Arquivos::criarPasta(pastas.configuracoes);
-
-    QString caminho = pastas.configuracoes + '/' + arquivos[perfilAtual].respostas;
-
-    // Se houver problema ao criar o arquivo
-    if(!Arquivos::criarArquivo(caminho)){
-        QMessageBox::critical(this, "ERRO", "O arquivo de respostas não pôde ser criado. Por favor, entre em contato com o suporte.");
-        return false;
-    }
-
-    return true;
-}
-
 void MainWindow::salvarResposta(){
 
     int selecionada = verificarRespostaSelecionada();
@@ -706,72 +504,8 @@ void MainWindow::salvarResposta(){
         return;
     }
 
-    // Arquivo de respostas
-    QString arquivo = pastas.configuracoes + '/' + arquivos[perfilAtual].respostas;
-
-    if(!Arquivos::arquivoExiste(arquivo)){
-        // Cria um arquivo vazio para a resposta
-        criarArquivoRespostas();
-    }
-
-    QJsonObject objeto = sequencias[perfilAtual][indiceAtual].toObject();
-
     // Salva a resposta no arquivo
-    Arquivos::salvarResposta(objeto, arquivo, selecionada);
-
-}
-
-// ***** VIDEO *********************************************
-
-QString MainWindow::selecionarVideo(){
-    // Obtem o diretório home do usuário
-    QString diretorioInicial = QDir::homePath();
-
-    // Adiciona uma barra no final se não houver
-    if (!diretorioInicial.endsWith(QDir::separator())) {
-        diretorioInicial += QDir::separator();
-    }
-
-    QString caminhoArquivo = QFileDialog::getOpenFileName(this, tr("Selecione o video"), diretorioInicial, tr("MP4 (*.mp4);; MKV (*.mkv)"));
-
-    return caminhoArquivo;
-}
-
-QString MainWindow::salvarVideoBackup(){
-    // Cria pasta de backup geral
-    Arquivos::criarPasta(arquivos->pastas.backups);
-
-    // Pasta do perfil
-    QString pastaPerfil = arquivos->pastas.backups + '/' + arquivos[perfilAtual].pasta + '/';
-
-    // Cria pasta de backup do perfil
-    Arquivos::criarPasta(pastaPerfil);
-
-    // Seleciona o vídeo
-    QString caminhoArquivo = selecionarVideo();
-
-    // Verifica se o arquivo foi escolhido e existe
-    if(caminhoArquivo == "" || !Arquivos::arquivoExiste(caminhoArquivo)){
-        return QString();
-    }
-
-    // Copia o nome do arquivo
-    QFileInfo arquivo(caminhoArquivo);
-    QString nomeArquivo = arquivo.fileName();
-
-    // Monta o caminho completo de destino
-    QString destinoCompleto = pastaPerfil + nomeArquivo;
-
-    if(Arquivos::copiarArquivo(caminhoArquivo, destinoCompleto)) {
-        QMessageBox::about(this, "Arquivo copiado", "Arquivo copiado para o backup!");
-        qDebug() << "[Main][OK] Arquivo copiado com sucesso:" << caminhoArquivo;
-    }else{
-        //QMessageBox::critical(this, "ERRO", "Erro ao copiar o arquivo para o backup. Por favor, tente novamente.");
-        QMessageBox::about(this, "Arquivo duplicado", "O arquivo já está no backup");
-        qDebug() << "[Main][ERRO] Falha ao copiar o arquivo:" << caminhoArquivo;
-    }
-
-    return nomeArquivo;
+    arquivos->salvarResposta(perfis[perfilAtual]->sequencia->getItemNoIndexAtual(), selecionada, perfis[perfilAtual]->arquivos.respostas);
 }
 
 // ***** PERFIS *********************************************
@@ -793,6 +527,8 @@ void MainWindow::configurarPerfis(){
     profissional->arquivos.pasta = "profissional";
     profissional->arquivos.respostas = "rpr.json";
     profissional->arquivos.sequencia = "spr.json";
+
+    // Carrega a sequência de cada perfil
 }
 
 void MainWindow::removerItemSelecionado(){
@@ -872,4 +608,190 @@ void MainWindow::adicionarPerfisParaSelecao(){
                          [&](int index) {
                             selecionarPerfil(ui->comboBox_perfis->itemText(index));
                          });
+}
+
+/* ************************************************************
+ * BOTÕES E AÇÕES
+ *************************************************************/
+
+// ***** INICIAR *********************************************
+
+void MainWindow::on_pushButton_iniciar_clicked()
+{
+    Arquivos::aumentarReproducoes();
+
+    perfis[perfilAtual]->sequencia->resetarIndice();
+
+    if(configurarSequenciaAtual()){
+        somAmbiente->desligar();
+        carregarTelaAtual();
+    }
+}
+
+void MainWindow::on_pushButton_sobre_clicked()
+{
+    mostrarTela(Pagina::Sobre);
+}
+
+void MainWindow::on_pushButton_som_clicked()
+{
+    if(somAmbiente->estaMutado()){
+        somAmbiente->ligar();
+    }else{
+        somAmbiente->desligar();
+    }
+
+    atualizarIconeSom();
+}
+
+void MainWindow::on_pushButton_configurar_clicked()
+{
+    if(senha->autenticarSenha()){
+        mostrarTela(Pagina::Configurar);
+    }
+}
+
+// ***** SOBRE *********************************************
+
+void MainWindow::on_pushButton_voltar_sobre_clicked()
+{
+    mostrarTela(Pagina::Inicial);
+}
+
+// ***** CONFIGURAR *********************************************
+
+void MainWindow::on_pushButton_voltar_configurar_clicked()
+{
+    mostrarTela(Pagina::Inicial);
+}
+
+void MainWindow::on_pushButton_alterar_senha_clicked()
+{
+    senha->alterarSenha();
+}
+
+void MainWindow::on_pushButton_adicionar_video_clicked()
+{
+    // Copia um vídeo no backup
+    QString nomeArquivoVideo = arquivos->salvarVideoBackup(perfis[perfilAtual]->arquivos.pasta);
+
+    // Caso não tenha sido selecionado nenhum arquivo ("")
+    if(nomeArquivoVideo.isEmpty()){
+        return;
+    }
+
+    // Adiciona o vídeo na sequência
+    perfis[perfilAtual]->sequencia->adicionarVideo(nomeArquivoVideo);
+
+    // Atualiza a sequência no arquivo
+    arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.pasta, perfis[perfilAtual]->arquivos.sequencia);
+
+    // Recarrega a lista no widget
+    carregarListaPerfilAtual();
+
+    qDebug() << "[Main][INFO] Vídeo adicionado na sequência:" << nomeArquivoVideo;
+}
+
+void MainWindow::on_pushButton_adicionar_pergunta_clicked()
+{
+    limparCamposPergunta();
+    mostrarTela(Pagina::AdicionarPergunta);
+}
+
+void MainWindow::on_pushButton_salvar_video_clicked()
+{
+    arquivos->salvarVideoBackup(perfis[perfilAtual]->arquivos.pasta);
+}
+
+void MainWindow::on_pushButton_editarItem_clicked()
+{
+    if(ui->listWidget->currentItem()){
+        editarItemSelecionado();
+    }
+}
+
+void MainWindow::on_pushButton_removerItem_clicked()
+{
+    // Confirma se gostaria de remover
+    if(ui->listWidget->currentItem() && mostrarConfirmarRemoverItem()){
+        removerItemSelecionado();
+    }
+}
+
+
+// ***** REPRODUTOR *********************************************
+
+void MainWindow::on_pushButton_inicio_reprodutor_clicked()
+{
+    reprodutor->pararVideo();
+
+    somAmbiente->ligar();
+    atualizarIconeSom();
+
+    mostrarTela(Pagina::Inicial);
+}
+
+void MainWindow::on_pushButton_voltar_reprodutor_clicked()
+{
+    reprodutor->pararVideo();
+    mostrarTelaAnterior();
+}
+
+void MainWindow::on_pushButton_proximo_reprodutor_clicked()
+{
+    reprodutor->pararVideo();
+    mostrarProximaTela();
+}
+
+// ***** PERGUNTA *********************************************
+
+void MainWindow::on_pushButton_pergunta_inicio_clicked()
+{
+    mostrarTela(Pagina::Inicial);
+
+    somAmbiente->ligar();
+    atualizarIconeSom();
+}
+
+void MainWindow::on_pushButton_voltar_pergunta_clicked()
+{
+    mostrarTelaAnterior();
+}
+
+void MainWindow::on_pushButton_proximo_pergunta_clicked()
+{
+    salvarResposta();
+    mostrarProximaTela();
+}
+
+// ***** ADICIONAR PERGUNTA *********************************************
+
+void MainWindow::on_pushButton_inicial_adicionar_pergunta_clicked()
+{
+    if(todosCamposPreenchidos()){
+        if(mostrarConfirmarSairPergunta()){
+            mostrarTela(Pagina::Inicial);
+        }
+    }else{
+        mostrarTela(Pagina::Inicial);
+    }
+}
+
+void MainWindow::on_pushButton_voltar_adicionar_pergunta_clicked()
+{
+    if(todosCamposPreenchidos()){
+        if(mostrarConfirmarSairPergunta()){
+            mostrarTela(Pagina::Configurar);
+        }
+    }else{
+        mostrarTela(Pagina::Configurar);
+    }
+}
+
+void MainWindow::on_pushButton_salvar_pergunta_clicked()
+{
+    if(salvarPergunta()){
+        carregarListaPerfilAtual();
+        mostrarTela(Pagina::Configurar);
+    }
 }
