@@ -5,6 +5,9 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+// Para configurar arquivos
+#include "arquivos.h"
+
 class Sequencia
 {
 public:
@@ -40,12 +43,49 @@ public:
     void resetarIndice();
 
     /**
+     * @brief Calcula o próximo indice da sequencia e indica se ainda está dentro
+     * do limite
+     * @return true caso ainda esteja dentro do limite do indice, false para caso
+     * contrário
+     */
+    bool proximoIndice();
+
+    /**
+     * @brief Calcula o indice anterior da sequencia e indica se ainda está dentro
+     * do limite
+     * @return true caso ainda esteja dentro do limite do indice, false para caso
+     * contrário
+     */
+    bool indiceAnterior();
+
+    /**
      * @brief Calcula um Id para o novo item da lista
      * @return O novo Id
      */
     int calcularNovoId();
 
-    // **** ITENS ************************************************
+    // **** MANIPULAÇÃO DE ITENS ************************************************
+
+    /**
+     * @brief Carrega a sequência armazenada no arquivo
+     * @param nomeArquivo O nome do arquivo que está a sequência
+     */
+    void carregarDoArquivo(QString nomeArquivo);
+
+    /**
+     * @brief Retorna o valor da chave de um objeto Json
+     * @param objetoJson O objeto Json
+     * @param chave A chave a ser buscada
+     * @return O valor da chave do objeto Json
+     */
+    static QString valorChave(QJsonObject objetoJson, QString chave);
+
+    /**
+     * @brief Retorna o valor da chave do item no index atual
+     * @param chave A chave a ser buscada
+     * @return O valor da chave no item
+     */
+    QString valorChaveNoIndexAtual(QString chave);
 
     /**
      * @brief Retorna o valor do item no index indicado na sequência
@@ -54,7 +94,17 @@ public:
      */
     QString valorItem(int index);
 
-    // **** MANIPULAÇÃO DE ITENS ************************************************
+    /**
+     * @brief Retorna o valor do item no index atual
+     * @return O valor do item
+     */
+    QString valorItemNoIndexAtual();
+
+    /**
+     * @brief Retorna o tipo do item no indice atual da sequência
+     * @return O tipo do item
+     */
+    QString tipoItemNoIndexAtual();
 
     /**
      * @brief Retorna o item no indice atual da sequência
@@ -84,6 +134,9 @@ private:
     int indiceAtual = 0;
 
     QJsonArray *array;
+
+    // Configurar
+    Arquivos *arquivos = new Arquivos();
 };
 
 #endif // SEQUENCIA_H

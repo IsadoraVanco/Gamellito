@@ -152,14 +152,6 @@ public:
      */
     static bool escreverObjetoJson(QJsonObject &objetoJson, QString pathArquivo);
 
-    /**
-     * @brief
-     * @param objetoJson
-     * @param chave
-     * @return
-     */
-    static QString retornarValorChaveObjeto(QJsonObject objetoJson, QString chave);
-
     // **** ARRAY ************************************************
 
     /**
@@ -181,13 +173,11 @@ public:
      *************************************************************/
 
     /**
-     * @brief Preenche o arquivo de configurações iniciais
-     * @param nomeArquivo
-     * @param senha
-     * @return True caso dê tudo certo, false para caso contrário
+     * @brief Cria o arquivo de configuração geral
+     * @param novaSenha A nova senha válida
+     * @return true caso tudo tenha sido concluído com sucesso, false para caso contrário
      */
-    static bool preencherArquivoGeral(QString novaSenha, structArquivos paciente,
-                         structArquivos responsavel, structArquivos profissional);
+    bool criarArquivoGeral(QString novaSenha);
 
     // **** VISITAS ************************************************
 
@@ -213,12 +203,18 @@ public:
      *************************************************************/
 
     /**
+     * @brief Carrega uma sequência de um um arquivo Json e o retorna
+     * @param nomeArquivo O nome do arquivo que a sequência está armazenada
+     * @return A sequência carregada
+     */
+    QJsonArray carregarSequenciaDoArquivo(QString nomeArquivo);
+
+    /**
      * @brief Salva uma sequência em um arquivo Json
      * @param sequencia A sequência a ser salva
-     * @param pasta A pasta que o arquivo estará salvo
      * @param nomeArquivo O nome do arquivo que será salvo
      */
-    void salvarSequenciaNoArquivo(QJsonArray sequencia, QString pasta, QString nomeArquivo);
+    void salvarSequenciaNoArquivo(QJsonArray sequencia, QString nomeArquivo);
 
     // **** VIDEO ************************************************
 

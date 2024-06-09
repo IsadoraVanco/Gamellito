@@ -1,5 +1,6 @@
 #include "sequencia.h"
 
+
 // **** CONSTRUTOR ************************************************
 
 Sequencia::Sequencia(){
@@ -24,6 +25,28 @@ QJsonArray Sequencia::getSequencia(){
 
 void Sequencia::resetarIndice(){
     this->indiceAtual = 0;
+}
+
+bool Sequencia::proximoIndice(){
+
+    if(this->indiceAtual + 1 >= this->array->size()){
+        this->resetarIndice();
+        return false;
+    }
+
+    this->indiceAtual++;
+    return true;
+}
+
+bool Sequencia::indiceAnterior(){
+
+    if(this->indiceAtual - 1 < 0){
+        this->resetarIndice();
+        return false;
+    }
+
+    this->indiceAtual--;
+    return true;
 }
 
 int Sequencia::calcularNovoId(){
@@ -54,7 +77,45 @@ int Sequencia::calcularNovoId(){
     return id + 1;
 }
 
-// **** ITENS ************************************************
+// **** MANIPULAÇÃO DE ITENS ************************************************
+
+void Sequencia::carregarDoArquivo(QString nomeArquivo){
+
+    *this->array = arquivos->carregarSequenciaDoArquivo(nomeArquivo);
+}
+
+QString Sequencia::valorChave(QJsonObject objetoJson, QString chave){
+
+    // Verifica se o objeto possui uma chave chamada "tipo"
+    if(objetoJson.contains(chave)) {
+
+        // Acessa o valor da chave
+        QString valor = objetoJson[chave].toString();
+
+        qDebug() << "[Sequencia][OK] O elemento possui a chave" << chave << "e possui valor" << valor;
+        return valor;
+    } else {
+        qDebug() << "[Sequencia][ERRO] O elemento não possui uma chave chamada" << chave;
+        return QString();
+    }
+}
+
+QString Sequencia::valorChaveNoIndexAtual(QString chave){
+    QJsonObject objeto = this->array->at(indiceAtual).toObject();
+
+    // Verifica se o objeto possui uma chave chamada "tipo"
+    if(objeto.contains(chave)) {
+
+        // Acessa o valor da chave
+        QString valor = objeto[chave].toString();
+
+        qDebug() << "[Sequencia][OK] O elemento atual possui a chave" << chave << "e possui valor" << valor;
+        return valor;
+    } else {
+        qDebug() << "[Sequencia][ERRO] O elemento atual não possui uma chave chamada" << chave;
+        return QString();
+    }
+}
 
 QString Sequencia::valorItem(int index){
     if(index < 0 || index >= this->array->size()){
@@ -73,7 +134,24 @@ QString Sequencia::valorItem(int index){
     return QString();
 }
 
-// **** MANIPULAÇÃO DE ITENS ************************************************
+QString Sequencia::valorItemNoIndexAtual(){
+    QJsonObject objeto = this->array->at(indiceAtual).toObject();
+
+    if(objeto["tipo"] == "video"){
+        return objeto["caminho"].toString();
+
+    }else if(objeto["tipo"] == "pergunta"){
+        return objeto["pergunta"].toString();
+    }
+
+    return QString();
+}
+
+QString Sequencia::tipoItemNoIndexAtual(){
+    QJsonObject objeto = this->array->at(indiceAtual).toObject();
+
+    return objeto["tipo"].toString();
+}
 
 QJsonObject Sequencia::getItemNoIndexAtual(){
     return this->array->at(indiceAtual).toObject();

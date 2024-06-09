@@ -93,7 +93,7 @@ void Senha::alterarSenha(){
         senhaArquivo = novaSenha;
         Arquivos::alterarSenha(novaSenha);
 
-        qDebug() << "[Senha] [INFO] Senha alterada:" << senhaArquivo;
+        qDebug() << "[Senha][INFO] Senha alterada:" << senhaArquivo;
 
         QMessageBox::about(this, "Senha cadastrada", "Sua nova senha foi cadastrada com sucesso!");
     }else if(novaSenha != ""){
@@ -105,7 +105,7 @@ void Senha::carregarSenha(){
     // Carrega a senha do arquivo
     senhaArquivo = Arquivos::carregarSenha();
 
-    qDebug() << "[Senha] [INFO] Senha atual:" << senhaArquivo;
+    qDebug() << "[Senha][INFO] Senha atual:" << senhaArquivo;
 
     // Caso a senha tenha sido alterada, ou houve algum erro ao carregar
     if(!ehSenhaValida(senhaArquivo)){

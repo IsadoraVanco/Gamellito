@@ -78,17 +78,12 @@ private slots:
 
     // ***** GERAL *********************************************
 
-    void criarArquivoGeral();
-
+    /**
+     * @brief Configura o arquivo de configurações gerais
+     */
     void configurarArquivoGeral();
 
     // ***** SEQUÊNCIAS *********************************************
-
-    bool criarArquivoSequencia();
-
-    bool ehSequenciaVazia(QJsonArray sequencia);
-
-    bool configurarSequenciaAtual();
 
     void carregarSequencias();
 

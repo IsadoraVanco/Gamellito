@@ -233,27 +233,11 @@ bool Arquivos::escreverObjetoJson(QJsonObject &objetoJson, QString pathArquivo){
         arquivoJson.write(docJson.toJson());
         arquivoJson.close();
 
-        qDebug() << "[Arquivos] [OK] Arquivo JSON salvo com sucesso:" << pathArquivo;
+        qDebug() << "[Arquivos][OK] Arquivo JSON salvo com sucesso:" << pathArquivo;
         return true;
     }else{
-        qDebug() << "[Arquivos] [ERRO] Erro ao abrir o arquivo JSON para escrita:" << pathArquivo;
+        qDebug() << "[Arquivos][ERRO] Erro ao abrir o arquivo JSON para escrita:" << pathArquivo;
         return false;
-    }
-}
-
-QString Arquivos::retornarValorChaveObjeto(QJsonObject objetoJson, QString chave){
-
-    // Verifica se o objeto possui uma chave chamada "tipo"
-    if (objetoJson.contains(chave)) {
-
-        // Acessa o valor da chave
-        QString valor = objetoJson[chave].toString();
-
-        qDebug() << "[Arquivos] [OK] O elemento atual possui a chave" << chave << "e possui valor" << valor;
-        return valor;
-    } else {
-        qDebug() << "[Arquivos] [ERRO] O elemento atual não possui uma chave chamada" << chave;
-        return QString();
     }
 }
 
@@ -313,21 +297,12 @@ void Arquivos::escreverArrayJson(QString pathArquivoJson, QJsonArray arrayJson){
  * ARQUIVO DE CONFIGURAÇÃO GERAL
  *************************************************************/
 
-bool Arquivos::preencherArquivoGeral(QString novaSenha, structArquivos paciente,
-                                     structArquivos responsavel, structArquivos profissional){
+bool Arquivos::criarArquivoGeral(QString novaSenha){
     QJsonObject novoObjeto;
-
-    novoObjeto["sequenciaPaciente"] = QString(paciente.sequencia);
-    novoObjeto["respostasPaciente"] = QString(paciente.respostas);
-
-    novoObjeto["sequenciaResponsavel"] = QString(responsavel.sequencia);
-    novoObjeto["respostasResponsavel"] = QString(responsavel.respostas);
-
-    novoObjeto["sequenciaProfissional"] = QString(profissional.sequencia);
-    novoObjeto["respostasProfissional"] = QString(profissional.respostas);
 
     // Refere-se ao número de vezes que o programa foi aberto
     novoObjeto["numeroAcessos"] = 1; // acessando agora :)
+
     // Refere-se ao número de vezes que o botão de "iniciar" foi apertado
     novoObjeto["numeroReproducoes"] = 0;
     novoObjeto["ultimoAcesso"] = carregarDataAtual();
@@ -444,13 +419,10 @@ void Arquivos::alterarSenha(QString novaSenha){
  * ARQUIVO DE CONFIGURAÇÃO DE SEQUÊNCIA
  *************************************************************/
 
-void Arquivos::salvarSequenciaNoArquivo(QJsonArray sequencia, QString pasta, QString nomeArquivo){
+void Arquivos::salvarSequenciaNoArquivo(QJsonArray sequencia, QString nomeArquivo){
 
     //Cria as pastas para salvar o arquivo
     criarPasta(pastas.configuracoes);
-
-    QString caminho = pastas.configuracoes + '/' + pasta;
-    criarPasta(caminho);
 
     // Cria um documento JSON a partir do array JSON
     QJsonDocument doc(sequencia);
@@ -459,7 +431,7 @@ void Arquivos::salvarSequenciaNoArquivo(QJsonArray sequencia, QString pasta, QSt
     QString strJson(doc.toJson(QJsonDocument::Compact));
 
     // Cria um objeto QFile com o nome do arquivo
-    QString pathArquivo = caminho + '/' + nomeArquivo;
+    QString pathArquivo = pastas.configuracoes + '/' + nomeArquivo;
     QFile arquivo(QDir::current().absoluteFilePath(pathArquivo));
 
     // Abre o arquivo para escrita
@@ -475,6 +447,33 @@ void Arquivos::salvarSequenciaNoArquivo(QJsonArray sequencia, QString pasta, QSt
     arquivo.close();
 
     qDebug() << "[Arquivos][OK] Sequência salva em:" << pathArquivo;
+}
+
+QJsonArray Arquivos::carregarSequenciaDoArquivo(QString nomeArquivo){
+
+    QString pathArquivo = this->pastas.configuracoes + '/' + nomeArquivo;
+
+    QFile arquivo(QDir::current().absoluteFilePath(pathArquivo));
+
+    // Caso haja erro para abrir o arquivo
+    if (!arquivo.open(QIODevice::ReadOnly | QIODevice::Text)){
+        qDebug() << "[Arquivos][ERRO] Falha ao abrir arquivo JSON para conversão para Array:" << pathArquivo;
+        return QJsonArray();
+    }
+
+    // Lê o arquivo
+    QTextStream input(&arquivo);
+    QString textoJson = input.readAll();
+
+    arquivo.close();
+
+    // Converte a string em um documento JSON
+    QJsonDocument doc = QJsonDocument::fromJson(textoJson.toUtf8());
+
+    // Converte o documento JSON em um array JSON
+    QJsonArray array = doc.array();
+
+    return array;
 }
 
 // **** PERGUNTA ************************************************

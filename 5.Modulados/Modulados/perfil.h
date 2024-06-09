@@ -21,6 +21,8 @@ public:
 
     QString pastaCapitalizada();
 
+    void carregarSequencia();
+
     // Por enquanto, serão públicos
 
     // Nome do perfil

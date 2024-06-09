@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Verifica os arquivos de configurações
+    // Verifica o arquivo de configurações gerais
     configurarArquivoGeral();
 
     // Faz a configuração dos atributos dos perfis
@@ -131,30 +131,20 @@ void MainWindow::atualizarIconeSom(){
 
 // ***** GERAL *********************************************
 
-void MainWindow::criarArquivoGeral(){
-    // Lê uma nova senha válida
-    QString input = senha->definirSenha("Olá profissional! Vamos definir sua senha? Ela será necessária para as configurações do programa e para a troca de usuário");
-
-    // Cria um arquivo
-    if(!Arquivos::criarArquivo(QString(ARQUIVO_CONFIGURACAO_GERAL))){
-        QMessageBox::critical(this, "ERRO", "Não foi possível criar um arquivo de configuração, por favor, entre em contato com o suporte");
-        this->close();
-        return;
-    }
-
-    // Preenche com as configs
-    if(!Arquivos::preencherArquivoGeral(input, arquivos[Perfil::Paciente], arquivos[Perfil::Responsavel], arquivos[Perfil::Profissional])){
-        QMessageBox::critical(this, "ERRO", "Não foi possível preencher o arquivo de configurações iniciais. Por favor, entre em contato com o suporte");
-        this->close();
-        return;
-    }
-
-    QMessageBox::about(this, "Pronto :)", "Os arquivos de configuração inicial do programa foram criados. Aproveite o software! :)");
-}
-
 void MainWindow::configurarArquivoGeral(){
     if(!Arquivos::arquivoExiste(ARQUIVO_CONFIGURACAO_GERAL)){
-        criarArquivoGeral();
+        // Lê uma nova senha válida
+        QString input = senha->definirSenha("Olá profissional! Vamos definir sua senha? Ela será necessária para as configurações do programa e para a troca de usuário");
+
+        bool ok = arquivos->criarArquivoGeral(input);
+
+        if(!ok){
+            QMessageBox::critical(this, "ERRO", "Não foi possível preencher o arquivo de configurações iniciais. Por favor, entre em contato com o suporte");
+            this->close();
+            return;
+        }else{
+            QMessageBox::about(this, "Pronto :)", "Os arquivos de configuração inicial do programa foram criados. Aproveite o software! :)");
+        }
     }else{
         senha->carregarSenha();
 
@@ -168,55 +158,14 @@ void MainWindow::configurarArquivoGeral(){
 
 // ***** SEQUÊNCIAS *********************************************
 
-bool MainWindow::criarArquivoSequencia(){
-
-    QString caminho = pastas.configuracoes + '/' + arquivos[perfilAtual].sequencia;
-
-    // Se houver problema ao criar o arquivo
-    if(!Arquivos::criarArquivo(caminho)){
-        QMessageBox::critical(this, "ERRO", "O arquivo de sequência não pôde ser criado. Por favor, entre em contato com o suporte.");
-        return false;
-    }
-
-    return true;
-}
-
-bool MainWindow::configurarSequenciaAtual(){
-
-    // Verifica se a sequencia está definida
-    if(ehSequenciaVazia(sequencias[perfilAtual])){
-        // Caso a sequência esteja corrompida, também será tratada como sequencia vazia
-
-        QString caminho = pastas.configuracoes + '/' + arquivos[perfilAtual].sequencia;
-
-        if(!Arquivos::arquivoExiste(caminho)){
-            // Cria um arquivo vazio para a sequência
-            criarArquivoSequencia();
-        }
-
-        QMessageBox::about(this, "Sequência não definida", "A sequência de vídeos e perguntas para o perfil atual não foi definida! Por favor, acesse o menu de configurações para definir a sequência.");
-
-        return false;
-    }
-
-    // A sequência já foi carregada no setup!
-    return true;
-}
-
 void MainWindow::carregarSequencias(){
 
     // Adiciona os perfis para seleção (utiliza o nome das pastas capitalizado)
-    for(const auto& perfil : arquivos){
-        // Acessa o valor do mapeamento 'arquivos'
-        structArquivos arquivo = perfil.second;
-
-        QString caminho = pastas.configuracoes + '/' + arquivo.sequencia;
+    for(const auto& user : perfis){
+        Perfil *perfil = user.second;
 
         // Carrega a sequência
-        QJsonArray sequencia = Arquivos::converterJsonParaArray(caminho);
-
-        // Atualiza o mapeamento 'sequencias' com a sequência carregada
-        sequencias[perfil.first] = sequencia;
+        perfis[perfilAtual]->carregarSequencia();
     }
 
     carregarListaPerfilAtual();
@@ -244,11 +193,10 @@ bool MainWindow::mostrarConfirmarRemoverItem(){
 // ***** TELAS *********************************************
 
 void MainWindow::carregarTelaAtual(){
-    // Dá pra melhorar ... :)
 
-    QJsonObject objetoJson = sequencias[perfilAtual][indiceAtual].toObject();
+    QJsonObject objetoJson = perfis[perfilAtual]->sequencia->getItemNoIndexAtual();
 
-    QString tipo = Arquivos::retornarValorChaveObjeto(objetoJson, "tipo");
+    QString tipo = perfis[perfilAtual]->sequencia->tipoItemNoIndexAtual();
 
     if(tipo == "video"){
         mostrarTela(Pagina::Video);
@@ -260,34 +208,33 @@ void MainWindow::carregarTelaAtual(){
 }
 
 void MainWindow::mostrarProximaTela(){
-    if(indiceAtual + 1 >= sequencias[perfilAtual].size()){
+    if(perfis[perfilAtual]->sequencia->proximoIndice()){
+        carregarTelaAtual();
+    }else{
         somAmbiente->ligar();
         atualizarIconeSom();
 
         mostrarTela(Pagina::Inicial);
-    }else{
-        indiceAtual++;
-        carregarTelaAtual();
     }
 }
 
 void MainWindow::mostrarTelaAnterior(){
-    if(indiceAtual - 1 < 0){
+    if(perfis[perfilAtual]->sequencia->indiceAnterior()){
+        carregarTelaAtual();
+    }else{
         somAmbiente->ligar();
         atualizarIconeSom();
 
         mostrarTela(Pagina::Inicial);
-    }else{
-        indiceAtual--;
-        carregarTelaAtual();
     }
 }
 
 void MainWindow::configurarTelaVideo(QJsonObject objetoAtual){
 
-    QString nomeVideo = Arquivos::retornarValorChaveObjeto(objetoAtual, "caminho");
+    QString nomeVideo = perfis[perfilAtual]->sequencia->valorItemNoIndexAtual();
 
-    QString caminhoVideo = pastas.backups + '/' + arquivos[perfilAtual].pasta + '/' + nomeVideo;
+    // Reproduz o video que está no backup do perfil
+    QString caminhoVideo = arquivos->pastas.backups + '/' + perfis[perfilAtual]->arquivos.pasta + '/' + nomeVideo;
 
     reprodutor->configurarVideo(caminhoVideo);
     reprodutor->tocarVideo();
@@ -295,29 +242,29 @@ void MainWindow::configurarTelaVideo(QJsonObject objetoAtual){
 
 void MainWindow::configurarTelaPergunta(QJsonObject objetoAtual){
     // Muda as configurações da pergunta do questionário
-    QString pergunta = Arquivos::retornarValorChaveObjeto(objetoAtual, "pergunta");
+    QString pergunta = perfis[perfilAtual]->sequencia->valorChaveNoIndexAtual("pergunta");
     ui->label_pergunta->setText(pergunta);
 
     // Muda as respostas
-    QString opcao1 = Arquivos::retornarValorChaveObjeto(objetoAtual, "opcao1");
+    QString opcao1 = perfis[perfilAtual]->sequencia->valorChaveNoIndexAtual("opcao1");
     ui->radioButton_resposta1->setText(opcao1);
     ui->radioButton_resposta1->setAutoExclusive(false);
     ui->radioButton_resposta1->setChecked(false);
     ui->radioButton_resposta1->setAutoExclusive(true);
 
-    QString opcao2 = Arquivos::retornarValorChaveObjeto(objetoAtual, "opcao2");
+    QString opcao2 = perfis[perfilAtual]->sequencia->valorChaveNoIndexAtual("opcao2");
     ui->radioButton_resposta2->setText(opcao2);
     ui->radioButton_resposta2->setAutoExclusive(false);
     ui->radioButton_resposta2->setChecked(false);
     ui->radioButton_resposta2->setAutoExclusive(true);
 
-    QString opcao3 = Arquivos::retornarValorChaveObjeto(objetoAtual, "opcao3");
+    QString opcao3 = perfis[perfilAtual]->sequencia->valorChaveNoIndexAtual("opcao3");
     ui->radioButton_resposta3->setText(opcao3);
     ui->radioButton_resposta3->setAutoExclusive(false);
     ui->radioButton_resposta3->setChecked(false);
     ui->radioButton_resposta3->setAutoExclusive(true);
 
-    QString opcao4 = Arquivos::retornarValorChaveObjeto(objetoAtual, "opcao4");
+    QString opcao4 = perfis[perfilAtual]->sequencia->valorChaveNoIndexAtual("opcao4");
     ui->radioButton_resposta4->setText(opcao4);
     ui->radioButton_resposta4->setAutoExclusive(false);
     ui->radioButton_resposta4->setChecked(false);
@@ -529,6 +476,7 @@ void MainWindow::configurarPerfis(){
     profissional->arquivos.sequencia = "spr.json";
 
     // Carrega a sequência de cada perfil
+    carregarSequencias();
 }
 
 void MainWindow::removerItemSelecionado(){
@@ -586,7 +534,7 @@ void MainWindow::selecionarPerfil(QString nomePerfil){
             // Carrega a sequência na lista de itens aparentes
             carregarListaPerfilAtual();
 
-            qDebug() << "[Main][INFO] Perfil selecionado:" << perfil;
+            qDebug() << "[Main][INFO] Perfil selecionado:" << nomePerfil;
 
             break;
         }
@@ -622,10 +570,14 @@ void MainWindow::on_pushButton_iniciar_clicked()
 
     perfis[perfilAtual]->sequencia->resetarIndice();
 
-    if(configurarSequenciaAtual()){
+    if(perfis[perfilAtual]->sequencia->estaVazia()){
+        // Exibe mensagem de erro
+        QMessageBox::about(this, "Sequência não definida", "A sequência de vídeos e perguntas para o perfil atual não foi definida! Por favor, acesse o menu de configurações para definir a sequência.");
+    }else{
         somAmbiente->desligar();
         carregarTelaAtual();
     }
+
 }
 
 void MainWindow::on_pushButton_sobre_clicked()
@@ -684,7 +636,7 @@ void MainWindow::on_pushButton_adicionar_video_clicked()
     perfis[perfilAtual]->sequencia->adicionarVideo(nomeArquivoVideo);
 
     // Atualiza a sequência no arquivo
-    arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.pasta, perfis[perfilAtual]->arquivos.sequencia);
+    arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.sequencia);
 
     // Recarrega a lista no widget
     carregarListaPerfilAtual();
