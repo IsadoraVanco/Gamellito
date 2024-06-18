@@ -160,12 +160,12 @@ void MainWindow::configurarArquivoGeral(){
 
 void MainWindow::carregarSequencias(){
 
-    // Adiciona os perfis para seleção (utiliza o nome das pastas capitalizado)
+    // Adiciona os perfis para seleção
     for(const auto& user : perfis){
-        Perfil *perfil = user.second;
+        TipoPerfil perfil = user.first;
 
         // Carrega a sequência
-        perfis[perfilAtual]->carregarSequencia();
+        perfis[perfil]->carregarSequencia();
     }
 
     carregarListaPerfilAtual();
@@ -190,18 +190,72 @@ bool MainWindow::mostrarConfirmarRemoverItem(){
     return msgBox.clickedButton() == simButton;
 }
 
+void MainWindow::removerItemSelecionado(){
+    // Remove o item da lista de edição
+    QListWidgetItem *item = ui->listWidget->currentItem();
+
+    if(item){
+        delete item;
+
+        // Procura e remove o item na lista da sequência real
+
+    }
+}
+
+void MainWindow::editarItemSelecionado(){
+
+    // Edita o item da lista de edição
+    QListWidgetItem *item = ui->listWidget->currentItem();
+
+    if(item){
+
+        // Obtém o índice do item selecionado na lista do widget
+        int index = ui->listWidget->row(item);
+
+        // Analisa se é vídeo ou pergunta
+        TipoItem tipo = perfis[perfilAtual]->sequencia->tipoItem(index);
+
+        if(tipo == TipoItem::Video){
+            // Copia um vídeo no backup
+            QString nomeArquivoVideo = arquivos->salvarVideoBackup(perfis[perfilAtual]->arquivos.pasta);
+
+            // Caso não tenha sido selecionado nenhum arquivo ("")
+            if(nomeArquivoVideo.isEmpty()){
+                return;
+            }
+
+            // Adiciona o vídeo na sequência
+            perfis[perfilAtual]->sequencia->editarVideo(index, nomeArquivoVideo);
+
+            // Atualiza a sequência no arquivo
+            arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.sequencia);
+
+            // Recarrega a lista no widget
+            carregarListaPerfilAtual();
+
+        }else if(tipo == TipoItem::Pergunta){
+
+            // Carrega a pergunta existente na tela
+            carregarEdicaoPergunta();
+
+            // Mostra a tela de pergunta
+            mostrarTela(Pagina::EditarPergunta);
+        }
+    }
+}
+
 // ***** TELAS *********************************************
 
 void MainWindow::carregarTelaAtual(){
 
     QJsonObject objetoJson = perfis[perfilAtual]->sequencia->getItemNoIndexAtual();
 
-    QString tipo = perfis[perfilAtual]->sequencia->tipoItemNoIndexAtual();
+    TipoItem tipo = perfis[perfilAtual]->sequencia->tipoItemNoIndexAtual();
 
-    if(tipo == "video"){
+    if(tipo == TipoItem::Video){
         mostrarTela(Pagina::Video);
         configurarTelaVideo(objetoJson);
-    }else if(tipo == "pergunta"){
+    }else if(tipo == TipoItem::Pergunta){
         configurarTelaPergunta(objetoJson);
         mostrarTela(Pagina::Pergunta);
     }
@@ -380,7 +434,7 @@ bool MainWindow::existemCamposVazios(){
     return false;
 }
 
-bool MainWindow::salvarPergunta(){
+bool MainWindow::salvarNovaPergunta(){
 
     // Verifica se todos os campos foram preenchidos
     if(existemCamposVazios()){
@@ -413,7 +467,7 @@ bool MainWindow::salvarPergunta(){
     perfis[perfilAtual]->sequencia->adicionarPergunta(pergunta, opcao1, opcao2, opcao3, opcao4, correta);
 
     // Atualiza a sequência no arquivo
-    arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.pasta, perfis[perfilAtual]->arquivos.sequencia);
+    arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.sequencia);
 
     // Recarrega a lista do widget
     carregarListaPerfilAtual();
@@ -422,6 +476,164 @@ bool MainWindow::salvarPergunta(){
     qDebug() << "[Main][OK] Pergunta adicionada na sequência";
 
     return true;
+}
+
+// ***** EDITAR PERGUNTA *********************************************
+
+void MainWindow::carregarEdicaoPergunta(){
+
+    QListWidgetItem *item = ui->listWidget->currentItem();
+
+    // Obtém o índice do item selecionado na lista do widget
+    int index = ui->listWidget->row(item);
+
+    // Carrega as infos da pergunta
+    QString pergunta = perfis[perfilAtual]->sequencia->pergunta(index);
+    QString opcao1 = perfis[perfilAtual]->sequencia->opcao1(index);
+    QString opcao2 = perfis[perfilAtual]->sequencia->opcao2(index);
+    QString opcao3 = perfis[perfilAtual]->sequencia->opcao3(index);
+    QString opcao4 = perfis[perfilAtual]->sequencia->opcao4(index);
+    int correta = perfis[perfilAtual]->sequencia->respostaCorreta(index);
+
+    // Coloca na página de edição
+    ui->textEdit_editar_pergunta->setText(pergunta);
+    ui->textEdit_editar_opcao1->setText(opcao1);
+    ui->textEdit_editar_opcao2->setText(opcao2);
+    ui->textEdit_editar_opcao3->setText(opcao3);
+    ui->textEdit_editar_opcao4->setText(opcao4);
+
+    // Analisa qual a correta
+    switch(correta){
+    case 1:
+        ui->radioButton_editar_opcao1->setChecked(true);
+        break;
+
+    case 2:
+        ui->radioButton_editar_opcao2->setChecked(true);
+        break;
+
+    case 3:
+        ui->radioButton_editar_opcao3->setChecked(true);
+        break;
+
+    case 4:
+        ui->radioButton_editar_opcao4->setChecked(true);
+        break;
+
+    default:
+        break;
+    }
+}
+
+bool MainWindow::salvarPerguntaEditada(){
+
+    // Verifica se todos os campos foram preenchidos
+    if(existemCamposVaziosEditada()){
+        QMessageBox::about(this, "Campos vazios", "Existem campos que estão vazios. Por favor, complete-os antes de salvar.");
+        return false;
+    }
+
+    // Converte textos
+    QString pergunta = ui->textEdit_editar_pergunta->toPlainText();
+    QString opcao1 = ui->textEdit_editar_opcao1->toPlainText();
+    QString opcao2 = ui->textEdit_editar_opcao2->toPlainText();
+    QString opcao3 = ui->textEdit_editar_opcao3->toPlainText();
+    QString opcao4 = ui->textEdit_editar_opcao4->toPlainText();
+
+    // Verificar qual a correta
+    int correta = 0;
+
+    if(ui->radioButton_editar_opcao1->isChecked()){
+        correta = 1;
+    }else if(ui->radioButton_editar_opcao2->isChecked()){
+        correta = 2;
+    }else if(ui->radioButton_editar_opcao3->isChecked()){
+        correta = 3;
+    }else if(ui->radioButton_editar_opcao4->isChecked()){
+        correta = 4;
+    }
+
+    // Obtém o índice do item selecionado na lista do widget
+    QListWidgetItem *item = ui->listWidget->currentItem();
+    int index = ui->listWidget->row(item);
+
+    // Edita a pergunta na sequência
+    perfis[perfilAtual]->sequencia->editarPergunta(index, pergunta, opcao1, opcao2, opcao3, opcao4, correta);
+
+    // Atualiza a sequência no arquivo
+    arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.sequencia);
+
+    // Recarrega a lista do widget
+    carregarListaPerfilAtual();
+
+    QMessageBox::about(this, "Pergunta salva", "A pergunta foi editada com sucesso");
+    qDebug() << "[Main][OK] Pergunta editada na sequência";
+
+    return true;
+}
+
+bool MainWindow::todosCamposPreenchidosEditada(){
+    QString pergunta = ui->textEdit_editar_pergunta->toPlainText();
+    if(pergunta != ""){
+        return true;
+    }
+
+    QString opcao1 = ui->textEdit_editar_opcao1->toPlainText();
+    if(opcao1 != ""){
+        return true;
+    }
+
+    QString opcao2 = ui->textEdit_editar_opcao2->toPlainText();
+    if(opcao2 != ""){
+        return true;
+    }
+
+    QString opcao3 = ui->textEdit_editar_opcao3->toPlainText();
+    if(opcao3 != ""){
+        return true;
+    }
+
+    QString opcao4 = ui->textEdit_editar_opcao4->toPlainText();
+    if(opcao4 != ""){
+        return true;
+    }
+
+    return false;
+}
+
+bool MainWindow::existemCamposVaziosEditada(){
+
+    QString pergunta = ui->textEdit_editar_pergunta->toPlainText();
+    if(pergunta == ""){
+        qDebug() << "[Main][ERRO] O campo de pergunta editada está vazio";
+        return true;
+    }
+
+    QString opcao1 = ui->textEdit_editar_opcao1->toPlainText();
+    if(opcao1 == ""){
+        qDebug() << "[Main][ERRO] O campo da opção 1 editada está vazio";
+        return true;
+    }
+
+    QString opcao2 = ui->textEdit_editar_opcao2->toPlainText();
+    if(opcao2 == ""){
+        qDebug() << "[Main][ERRO] O campo da opção 2 editada está vazio";
+        return true;
+    }
+
+    QString opcao3 = ui->textEdit_editar_opcao3->toPlainText();
+    if(opcao3 == ""){
+        qDebug() << "[Main][ERRO] O campo da opção 3 editada está vazio";
+        return true;
+    }
+
+    QString opcao4 = ui->textEdit_editar_opcao4->toPlainText();
+    if(opcao4 == ""){
+        qDebug() << "[Main][ERRO] O campo da opção 4 editada está vazio";
+        return true;
+    }
+
+    return false;
 }
 
 // ***** PERGUNTA *********************************************
@@ -462,45 +674,21 @@ void MainWindow::configurarPerfis(){
     // Configurando o nome de cada arquivo para os perfis
     paciente->nome = "Paciente";
     paciente->arquivos.pasta = "paciente";
-    paciente->arquivos.respostas = "rpa.json";
-    paciente->arquivos.sequencia = "spa.json";
+    paciente->arquivos.respostas = "respostasPaciente.json";
+    paciente->arquivos.sequencia = "sequenciaPaciente.json";
 
     responsavel->nome = "Responsável";
     responsavel->arquivos.pasta = "responsavel";
-    responsavel->arquivos.respostas = "rre.json";
-    responsavel->arquivos.sequencia = "sre.json";
+    responsavel->arquivos.respostas = "respostasResponsavel.json";
+    responsavel->arquivos.sequencia = "sequenciaResponsavel.json";
 
     profissional->nome = "Profissional";
     profissional->arquivos.pasta = "profissional";
-    profissional->arquivos.respostas = "rpr.json";
-    profissional->arquivos.sequencia = "spr.json";
+    profissional->arquivos.respostas = "respostasProfissional.json";
+    profissional->arquivos.sequencia = "sequenciaProfissional.json";
 
     // Carrega a sequência de cada perfil
     carregarSequencias();
-}
-
-void MainWindow::removerItemSelecionado(){
-    // Remove o item da lista de edição
-    QListWidgetItem *item = ui->listWidget->currentItem();
-
-    if(item){
-        delete item;
-
-        // Procura e remove o item na lista da sequência real
-
-    }
-}
-
-void MainWindow::editarItemSelecionado(){
-    // Edita o item da lista de edição
-    QListWidgetItem *item = ui->listWidget->currentItem();
-
-    if(item){
-
-        // Edita o item da lista
-
-        // Edita do JSON
-    }
 }
 
 void MainWindow::carregarListaPerfilAtual(){
@@ -742,7 +930,39 @@ void MainWindow::on_pushButton_voltar_adicionar_pergunta_clicked()
 
 void MainWindow::on_pushButton_salvar_pergunta_clicked()
 {
-    if(salvarPergunta()){
+    if(salvarNovaPergunta()){
+        carregarListaPerfilAtual();
+        mostrarTela(Pagina::Configurar);
+    }
+}
+
+// ***** EDITAR PERGUNTA *********************************************
+
+void MainWindow::on_pushButton_inicial_editar_pergunta_clicked()
+{
+    if(todosCamposPreenchidosEditada()){
+        if(mostrarConfirmarSairPergunta()){
+            mostrarTela(Pagina::Inicial);
+        }
+    }else{
+        mostrarTela(Pagina::Inicial);
+    }
+}
+
+void MainWindow::on_pushButton_voltar_editar_pergunta_clicked()
+{
+    if(todosCamposPreenchidos()){
+        if(mostrarConfirmarSairPergunta()){
+            mostrarTela(Pagina::Configurar);
+        }
+    }else{
+        mostrarTela(Pagina::Configurar);
+    }
+}
+
+void MainWindow::on_pushButton_salvar_pergunta_editada_clicked()
+{
+    if(salvarPerguntaEditada()){
         carregarListaPerfilAtual();
         mostrarTela(Pagina::Configurar);
     }

@@ -8,6 +8,13 @@
 // Para configurar arquivos
 #include "arquivos.h"
 
+// Tipos de itens
+enum class TipoItem{
+    Indefinido, // 0
+    Pergunta,   // 1
+    Video       // 2
+};
+
 class Sequencia
 {
 public:
@@ -34,6 +41,61 @@ public:
      * @return Um QJsonArray
      */
     QJsonArray getSequencia();
+
+    /**
+     * @brief Retorna o item de um index da sequência
+     * @param index Valor do index
+     * @return O item
+     */
+    QJsonObject getItem(int index);
+
+    /**
+     * @brief Retorna o item no indice atual da sequência
+     * @return Um QJsonObject
+     */
+    QJsonObject getItemNoIndexAtual();
+
+    /**
+     * @brief Retorna o valor da chave de um objeto Json
+     * @param objetoJson O objeto Json
+     * @param chave A chave a ser buscada
+     * @return O valor da chave do objeto Json
+     */
+    static QString valorChave(QJsonObject objetoJson, QString chave);
+
+    /**
+     * @brief Retorna o valor da chave do item no index atual
+     * @param chave A chave a ser buscada
+     * @return O valor da chave no item
+     */
+    QString valorChaveNoIndexAtual(QString chave);
+
+    /**
+     * @brief Retorna o valor do item no index indicado na sequência
+     * @param index O index do item na sequência
+     * @return O valor do item
+     */
+    QString valorItem(int index);
+
+    /**
+     * @brief Retorna o valor do item no index atual
+     * @return O valor do item
+     */
+    QString valorItemNoIndexAtual();
+
+    /**
+     * @brief Retorna o tipo do item no indice atual da sequência
+     * @return O tipo do item
+     */
+    TipoItem tipoItemNoIndexAtual();
+
+    /**
+     * @brief Retorna o tipo do item no index indicado na sequência
+     * @param index O index do item na sequência
+     * @return O valor do item
+     */
+    TipoItem tipoItem(int index);
+
 
     // **** ÍNDICE ************************************************
 
@@ -73,50 +135,17 @@ public:
     void carregarDoArquivo(QString nomeArquivo);
 
     /**
-     * @brief Retorna o valor da chave de um objeto Json
-     * @param objetoJson O objeto Json
-     * @param chave A chave a ser buscada
-     * @return O valor da chave do objeto Json
-     */
-    static QString valorChave(QJsonObject objetoJson, QString chave);
-
-    /**
-     * @brief Retorna o valor da chave do item no index atual
-     * @param chave A chave a ser buscada
-     * @return O valor da chave no item
-     */
-    QString valorChaveNoIndexAtual(QString chave);
-
-    /**
-     * @brief Retorna o valor do item no index indicado na sequência
-     * @param index O index do item na sequência
-     * @return O valor do item
-     */
-    QString valorItem(int index);
-
-    /**
-     * @brief Retorna o valor do item no index atual
-     * @return O valor do item
-     */
-    QString valorItemNoIndexAtual();
-
-    /**
-     * @brief Retorna o tipo do item no indice atual da sequência
-     * @return O tipo do item
-     */
-    QString tipoItemNoIndexAtual();
-
-    /**
-     * @brief Retorna o item no indice atual da sequência
-     * @return Um QJsonObject
-     */
-    QJsonObject getItemNoIndexAtual();
-
-    /**
      * @brief Adiciona um vídeo na sequência
      * @param nomeArquivo O nome do arquivo de vídeo que será adicionado
      */
     void adicionarVideo(QString nomeArquivo);
+
+    /**
+     * @brief Edita um item de vídeo da sequência
+     * @param index O index onde está o item
+     * @param nomeArquivo O nome do arquivo atualizado
+     */
+    void editarVideo(int index, QString nomeArquivo);
 
     /**
      * @brief Adiciona uma pergunta na sequência
@@ -128,6 +157,59 @@ public:
      * @param correta Número da resposta correta
      */
     void adicionarPergunta(QString pergunta, QString opcao1, QString opcao2, QString opcao3, QString opcao4, int correta);
+
+    void editarPergunta(int index, QString pergunta, QString opcao1, QString opcao2, QString opcao3, QString opcao4, int correta);
+
+    // **** CONSULTA DE ITENS ************************************************
+
+    /**
+     * @brief Verifica se um item no index indicado é uma pergunta
+     * @param index O index do item
+     * @return True caso seja uma pergunta, false para caso contrário
+     */
+    bool ehPergunta(int index);
+
+    /**
+     * @brief Retorna a pergunta caso o item do index seja uma pergunta.
+     * @param index O index do item
+     * @return A pergunta
+     */
+    QString pergunta(int index);
+
+    /**
+     * @brief Retorna a primeira opção da resposta caso o item no index seja uma pergunta
+     * @param index O index do item
+     * @return A opção
+     */
+    QString opcao1(int index);
+
+    /**
+     * @brief Retorna a segunda opção da resposta caso o item no index seja uma pergunta
+     * @param index O index do item
+     * @return A opção
+     */
+    QString opcao2(int index);
+
+    /**
+     * @brief Retorna a terceira opção da resposta caso o item no index seja uma pergunta
+     * @param index O index do item
+     * @return A opção
+     */
+    QString opcao3(int index);
+
+    /**
+     * @brief Retorna a quarta opção da resposta caso o item no index seja uma pergunta
+     * @param index O index do item
+     * @return A opção
+     */
+    QString opcao4(int index);
+
+    /**
+     * @brief O número que representa a opção correta da pergunta no index
+     * @param index O index do item
+     * @return O número da opção correta
+     */
+    int respostaCorreta(int index);
 
 private:
     // Marca qual o índice do elemento atual da sequência

@@ -28,7 +28,8 @@ enum class Pagina{
     Configurar, // 2
     Video,      // 3
     Pergunta,   // 4
-    AdicionarPergunta   //5
+    AdicionarPergunta,   //5
+    EditarPergunta      // 6
 };
 
 class MainWindow : public QMainWindow
@@ -132,7 +133,17 @@ private slots:
      * @return True caso o processo tenha sido concluído com sucesso,
      * false para caso contrário
      */
-    bool salvarPergunta();
+    bool salvarNovaPergunta();
+
+    // ***** EDITAR PERGUNTA *********************************************
+
+    void carregarEdicaoPergunta();
+
+    bool salvarPerguntaEditada();
+
+    bool todosCamposPreenchidosEditada();
+
+    bool existemCamposVaziosEditada();
 
     // ***** PERGUNTA *********************************************
 
@@ -261,6 +272,14 @@ private slots:
     void on_pushButton_voltar_adicionar_pergunta_clicked();
 
     void on_pushButton_salvar_pergunta_clicked();
+
+    // ***** EDITAR PERGUNTA *********************************************
+
+    void on_pushButton_inicial_editar_pergunta_clicked();
+
+    void on_pushButton_voltar_editar_pergunta_clicked();
+
+    void on_pushButton_salvar_pergunta_editada_clicked();
 
 private:
 
