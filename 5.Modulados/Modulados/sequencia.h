@@ -158,7 +158,23 @@ public:
      */
     void adicionarPergunta(QString pergunta, QString opcao1, QString opcao2, QString opcao3, QString opcao4, int correta);
 
+    /**
+     * @brief Edita uma pergunta que está no index
+     * @param index O index do item na sequência
+     * @param pergunta A pergunta a ser editada
+     * @param opcao1 Opção que será editada
+     * @param opcao2 Opção que será editada
+     * @param opcao3 Opção que será editada
+     * @param opcao4 Opção que será editada
+     * @param correta O número da opção correta
+     */
     void editarPergunta(int index, QString pergunta, QString opcao1, QString opcao2, QString opcao3, QString opcao4, int correta);
+
+    /**
+     * @brief Remove um item da sequência
+     * @param index O index do item a ser removido
+     */
+    void removerItem(int index);
 
     // **** CONSULTA DE ITENS ************************************************
 

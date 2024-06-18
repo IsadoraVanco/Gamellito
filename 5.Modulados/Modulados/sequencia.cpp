@@ -239,9 +239,24 @@ void Sequencia::editarPergunta(int index, QString pergunta, QString opcao1, QStr
     (*this->array)[index] = objeto;
 }
 
+void Sequencia::removerItem(int index){
+    if(index < 0 || index >= this->array->size()){
+        return;
+    }
+
+    // Remove o item do array
+    this->array->removeAt(index);
+
+    qDebug() << "[Sequência][OK] O item foi removido da sequência";
+}
+
 // **** CONSULTA DE ITENS ************************************************
 
 bool Sequencia::ehPergunta(int index){
+    if(index < 0 || index >= this->array->size()){
+        return false;
+    }
+
     QJsonObject objeto = this->array->at(index).toObject();
 
     if(objeto["tipo"] != "pergunta"){

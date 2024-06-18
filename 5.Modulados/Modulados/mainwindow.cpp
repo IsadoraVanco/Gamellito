@@ -195,10 +195,18 @@ void MainWindow::removerItemSelecionado(){
     QListWidgetItem *item = ui->listWidget->currentItem();
 
     if(item){
+
+        // Obtém o índice do item selecionado na lista do widget
+        int index = ui->listWidget->row(item);
+
+        // Remove o item na lista da sequência real
+        perfis[perfilAtual]->sequencia->removerItem(index);
+
+        // Atualiza a lista do widget
         delete item;
 
-        // Procura e remove o item na lista da sequência real
-
+        // Atualiza o arquivo
+        arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.sequencia);
     }
 }
 
