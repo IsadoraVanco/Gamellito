@@ -267,7 +267,7 @@ bool Sequencia::ehPergunta(int index){
     return true;
 }
 
-QString Sequencia::pergunta(int index){
+QString Sequencia::getPergunta(int index){
     if(index < 0 || index >= this->array->size()){
         return QString();
     }
@@ -281,7 +281,11 @@ QString Sequencia::pergunta(int index){
     return objeto["pergunta"].toString();
 }
 
-QString Sequencia::opcao1(int index){
+QString Sequencia::getPerguntaNoIndiceAtual(){
+    return getPergunta(indiceAtual);
+}
+
+QString Sequencia::getOpcao1(int index){
     if(index < 0 || index >= this->array->size()){
         return QString();
     }
@@ -295,7 +299,11 @@ QString Sequencia::opcao1(int index){
     return objeto["opcao1"].toString();
 }
 
-QString Sequencia::opcao2(int index){
+QString Sequencia::getOpcao1NoIndiceAtual(){
+    return getOpcao1(indiceAtual);
+}
+
+QString Sequencia::getOpcao2(int index){
     if(index < 0 || index >= this->array->size()){
         return QString();
     }
@@ -309,7 +317,11 @@ QString Sequencia::opcao2(int index){
     return objeto["opcao2"].toString();
 }
 
-QString Sequencia::opcao3(int index){
+QString Sequencia::getOpcao2NoIndiceAtual(){
+    return getOpcao2(indiceAtual);
+}
+
+QString Sequencia::getOpcao3(int index){
     if(index < 0 || index >= this->array->size()){
         return QString();
     }
@@ -323,7 +335,11 @@ QString Sequencia::opcao3(int index){
     return objeto["opcao3"].toString();
 }
 
-QString Sequencia::opcao4(int index){
+QString Sequencia::getOpcao3NoIndiceAtual(){
+    return getOpcao3(indiceAtual);
+}
+
+QString Sequencia::getOpcao4(int index){
     if(index < 0 || index >= this->array->size()){
         return QString();
     }
@@ -337,7 +353,11 @@ QString Sequencia::opcao4(int index){
     return objeto["opcao4"].toString();
 }
 
-int Sequencia::respostaCorreta(int index){
+QString Sequencia::getOpcao4NoIndiceAtual(){
+    return getOpcao4(indiceAtual);
+}
+
+int Sequencia::getRespostaCorreta(int index){
     if(index < 0 || index >= this->array->size()){
         return -1;
     }
@@ -349,4 +369,8 @@ int Sequencia::respostaCorreta(int index){
     }
 
     return objeto["correta"].toInt();
+}
+
+int Sequencia::getRespostaCorretaNoIndiceAtual(){
+    return getRespostaCorreta(indiceAtual);
 }

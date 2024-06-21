@@ -7,6 +7,9 @@
 // Para a lista da sequência
 #include <QListWidget>
 
+// Para os botões
+#include <QRadioButton>
+
 #include "reprodutor.h"
 #include "arquivos.h"
 #include "senha.h"
@@ -26,10 +29,11 @@ enum class Pagina{
     Inicial,    // 0
     Sobre,      // 1
     Configurar, // 2
-    Video,      // 3
-    Pergunta,   // 4
-    AdicionarPergunta,   //5
-    EditarPergunta      // 6
+    ConfigurarPerfil, // 3
+    Video,      // 4
+    Pergunta,   // 5
+    AdicionarPergunta,   //6
+    EditarPergunta      // 7
 };
 
 class MainWindow : public QMainWindow
@@ -215,6 +219,13 @@ private slots:
     // ***** CONFIGURAR *********************************************
 
     /**
+     * @brief Altera a página para a de Configurar Perfil
+     */
+    void on_pushButton_configurar_perfil_clicked();
+
+    // ***** CONFIGURAR PERFIL *********************************************
+
+    /**
      * @brief Volta para o início do menu
      */
     void on_pushButton_voltar_configurar_clicked();
@@ -265,6 +276,14 @@ private slots:
 
     void on_pushButton_proximo_pergunta_clicked();
 
+    void on_radioButton_resposta1_clicked();
+
+    void on_radioButton_resposta2_clicked();
+
+    void on_radioButton_resposta3_clicked();
+
+    void on_radioButton_resposta4_clicked();
+
     // ***** ADICIONAR PERGUNTA *********************************************
 
     void on_pushButton_inicial_adicionar_pergunta_clicked();
@@ -273,6 +292,14 @@ private slots:
 
     void on_pushButton_salvar_pergunta_clicked();
 
+    void on_radioButton_opcao1_clicked();
+
+    void on_radioButton_opcao2_clicked();
+
+    void on_radioButton_opcao3_clicked();
+
+    void on_radioButton_opcao4_clicked();
+
     // ***** EDITAR PERGUNTA *********************************************
 
     void on_pushButton_inicial_editar_pergunta_clicked();
@@ -280,6 +307,14 @@ private slots:
     void on_pushButton_voltar_editar_pergunta_clicked();
 
     void on_pushButton_salvar_pergunta_editada_clicked();
+
+    void on_radioButton_editar_opcao1_clicked();
+
+    void on_radioButton_editar_opcao2_clicked();
+
+    void on_radioButton_editar_opcao3_clicked();
+
+    void on_radioButton_editar_opcao4_clicked();
 
 private:
 
@@ -322,6 +357,10 @@ private:
     // ***** SOM AMBIENTE *********************************************
 
     SomAmbiente *somAmbiente = new SomAmbiente();
+
+    // ***** BOTÕES *********************************************
+
+    QRadioButton *ultimoApertado = nullptr;
 
 };
 #endif // MAINWINDOW_H

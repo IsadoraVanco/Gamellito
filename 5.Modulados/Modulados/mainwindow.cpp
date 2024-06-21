@@ -58,6 +58,9 @@ MainWindow::~MainWindow()
 void MainWindow::mostrarTela(Pagina tipo){
     // Converte o enum para int e carrega a página
     ui->stackedWidget->setCurrentIndex(static_cast<int>(tipo));
+
+    // Reseta o ultimo botão apertado nas perguntas
+    ultimoApertado = nullptr;
 }
 
 void MainWindow::configurarTelas(){
@@ -304,29 +307,29 @@ void MainWindow::configurarTelaVideo(QJsonObject objetoAtual){
 
 void MainWindow::configurarTelaPergunta(QJsonObject objetoAtual){
     // Muda as configurações da pergunta do questionário
-    QString pergunta = perfis[perfilAtual]->sequencia->valorChaveNoIndexAtual("pergunta");
+    QString pergunta = perfis[perfilAtual]->sequencia->getPerguntaNoIndiceAtual();
     ui->label_pergunta->setText(pergunta);
 
     // Muda as respostas
-    QString opcao1 = perfis[perfilAtual]->sequencia->valorChaveNoIndexAtual("opcao1");
+    QString opcao1 = perfis[perfilAtual]->sequencia->getOpcao1NoIndiceAtual();
     ui->radioButton_resposta1->setText(opcao1);
     ui->radioButton_resposta1->setAutoExclusive(false);
     ui->radioButton_resposta1->setChecked(false);
     ui->radioButton_resposta1->setAutoExclusive(true);
 
-    QString opcao2 = perfis[perfilAtual]->sequencia->valorChaveNoIndexAtual("opcao2");
+    QString opcao2 = perfis[perfilAtual]->sequencia->getOpcao2NoIndiceAtual();
     ui->radioButton_resposta2->setText(opcao2);
     ui->radioButton_resposta2->setAutoExclusive(false);
     ui->radioButton_resposta2->setChecked(false);
     ui->radioButton_resposta2->setAutoExclusive(true);
 
-    QString opcao3 = perfis[perfilAtual]->sequencia->valorChaveNoIndexAtual("opcao3");
+    QString opcao3 = perfis[perfilAtual]->sequencia->getOpcao3NoIndiceAtual();
     ui->radioButton_resposta3->setText(opcao3);
     ui->radioButton_resposta3->setAutoExclusive(false);
     ui->radioButton_resposta3->setChecked(false);
     ui->radioButton_resposta3->setAutoExclusive(true);
 
-    QString opcao4 = perfis[perfilAtual]->sequencia->valorChaveNoIndexAtual("opcao4");
+    QString opcao4 = perfis[perfilAtual]->sequencia->getOpcao4NoIndiceAtual();
     ui->radioButton_resposta4->setText(opcao4);
     ui->radioButton_resposta4->setAutoExclusive(false);
     ui->radioButton_resposta4->setChecked(false);
@@ -496,12 +499,12 @@ void MainWindow::carregarEdicaoPergunta(){
     int index = ui->listWidget->row(item);
 
     // Carrega as infos da pergunta
-    QString pergunta = perfis[perfilAtual]->sequencia->pergunta(index);
-    QString opcao1 = perfis[perfilAtual]->sequencia->opcao1(index);
-    QString opcao2 = perfis[perfilAtual]->sequencia->opcao2(index);
-    QString opcao3 = perfis[perfilAtual]->sequencia->opcao3(index);
-    QString opcao4 = perfis[perfilAtual]->sequencia->opcao4(index);
-    int correta = perfis[perfilAtual]->sequencia->respostaCorreta(index);
+    QString pergunta = perfis[perfilAtual]->sequencia->getPergunta(index);
+    QString opcao1 = perfis[perfilAtual]->sequencia->getOpcao1(index);
+    QString opcao2 = perfis[perfilAtual]->sequencia->getOpcao2(index);
+    QString opcao3 = perfis[perfilAtual]->sequencia->getOpcao3(index);
+    QString opcao4 = perfis[perfilAtual]->sequencia->getOpcao4(index);
+    int correta = perfis[perfilAtual]->sequencia->getRespostaCorreta(index);
 
     // Coloca na página de edição
     ui->textEdit_editar_pergunta->setText(pergunta);
@@ -803,10 +806,17 @@ void MainWindow::on_pushButton_configurar_clicked()
 
 void MainWindow::on_pushButton_voltar_sobre_clicked()
 {
-    mostrarTela(Pagina::Inicial);
+    mostrarTela(Pagina::Configurar);
 }
 
 // ***** CONFIGURAR *********************************************
+
+void MainWindow::on_pushButton_configurar_perfil_clicked()
+{
+    mostrarTela(Pagina::ConfigurarPerfil);
+}
+
+// ***** CONFIGURAR PERFIL *********************************************
 
 void MainWindow::on_pushButton_voltar_configurar_clicked()
 {
@@ -866,7 +876,6 @@ void MainWindow::on_pushButton_removerItem_clicked()
     }
 }
 
-
 // ***** REPRODUTOR *********************************************
 
 void MainWindow::on_pushButton_inicio_reprodutor_clicked()
@@ -903,6 +912,9 @@ void MainWindow::on_pushButton_pergunta_inicio_clicked()
 
 void MainWindow::on_pushButton_voltar_pergunta_clicked()
 {
+    // Reseta o ultimo botão apertado nas perguntas
+    ultimoApertado = nullptr;
+
     mostrarTelaAnterior();
 }
 
@@ -910,6 +922,57 @@ void MainWindow::on_pushButton_proximo_pergunta_clicked()
 {
     salvarResposta();
     mostrarProximaTela();
+
+    // Reseta o ultimo botão apertado nas perguntas
+    ultimoApertado = nullptr;
+}
+
+void MainWindow::on_radioButton_resposta1_clicked()
+{
+    if(ultimoApertado == ui->radioButton_resposta1){
+        ui->radioButton_resposta1->setAutoExclusive(false);
+        ui->radioButton_resposta1->setChecked(false);
+        ui->radioButton_resposta1->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_resposta1;
+    }
+}
+
+void MainWindow::on_radioButton_resposta2_clicked()
+{
+    if(ultimoApertado == ui->radioButton_resposta2){
+        ui->radioButton_resposta2->setAutoExclusive(false);
+        ui->radioButton_resposta2->setChecked(false);
+        ui->radioButton_resposta2->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_resposta2;
+    }
+}
+
+void MainWindow::on_radioButton_resposta3_clicked()
+{
+    if(ultimoApertado == ui->radioButton_resposta3){
+        ui->radioButton_resposta3->setAutoExclusive(false);
+        ui->radioButton_resposta3->setChecked(false);
+        ui->radioButton_resposta3->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_resposta3;
+    }
+}
+
+void MainWindow::on_radioButton_resposta4_clicked()
+{
+    if(ultimoApertado == ui->radioButton_resposta4){
+        ui->radioButton_resposta4->setAutoExclusive(false);
+        ui->radioButton_resposta4->setChecked(false);
+        ui->radioButton_resposta4->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_resposta4;
+    }
 }
 
 // ***** ADICIONAR PERGUNTA *********************************************
@@ -929,10 +992,10 @@ void MainWindow::on_pushButton_voltar_adicionar_pergunta_clicked()
 {
     if(todosCamposPreenchidos()){
         if(mostrarConfirmarSairPergunta()){
-            mostrarTela(Pagina::Configurar);
+            mostrarTela(Pagina::ConfigurarPerfil);
         }
     }else{
-        mostrarTela(Pagina::Configurar);
+        mostrarTela(Pagina::ConfigurarPerfil);
     }
 }
 
@@ -940,7 +1003,55 @@ void MainWindow::on_pushButton_salvar_pergunta_clicked()
 {
     if(salvarNovaPergunta()){
         carregarListaPerfilAtual();
-        mostrarTela(Pagina::Configurar);
+        mostrarTela(Pagina::ConfigurarPerfil);
+    }
+}
+
+void MainWindow::on_radioButton_opcao1_clicked()
+{
+    if(ultimoApertado == ui->radioButton_opcao1){
+        ui->radioButton_opcao1->setAutoExclusive(false);
+        ui->radioButton_opcao1->setChecked(false);
+        ui->radioButton_opcao1->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_opcao1;
+    }
+}
+
+void MainWindow::on_radioButton_opcao2_clicked()
+{
+    if(ultimoApertado == ui->radioButton_opcao2){
+        ui->radioButton_opcao2->setAutoExclusive(false);
+        ui->radioButton_opcao2->setChecked(false);
+        ui->radioButton_opcao2->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_opcao2;
+    }
+}
+
+void MainWindow::on_radioButton_opcao3_clicked()
+{
+    if(ultimoApertado == ui->radioButton_opcao3){
+        ui->radioButton_opcao3->setAutoExclusive(false);
+        ui->radioButton_opcao3->setChecked(false);
+        ui->radioButton_opcao3->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_opcao3;
+    }
+}
+
+void MainWindow::on_radioButton_opcao4_clicked()
+{
+    if(ultimoApertado == ui->radioButton_opcao4){
+        ui->radioButton_opcao4->setAutoExclusive(false);
+        ui->radioButton_opcao4->setChecked(false);
+        ui->radioButton_opcao4->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_opcao4;
     }
 }
 
@@ -961,10 +1072,10 @@ void MainWindow::on_pushButton_voltar_editar_pergunta_clicked()
 {
     if(todosCamposPreenchidos()){
         if(mostrarConfirmarSairPergunta()){
-            mostrarTela(Pagina::Configurar);
+            mostrarTela(Pagina::ConfigurarPerfil);
         }
     }else{
-        mostrarTela(Pagina::Configurar);
+        mostrarTela(Pagina::ConfigurarPerfil);
     }
 }
 
@@ -972,6 +1083,54 @@ void MainWindow::on_pushButton_salvar_pergunta_editada_clicked()
 {
     if(salvarPerguntaEditada()){
         carregarListaPerfilAtual();
-        mostrarTela(Pagina::Configurar);
+        mostrarTela(Pagina::ConfigurarPerfil);
+    }
+}
+
+void MainWindow::on_radioButton_editar_opcao1_clicked()
+{
+    if(ultimoApertado == ui->radioButton_editar_opcao1){
+        ui->radioButton_editar_opcao1->setAutoExclusive(false);
+        ui->radioButton_editar_opcao1->setChecked(false);
+        ui->radioButton_editar_opcao1->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_editar_opcao1;
+    }
+}
+
+void MainWindow::on_radioButton_editar_opcao2_clicked()
+{
+    if(ultimoApertado == ui->radioButton_editar_opcao2){
+        ui->radioButton_editar_opcao2->setAutoExclusive(false);
+        ui->radioButton_editar_opcao2->setChecked(false);
+        ui->radioButton_editar_opcao2->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_editar_opcao2;
+    }
+}
+
+void MainWindow::on_radioButton_editar_opcao3_clicked()
+{
+    if(ultimoApertado == ui->radioButton_editar_opcao3){
+        ui->radioButton_editar_opcao3->setAutoExclusive(false);
+        ui->radioButton_editar_opcao3->setChecked(false);
+        ui->radioButton_editar_opcao3->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_editar_opcao3;
+    }
+}
+
+void MainWindow::on_radioButton_editar_opcao4_clicked()
+{
+    if(ultimoApertado == ui->radioButton_editar_opcao4){
+        ui->radioButton_editar_opcao4->setAutoExclusive(false);
+        ui->radioButton_editar_opcao4->setChecked(false);
+        ui->radioButton_editar_opcao4->setAutoExclusive(true);
+        ultimoApertado = nullptr;
+    }else{
+        ultimoApertado = ui->radioButton_editar_opcao4;
     }
 }

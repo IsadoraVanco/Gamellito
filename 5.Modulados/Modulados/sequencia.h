@@ -190,42 +190,78 @@ public:
      * @param index O index do item
      * @return A pergunta
      */
-    QString pergunta(int index);
+    QString getPergunta(int index);
+
+    /**
+     * @brief Retorna a pergunta do item no indice atual
+     * @return A pergunta
+     */
+    QString getPerguntaNoIndiceAtual();
 
     /**
      * @brief Retorna a primeira opção da resposta caso o item no index seja uma pergunta
      * @param index O index do item
      * @return A opção
      */
-    QString opcao1(int index);
+    QString getOpcao1(int index);
+
+    /**
+     * @brief Retorna a primeira opção da resposta no item no índice atual
+     * @return A opção
+     */
+    QString getOpcao1NoIndiceAtual();
 
     /**
      * @brief Retorna a segunda opção da resposta caso o item no index seja uma pergunta
      * @param index O index do item
      * @return A opção
      */
-    QString opcao2(int index);
+    QString getOpcao2(int index);
+
+    /**
+     * @brief Retorna a segunda opção da resposta no item no índice atual
+     * @return A opção
+     */
+    QString getOpcao2NoIndiceAtual();
 
     /**
      * @brief Retorna a terceira opção da resposta caso o item no index seja uma pergunta
      * @param index O index do item
      * @return A opção
      */
-    QString opcao3(int index);
+    QString getOpcao3(int index);
+
+    /**
+     * @brief Retorna a terceira opção da resposta no item no índice atual
+     * @return A opção
+     */
+    QString getOpcao3NoIndiceAtual();
 
     /**
      * @brief Retorna a quarta opção da resposta caso o item no index seja uma pergunta
      * @param index O index do item
      * @return A opção
      */
-    QString opcao4(int index);
+    QString getOpcao4(int index);
+
+    /**
+     * @brief Retorna a quarta opção da resposta no item no índice atual
+     * @return A opção
+     */
+    QString getOpcao4NoIndiceAtual();
 
     /**
      * @brief O número que representa a opção correta da pergunta no index
      * @param index O index do item
      * @return O número da opção correta
      */
-    int respostaCorreta(int index);
+    int getRespostaCorreta(int index);
+
+    /**
+     * @brief Retorna o número da resposta correta de um item no indice atual
+     * @return O número da resposta correta
+     */
+    int getRespostaCorretaNoIndiceAtual();
 
 private:
     // Marca qual o índice do elemento atual da sequência

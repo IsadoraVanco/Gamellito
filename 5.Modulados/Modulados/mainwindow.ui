@@ -33,7 +33,7 @@
     <string notr="true">background: qlineargradient(spread:pad, x1:0.605, y1:0.374591, x2:0.094, y2:0.125, stop:0 rgba(251, 254, 12, 255), stop:1 rgba(255, 116, 57, 255))</string>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
+    <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="enabled">
        <bool>true</bool>
@@ -60,7 +60,7 @@
        <number>1</number>
       </property>
       <property name="currentIndex">
-       <number>6</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="inicio">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -195,7 +195,7 @@ QPushButton:hover {
 }</string>
           </property>
           <property name="text">
-           <string/>
+           <string>C</string>
           </property>
          </widget>
         </item>
@@ -272,57 +272,6 @@ QPushButton:hover {
             </property>
             <property name="flat">
              <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_sobre">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>320</width>
-              <height>60</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>320</width>
-              <height>60</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>18</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-	background-color: #FF7439;
-	border-radius: 20px;
-	border: none;
-	color: #fff;
-}
-
-QPushButton:pressed {
-	background-color: #c8592d;
-}
-
-QPushButton:hover {
-	background-color: #c8592d;
-}</string>
-            </property>
-            <property name="text">
-             <string>SOBRE</string>
             </property>
            </widget>
           </item>
@@ -581,6 +530,315 @@ QPushButton:pressed {
        </layout>
       </widget>
       <widget class="QWidget" name="configurar">
+       <layout class="QGridLayout" name="gridLayout_13">
+        <item row="5" column="2">
+         <spacer name="horizontalSpacer_15">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="9" column="4" alignment="Qt::AlignRight|Qt::AlignBottom">
+         <widget class="QPushButton" name="pushButton_sair_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: #FF7439;
+	border-radius: 20px;
+	border: none;
+	color: #fff;
+	min-width: 40px;
+	min-height: 40px;
+	font-weight: bold;
+}
+
+QPushButton:hover {
+	background-color: #c8592d;
+}
+
+QPushButton:pressed {
+	background-color: #c8592d;
+}</string>
+          </property>
+          <property name="text">
+           <string>SAIR</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
+         <spacer name="verticalSpacer_15">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Minimum</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="7" column="1">
+         <widget class="QLabel" name="label_4">
+          <property name="styleSheet">
+           <string notr="true">background: none;
+font-weight: bold;
+font-size: 16px;
+margin: 10px;</string>
+          </property>
+          <property name="text">
+           <string>CONFIGURAÇÕES DO ADMINISTRADOR:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QPushButton" name="pushButton_configurar_perfil">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: #FF7439;
+	border-radius: 20px;
+	border: none;
+	color: #fff;
+	min-width: 150px;
+	min-height: 60px;
+	font-weight: bold;
+}
+
+QPushButton:hover {
+	background-color: #c8592d;
+}
+
+QPushButton:pressed {
+	background-color: #c8592d;
+}</string>
+          </property>
+          <property name="text">
+           <string>CONFIGURAR PERFIL</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="3">
+         <widget class="QPushButton" name="pushButton_sobre">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: #FF7439;
+	border-radius: 20px;
+	border: none;
+	color: #fff;
+	min-width: 150px;
+	min-height: 60px;
+	font-weight: bold;
+}
+
+QPushButton:hover {
+	background-color: #c8592d;
+}
+
+QPushButton:pressed {
+	background-color: #c8592d;
+}</string>
+          </property>
+          <property name="text">
+           <string>SOBRE O PROGRAMA</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="label_2">
+          <property name="font">
+           <font>
+            <pointsize>-1</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+            <underline>false</underline>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background: none;
+font-weight: bold;
+font-size: 16px;
+margin: 10px;</string>
+          </property>
+          <property name="text">
+           <string>CONFIGURAÇÕES DO PERFIL</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="4">
+         <spacer name="horizontalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="5" column="3">
+         <widget class="QPushButton" name="pushButton_salvar_video">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: #FF7439;
+	border-radius: 20px;
+	border: none;
+	color: #fff;
+	min-width: 150px;
+	min-height: 60px;
+	font-weight: bold;
+}
+
+QPushButton:hover {
+	background-color: #c8592d;
+}
+
+QPushButton:pressed {
+	background-color: #c8592d;
+}</string>
+          </property>
+          <property name="text">
+           <string>SALVAR VÍDEO</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QPushButton" name="pushButton_4">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: #FF7439;
+	border-radius: 20px;
+	border: none;
+	color: #fff;
+	min-width: 120px;
+	min-height: 60px;
+	font-weight: bold;
+}
+
+QPushButton:hover {
+	background-color: #c8592d;
+}
+
+QPushButton:pressed {
+	background-color: #c8592d;
+}</string>
+          </property>
+          <property name="text">
+           <string>HOME</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="2">
+         <spacer name="horizontalSpacer_14">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="5" column="0">
+         <spacer name="horizontalSpacer_13">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="8" column="1">
+         <widget class="QPushButton" name="pushButton_3">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: #FF7439;
+	border-radius: 20px;
+	border: none;
+	color: #fff;
+	min-width: 150px;
+	min-height: 60px;
+	font-weight: bold;
+}
+
+QPushButton:hover {
+	background-color: #c8592d;
+}
+
+QPushButton:pressed {
+	background-color: #c8592d;
+}</string>
+          </property>
+          <property name="text">
+           <string>ALTERAR SENHA</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="label_3">
+          <property name="styleSheet">
+           <string notr="true">background: none;
+font-weight: bold;
+font-size: 16px;
+margin: 10px;</string>
+          </property>
+          <property name="text">
+           <string>SELECIONAR O TIPO DE USUÁRIO:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <spacer name="verticalSpacer_16">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="3" column="2" colspan="2">
+         <widget class="QComboBox" name="comboBox"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="configurar_perfil">
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="6" column="5">
          <spacer name="horizontalSpacer_configurar">
@@ -644,7 +902,10 @@ QPushButton:hover {
 }</string>
           </property>
           <property name="text">
-           <string/>
+           <string>SAIR</string>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -781,51 +1042,6 @@ QPushButton:pressed {
            </size>
           </property>
          </spacer>
-        </item>
-        <item row="6" column="3">
-         <widget class="QPushButton" name="pushButton_alterar_senha">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>150</width>
-            <height>60</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>10</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="cursor">
-           <cursorShape>PointingHandCursor</cursorShape>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton {
-	background-color: #FF7439;
-	border-radius: 20px;
-	border: none;
-	color: #fff;
-}
-
-QPushButton:hover {
-	background-color: #c8592d;
-}
-
-QPushButton:pressed {
-	background-color: #c8592d;
-}</string>
-          </property>
-          <property name="text">
-           <string>ALTERAR SENHA</string>
-          </property>
-         </widget>
         </item>
         <item row="6" column="0">
          <spacer name="horizontalSpacer_configurar_2">
@@ -1049,8 +1265,17 @@ QScrollBar::sub-line:vertical {
             <property name="horizontalScrollBarPolicy">
              <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustToContents</enum>
+            </property>
+            <property name="autoScrollMargin">
+             <number>30</number>
+            </property>
             <property name="tabKeyNavigation">
              <bool>true</bool>
+            </property>
+            <property name="dragDropOverwriteMode">
+             <bool>false</bool>
             </property>
             <property name="dragDropMode">
              <enum>QAbstractItemView::DragDrop</enum>
@@ -1067,7 +1292,7 @@ QScrollBar::sub-line:vertical {
             <property name="iconSize">
              <size>
               <width>20</width>
-              <height>20</height>
+              <height>100</height>
              </size>
             </property>
             <property name="textElideMode">
@@ -1076,26 +1301,44 @@ QScrollBar::sub-line:vertical {
             <property name="movement">
              <enum>QListView::Free</enum>
             </property>
+            <property name="flow">
+             <enum>QListView::TopToBottom</enum>
+            </property>
             <property name="isWrapping" stdset="0">
              <bool>false</bool>
             </property>
             <property name="resizeMode">
-             <enum>QListView::Adjust</enum>
+             <enum>QListView::Fixed</enum>
             </property>
             <property name="layoutMode">
-             <enum>QListView::SinglePass</enum>
+             <enum>QListView::Batched</enum>
             </property>
             <property name="spacing">
-             <number>16</number>
+             <number>1</number>
             </property>
             <property name="viewMode">
              <enum>QListView::ListMode</enum>
             </property>
+            <property name="modelColumn">
+             <number>0</number>
+            </property>
+            <property name="uniformItemSizes">
+             <bool>false</bool>
+            </property>
+            <property name="batchSize">
+             <number>100</number>
+            </property>
             <property name="wordWrap">
              <bool>false</bool>
             </property>
+            <property name="selectionRectVisible">
+             <bool>true</bool>
+            </property>
             <property name="itemAlignment">
-             <set>Qt::AlignLeading</set>
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="currentRow">
+             <number>-1</number>
             </property>
            </widget>
           </item>
@@ -1220,8 +1463,24 @@ QPushButton:pressed {
           </item>
          </layout>
         </item>
-        <item row="5" column="5">
-         <widget class="QPushButton" name="pushButton_salvar_video">
+        <item row="2" column="2">
+         <spacer name="verticalSpacer_9">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="6" column="3">
+         <widget class="QPushButton" name="pushButton_limpar_sequencia">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -1261,25 +1520,36 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>SALVAR VÍDEO</string>
+           <string>LIMPAR SEQUÊNCIA</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="2">
-         <spacer name="verticalSpacer_9">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+        <item row="8" column="0">
+         <widget class="QPushButton" name="pushButton">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: #FF7439;
+	border-radius: 20px;
+	border: none;
+	color: #fff;
+	font-size: 10px;
+	font-weight: bold;
+	min-width: 100px;
+	min-height: 40px;
+}
+
+QPushButton:hover {
+	background-color: #c8592d;
+}
+
+QPushButton:pressed {
+	background-color: #c8592d;
+}</string>
           </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
+          <property name="text">
+           <string>VOLTAR</string>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -1681,6 +1951,9 @@ background-color: #789d1c;
              <property name="text">
               <string>Opção 2</string>
              </property>
+             <property name="autoRepeat">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item row="2" column="0">
@@ -1737,6 +2010,12 @@ background-color: #789d1c;
              </property>
              <property name="text">
               <string>Opção 1</string>
+             </property>
+             <property name="autoRepeat">
+              <bool>false</bool>
+             </property>
+             <property name="autoRepeatDelay">
+              <number>301</number>
              </property>
             </widget>
            </item>
