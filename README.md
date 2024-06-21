@@ -19,31 +19,36 @@ Para consultas futuras, aqui estão as documentações de cada classe utilizada:
 * [**QMultimedia**](https://doc.qt.io/qt-5/qtmultimedia-index.html)
 * [**QWidget**](https://doc.qt.io/qt-5/qwidget.html)
 * [**QVideoWidget**](https://doc.qt.io/qt-5/qvideowidget.html)
-* [**QGraphcsVideoItem**](https://doc.qt.io/qt-5/qgraphicsvideoitem.html)
+* [**QGraphicsVideoItem**](https://doc.qt.io/qt-5/qgraphicsvideoitem.html)
+
+#### Bibliotecas para a reprodução de vídeo
+Existem várias bibliotecas para a reprodução de vídeo em Qt. Abaixo, algumas testadas e seus resultados:
+
+* [**QVideo**](): Não foi possível alterar a dimensão do reprodutor;
+* [**QVideoWidget**](): Altera a dimensão do vídeo, porém, abrindo outra janela.
+* [**QGraphicsVideoItem**](): É possível alterar a dimensão do vídeo, e colocá-lo em um widget, sem a necessidade de abrir outra janela para reproduzir o vídeo. Apesar desses benefícios, o vídeo reproduz travando um pouco (quase impercipitível).
+
+Outras classes possíveis (mas que não foram testadas):
+
+* [**Qtav**](https://github.com/wang-bin/QtAV/tree/master);
+* [**QVideoFrame**](https://doc.qt.io/qt-5/qvideoframe.html);
+* [**QVideoSink**](https://doc.qt.io/qt-6/qvideosink.html) (Qt6);
+* [**VLC Qt**](https://github.com/vlc-qt/vlc-qt);
 
 ### 1.2. Virtualização
-
 Como utilizo Windows no dia-a-dia, preciso de uma ferramenta para virtualizar o sistema Linux para compilar o código e testá-lo. Para isso, utilizarei o **VM Virtual Box** e nele virtualizo o **Linux Mint XFCE versão 21.2 (Victoria) (64bits)**. Utilizando 2 GB de RAM da máquina hospedeira e 1 núcleo de 1.80GHz do AMD Ryzen 7 5700U with Radeon Graphics.
 
 Cogitei utilizar Docker, mas creio que seria muito para a máquina Dino, além de não ser muito viável para o usuário replicar o programa em outra máquina (creio eu).
 
 ### 1.3 Papelada
 
-Assim como uma casa, um software também precisa de uma planta que foi planejada para poder ser estruturado de forma segura. E para fazer algumas partes do processo, utilizei (mesmo que tardio):
+Assim como uma casa, um software também precisa de uma planta que foi planejada para poder ser estruturado de forma segura. E para fazer algumas partes do processo, utilizei:
 
 - **Protipagem de telas**: [Figma](https://www.figma.com);
 - **Diagrama de caso de uso**: [Lucidchart](https://lucid.app/);
 
-### Ainda para se pensar...
-Algumas novidades que podem ajudar (ainda para pesquisar e testar):
-
-* Embedar uma linguagem para uma atividade específica
-* Utilizar CSV ou txt para armazenar os dados selecionados pelo usuário
-* Utilizar JSON para armazenar a sequência de vídeos e perguntas
-
-## 2. Estrutura do Software
-
-Estou percebendo que vou precisar ter uma estrutura definida de algumas coisas, principalmente para quando for replicar em outras máquinas. Por enquanto, pensei o seguinte:
+## 2. Software
+Estrutura do armazenamento do software na máquina:
 
 ```
 projeto{
@@ -68,51 +73,31 @@ projeto{
     }
     
     configuracoes{
-        spa.json
-        spr.json
-        sre.json
+        sequenciaPaciente.json
+        sequenciaProfissional.json
+        sequenciaResponsavel.json
 
-        rpa.json
-        rpr.json
-        rre.json
+        respostasPaciente.json
+        respostasProfissional.json
+        respostasResponsavel.json
     }
 
-    .executável
+    .executavel
     config.json
-    ...
 }
 ```
 
-Onde `projeto` é a pasta da aplicação do Gamellito, e dentro dela contém o arquivo de configuração geral, que armazena as seguintes informações:
-```
+Onde `projeto` é a pasta da aplicação do Gamellito, e dentro dela contém todos os arquivos necessários para o funcionamento da aplicação. 
 
-```
+A pasta `assets` contém sons, ícones e fotos da aplicação. 
 
-da sequência de vídeos e perguntas, e a `pastaAssets`, que contém sons e fotos para a aplicação.
+`backups` trata-se da pasta que armazena os vídeos que foram salvos para as sequências. Dentro desta pasta, possui uma pasta separada para cada perfil.
 
-Além disso, `config.json` estará estruturado como:
-* Para o `vídeo`: 
-```
-{
-    "id": numero
-    "tipo":"video";
-    "caminho":"caminho/do/video"
-}
-```
+`configuracoes` é a pasta que armazena os arquivos .json de cada perfil, incluindo a sequência de cada perfil e as respostas coletadas em perguntas.
 
-* Para a `pergunta`: 
-```
-{
-    "id": numero
-    "tipo":"pergunta";
-    "pergunta":"texto";
-    "opcao1":"texto";
-    "opcao2":"texto";
-    "opcao3":"texto";
-    "opcao4":"texto";
-    "correta":0-4
-}
-```
+`.executavel` é o arquivo executável do programa.
+
+`config.json` é o arquivo de configurações gerais, que armazena algumas informações do programa, como: Número de reproduções das sequências, número de vezes que o programa foi aberto, a última vez que o programa foi aberto, a senha do administrador e a última vez que um relatório foi gerado.
 
 ### Assets
 
@@ -138,8 +123,33 @@ Além disso, `config.json` estará estruturado como:
     - [Com som](freepik.com/icon/volume_727269#fromView=search&page=1&position=2&uuid=a5f213c1-6501-4e0d-9c22-7edddaeb7029)
     - [Sem som](https://www.freepik.com/icon/mute_727240#fromView=search&page=1&position=3&uuid=a5f213c1-6501-4e0d-9c22-7edddaeb7029)
 
-## 3. Hardware
+### Sequências
+As sequências dos perfis são representadas por arquivos .json, e dentro deles, estão estruturados objetos Json para representar um item. Os itens são representados da seguinte maneira:
 
+* Para o `vídeo`: 
+```
+{
+    "id": numero;
+    "tipo":"video";
+    "caminho":"caminho/do/video"
+}
+```
+
+* Para a `pergunta`: 
+```
+{
+    "id": numero;
+    "tipo":"pergunta";
+    "pergunta":"texto";
+    "opcao1":"texto";
+    "opcao2":"texto";
+    "opcao3":"texto";
+    "opcao4":"texto";
+    "correta":0-4;
+}
+```
+
+## 3. Hardware
 Por enquanto, a máquina foi desbloqueada para utilizar sistemas operacionais. Procuro por sistemas Linux que são leves o suficientes para a máquina Dino.
 
 Sistemas testados até o momento (na máquina Dino):
@@ -154,14 +164,7 @@ Testar outros Linux mais leves. OBS: Pode ser que haja incompatiblidade de bibli
 - AntiX
 - outros...
 
-### Tarefinhas de finalização
-Depois que estiver pronto (ou quase):
-
-* Formatar o HD utilizando software
-* Limpar a máquina Dino e trocar pasta térmica
-
 ## 4. Testes
-
 Irei guardar cada teste para caso precise testar em um novo sistema operacional, e assim eu posso comparar cada resultado. Por enquanto, temos:
 
 1. **Roadmap** -> Um exemplo simples de tela inicial, com redimensionamento e botões que levam a novas janelas. Tamanho mínimo da tela: 960x540.
