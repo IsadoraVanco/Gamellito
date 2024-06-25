@@ -110,6 +110,8 @@ A pasta `assets` contém sons, ícones e fotos da aplicação.
     - [Iniciar do Menu](https://br.freepik.com/icone/jogar-circulo_10435870#fromView=image_search_similar&page=1&position=10&uuid=40e7a8b3-175f-43da-9d45-47ff17ad6399)
     - [Configurações](https://br.freepik.com/icone/chave-inglesa_11270131)
     - [Informações](https://br.freepik.com/icone/informacoes_3916699#fromView=search&page=1&position=7&uuid=736630dc-7ab3-4b4b-842a-2bb19c458c58)
+    - [Perfil](https://br.freepik.com/icone/utilizador_3917711)
+    - [Perfil com círculo](https://br.freepik.com/icone/usuario-circulo_9821492#fromView=search&page=1&position=48&uuid=3b1aacdf-4a1f-4407-b3a1-7a4417d6fa92)
 
     Geral:
     - [Home](https://www.freepik.com/icon/home_1946436#fromView=search&page=1&position=1&uuid=df718193-70a8-4e6c-bbb2-cfdbf124f5f0)
@@ -122,6 +124,7 @@ A pasta `assets` contém sons, ícones e fotos da aplicação.
     Reprodutor:
     - [Com som](freepik.com/icon/volume_727269#fromView=search&page=1&position=2&uuid=a5f213c1-6501-4e0d-9c22-7edddaeb7029)
     - [Sem som](https://www.freepik.com/icon/mute_727240#fromView=search&page=1&position=3&uuid=a5f213c1-6501-4e0d-9c22-7edddaeb7029)
+    - [Adiantar](https://br.freepik.com/icone/simbolo-seta-avanco-rapido_27284#fromView=resource_detail&position=59)
 
 ### Sequências
 As sequências dos perfis são representadas por arquivos .json, e dentro deles, estão estruturados objetos Json para representar um item. Os itens são representados da seguinte maneira:
