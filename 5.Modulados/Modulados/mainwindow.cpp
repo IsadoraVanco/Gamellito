@@ -28,18 +28,31 @@ MainWindow::MainWindow(QWidget *parent)
     // Configura os perfis para selecionar no widget
     adicionarPerfisParaSelecao();
 
-    // Inicializa a primeira tela
+    // Coloca os elementos nas telas
     configurarTelas();
 
-    // Tela inicial
+    // Vai para a tela inicial
     mostrarTela(Pagina::Inicial);
 
     // Configura o som ambiente
     somAmbiente->configurar("som-ambiente.wav");
     somAmbiente->ligar();
 
-    //Conexões
+    // Conexões - sair do programa
     connect(ui->pushButton_sair, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->pushButton_sair_2, SIGNAL(clicked()), this, SLOT(close()));
+
+    // Conexões - voltar para o início
+    connect(ui->pushButton_inicio_configurar, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Inicial); });
+    connect(ui->pushButton_inicio_configurar_perfil, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Inicial); });
+
+    // Conexões - trocar páginas
+    connect(ui->pushButton_voltar_sobre, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Configurar); });
+
+    connect(ui->pushButton_configurar_perfil, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::ConfigurarPerfil); });
+    connect(ui->pushButton_sobre, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Sobre); });
+
+    connect(ui->pushButton_voltar_configurar_perfil, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Configurar); });
 }
 
 /* ************************************************************
@@ -65,16 +78,14 @@ void MainWindow::mostrarTela(Pagina tipo){
 
 void MainWindow::configurarTelas(){
 
-    // O índice das páginas foram definidos manualmente na edição do design dos mesmos
-    // Não mudar as páginas de lugar!
-    // A sequência deve ser a mesma do enum Pagina
-
     // icone do botão de som
     atualizarIconeSom();
 
-    // Adiciona a imagem do menu
-    QPixmap gamellito("assets/gamellito.png");
-    ui->label_imagemMenu->setPixmap(gamellito);
+    // Design do menu
+    configurarElementosMenu();
+
+    // Design das configurações
+    configurarElementosTelaConfigurar();
 
     // Reprodutor
     if(!ui->widget_reprodutor){
@@ -115,6 +126,30 @@ void MainWindow::configurarTelas(){
     //ui->stackedWidget->insertWidget(Pagina::Configurar, widget);
 
 }
+
+/* ************************************************************
+ * CONFIGURAR TELAS
+ *************************************************************/
+
+void MainWindow::configurarElementosMenu(){
+
+    // Adiciona a imagem do menu
+    ui->label_imagemMenu->setPixmap(QPixmap("assets/gamellito.png"));
+
+    ui->pushButton_configurar->setIcon(QIcon("assets/icones/configuracoes/configuracoes-preto.png"));
+
+    ui->pushButton_trocar_perfis->setIcon(QIcon("assets/icones/perfil/perfil-preto.png"));
+}
+
+void MainWindow::configurarElementosTelaConfigurar(){
+
+    ui->pushButton_sair->setIcon(QIcon("assets/icones/sair/sair-preto.png"));
+    ui->pushButton_sair_2->setIcon(QIcon("assets/icones/sair/sair-preto.png"));
+
+    ui->pushButton_editarItem->setIcon(QIcon("assets/icones/editar/editar-preto.png"));
+    ui->pushButton_removerItem->setIcon(QIcon("assets/icones/lixeira/lixeira-preto.png"));
+}
+
 
 /* ************************************************************
  * ICONES
@@ -159,6 +194,25 @@ void MainWindow::configurarArquivoGeral(){
     }
 }
 
+bool MainWindow::mostrarConfirmar(QString titulo, QString texto){
+    // Crie a caixa de diálogo
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(titulo);
+    msgBox.setText(texto);
+
+    // Adicione os botões personalizados
+    QPushButton *simButton = msgBox.addButton(tr("Sim"), QMessageBox::YesRole);
+    QPushButton *naoButton = msgBox.addButton(tr("Não"), QMessageBox::NoRole);
+
+    // Defina o botão padrão (geralmente o "Não")
+    msgBox.setDefaultButton(naoButton);
+
+    // Exiba a caixa de diálogo e espere por uma resposta
+    msgBox.exec();
+
+    return msgBox.clickedButton() == simButton;
+}
+
 // ***** SEQUÊNCIAS *********************************************
 
 void MainWindow::carregarSequencias(){
@@ -172,25 +226,6 @@ void MainWindow::carregarSequencias(){
     }
 
     carregarListaPerfilAtual();
-}
-
-bool MainWindow::mostrarConfirmarRemoverItem(){
-    // Crie a caixa de diálogo
-    QMessageBox msgBox;
-    msgBox.setWindowTitle("Certeza que quer remover?");
-    msgBox.setText("Tem certeza que gostaria de remover o item? A ação não poderá ser desfeita.");
-
-    // Adicione os botões personalizados
-    QPushButton *simButton = msgBox.addButton(tr("Sim"), QMessageBox::YesRole);
-    QPushButton *naoButton = msgBox.addButton(tr("Não"), QMessageBox::NoRole);
-
-    // Defina o botão padrão (geralmente o "Não")
-    msgBox.setDefaultButton(naoButton);
-
-    // Exiba a caixa de diálogo e espere por uma resposta
-    msgBox.exec();
-
-    return msgBox.clickedButton() == simButton;
 }
 
 void MainWindow::removerItemSelecionado(){
@@ -313,72 +348,55 @@ void MainWindow::configurarTelaPergunta(QJsonObject objetoAtual){
     // Muda as respostas
     QString opcao1 = perfis[perfilAtual]->sequencia->getOpcao1NoIndiceAtual();
     ui->radioButton_resposta1->setText(opcao1);
-    ui->radioButton_resposta1->setAutoExclusive(false);
-    ui->radioButton_resposta1->setChecked(false);
-    ui->radioButton_resposta1->setAutoExclusive(true);
+    desmarcarOpcao(ui->radioButton_resposta1);
 
     QString opcao2 = perfis[perfilAtual]->sequencia->getOpcao2NoIndiceAtual();
     ui->radioButton_resposta2->setText(opcao2);
-    ui->radioButton_resposta2->setAutoExclusive(false);
-    ui->radioButton_resposta2->setChecked(false);
-    ui->radioButton_resposta2->setAutoExclusive(true);
+    desmarcarOpcao(ui->radioButton_resposta2);
 
     QString opcao3 = perfis[perfilAtual]->sequencia->getOpcao3NoIndiceAtual();
     ui->radioButton_resposta3->setText(opcao3);
-    ui->radioButton_resposta3->setAutoExclusive(false);
-    ui->radioButton_resposta3->setChecked(false);
-    ui->radioButton_resposta3->setAutoExclusive(true);
+    desmarcarOpcao(ui->radioButton_resposta3);
 
     QString opcao4 = perfis[perfilAtual]->sequencia->getOpcao4NoIndiceAtual();
     ui->radioButton_resposta4->setText(opcao4);
-    ui->radioButton_resposta4->setAutoExclusive(false);
-    ui->radioButton_resposta4->setChecked(false);
-    ui->radioButton_resposta4->setAutoExclusive(true);
+    desmarcarOpcao(ui->radioButton_resposta4);
+}
+
+// ***** CONFIGURAR PERFIL *********************************************
+
+// ***** PERGUNTA *********************************************
+
+void MainWindow::desmarcarOpcao(QRadioButton *btn){
+    btn->setAutoExclusive(false);
+    btn->setChecked(false);
+    btn->setAutoExclusive(true);
+}
+
+void MainWindow::limparTexto(QTextEdit *campo){
+    campo->setText("");
 }
 
 // ***** ADICIONAR PERGUNTA *********************************************
 
 bool MainWindow::mostrarConfirmarSairPergunta(){
-    // Crie a caixa de diálogo
-    QMessageBox msgBox;
-    msgBox.setWindowTitle("Certeza que quer sair?");
-    msgBox.setText("Existem alterações que não foram salvas. Gostaria de sair mesmo assim?");
-
-    // Adicione os botões personalizados
-    QPushButton *simButton = msgBox.addButton(tr("Sim"), QMessageBox::YesRole);
-    QPushButton *naoButton = msgBox.addButton(tr("Não"), QMessageBox::NoRole);
-
-    // Defina o botão padrão (geralmente o "Não")
-    msgBox.setDefaultButton(naoButton);
-
-    // Exiba a caixa de diálogo e espere por uma resposta
-    msgBox.exec();
-
-    return msgBox.clickedButton() == simButton;
+    return mostrarConfirmar("Certeza que quer sair?", "Existem alterações que não foram salvas. Gostaria de sair mesmo assim?");
 }
 
 void MainWindow::limparCamposPergunta(){
-    ui->textEdit_pergunta->setText("");
+    limparTexto(ui->textEdit_pergunta);
 
-    ui->textEdit_opcao1->setText("");
-    ui->radioButton_opcao1->setAutoExclusive(false);
-    ui->radioButton_opcao1->setChecked(false);
-    ui->radioButton_opcao1->setAutoExclusive(true);
+    limparTexto(ui->textEdit_opcao1);
+    desmarcarOpcao(ui->radioButton_opcao1);
 
-    ui->textEdit_opcao2->setText("");
-    ui->radioButton_opcao2->setAutoExclusive(false);
-    ui->radioButton_opcao2->setChecked(false);
-    ui->radioButton_opcao2->setAutoExclusive(true);
+    limparTexto(ui->textEdit_opcao2);
+    desmarcarOpcao(ui->radioButton_opcao2);
 
-    ui->textEdit_opcao3->setText("");
-    ui->radioButton_opcao3->setAutoExclusive(false);
-    ui->radioButton_opcao3->setChecked(false);
-    ui->radioButton_opcao3->setAutoExclusive(true);
+    limparTexto(ui->textEdit_opcao3);
+    desmarcarOpcao(ui->radioButton_opcao3);
 
-    ui->textEdit_opcao4->setText("");
-    ui->radioButton_opcao4->setAutoExclusive(false);
-    ui->radioButton_opcao4->setChecked(false);
-    ui->radioButton_opcao4->setAutoExclusive(true);
+    limparTexto(ui->textEdit_opcao4);
+    desmarcarOpcao(ui->radioButton_opcao4);
 }
 
 bool MainWindow::todosCamposPreenchidos(){
@@ -748,10 +766,16 @@ void MainWindow::adicionarPerfisParaSelecao(){
         QString nome = perfil->nome;
 
         ui->comboBox_perfis->addItem(nome);
+        ui->comboBox_configurar_perfis->addItem(nome);
     }
 
     // Evento para quando selecionar outro perfil
     QObject::connect(ui->comboBox_perfis, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                         [&](int index) {
+                            selecionarPerfil(ui->comboBox_perfis->itemText(index));
+                         });
+
+    QObject::connect(ui->comboBox_configurar_perfis, QOverload<int>::of(&QComboBox::currentIndexChanged),
                          [&](int index) {
                             selecionarPerfil(ui->comboBox_perfis->itemText(index));
                          });
@@ -779,11 +803,6 @@ void MainWindow::on_pushButton_iniciar_clicked()
 
 }
 
-void MainWindow::on_pushButton_sobre_clicked()
-{
-    mostrarTela(Pagina::Sobre);
-}
-
 void MainWindow::on_pushButton_som_clicked()
 {
     if(somAmbiente->estaMutado()){
@@ -804,29 +823,21 @@ void MainWindow::on_pushButton_configurar_clicked()
 
 // ***** SOBRE *********************************************
 
-void MainWindow::on_pushButton_voltar_sobre_clicked()
-{
-    mostrarTela(Pagina::Configurar);
-}
+
 
 // ***** CONFIGURAR *********************************************
-
-void MainWindow::on_pushButton_configurar_perfil_clicked()
-{
-    mostrarTela(Pagina::ConfigurarPerfil);
-}
-
-// ***** CONFIGURAR PERFIL *********************************************
-
-void MainWindow::on_pushButton_voltar_configurar_clicked()
-{
-    mostrarTela(Pagina::Inicial);
-}
 
 void MainWindow::on_pushButton_alterar_senha_clicked()
 {
     senha->alterarSenha();
 }
+
+void MainWindow::on_pushButton_salvar_video_clicked()
+{
+    arquivos->salvarVideoBackup(perfis[perfilAtual]->arquivos.pasta);
+}
+
+// ***** CONFIGURAR PERFIL *********************************************
 
 void MainWindow::on_pushButton_adicionar_video_clicked()
 {
@@ -856,11 +867,6 @@ void MainWindow::on_pushButton_adicionar_pergunta_clicked()
     mostrarTela(Pagina::AdicionarPergunta);
 }
 
-void MainWindow::on_pushButton_salvar_video_clicked()
-{
-    arquivos->salvarVideoBackup(perfis[perfilAtual]->arquivos.pasta);
-}
-
 void MainWindow::on_pushButton_editarItem_clicked()
 {
     if(ui->listWidget->currentItem()){
@@ -871,8 +877,75 @@ void MainWindow::on_pushButton_editarItem_clicked()
 void MainWindow::on_pushButton_removerItem_clicked()
 {
     // Confirma se gostaria de remover
-    if(ui->listWidget->currentItem() && mostrarConfirmarRemoverItem()){
-        removerItemSelecionado();
+    if(ui->listWidget->currentItem()){
+        bool confirma = mostrarConfirmar("Certeza que quer remover?", "Tem certeza que gostaria de remover o item? A ação não poderá ser desfeita.");
+
+        if(confirma){
+            removerItemSelecionado();
+        }
+    }
+}
+
+void MainWindow::on_pushButton_mover_cima_clicked()
+{
+    if(ui->listWidget->currentItem()){
+        int index = ui->listWidget->currentRow();
+
+        // Move na sequencia
+        perfis[perfilAtual]->sequencia->alterarIndice(index, index - 1);
+
+        // Atualiza o documento
+        arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.sequencia);
+
+        // Atualiza o widget
+        carregarListaPerfilAtual();
+
+        // Deixa o item selecionado
+        if(perfis[perfilAtual]->sequencia->ehIndiceValido(index - 1)){
+            ui->listWidget->setCurrentRow(index - 1);
+        }else{
+            ui->listWidget->setCurrentRow(index);
+        }
+    }
+}
+
+void MainWindow::on_pushButton_mover_baixo_clicked()
+{
+    if(ui->listWidget->currentItem()){
+        int index = ui->listWidget->currentRow();
+
+        // Move na sequencia
+        perfis[perfilAtual]->sequencia->alterarIndice(index, index + 1);
+
+        // Atualiza o documento
+        arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.sequencia);
+
+        // Atualiza o widget
+        carregarListaPerfilAtual();
+
+        // Deixa o item selecionado
+        if(perfis[perfilAtual]->sequencia->ehIndiceValido(index + 1)){
+            ui->listWidget->setCurrentRow(index + 1);
+        }else{
+            ui->listWidget->setCurrentRow(index);
+        }
+    }
+}
+
+void MainWindow::on_pushButton_limpar_sequencia_clicked()
+{
+    if(!perfis[perfilAtual]->sequencia->estaVazia()){
+        bool confirmar = mostrarConfirmar("Certeza que quer limpar a sequência?", "A sequência será limpa e não é possível desfazer esta ação. Deseja continuar?");
+
+        if(confirmar){
+            perfis[perfilAtual]->sequencia->limpar();
+
+            // Recarrega a lista no widget
+            carregarListaPerfilAtual();
+
+            // Atualizar o arquivo
+            arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.sequencia);
+        }
     }
 }
 
@@ -902,7 +975,7 @@ void MainWindow::on_pushButton_proximo_reprodutor_clicked()
 
 // ***** PERGUNTA *********************************************
 
-void MainWindow::on_pushButton_pergunta_inicio_clicked()
+void MainWindow::on_pushButton_inicio_pergunta_clicked()
 {
     mostrarTela(Pagina::Inicial);
 
@@ -912,9 +985,6 @@ void MainWindow::on_pushButton_pergunta_inicio_clicked()
 
 void MainWindow::on_pushButton_voltar_pergunta_clicked()
 {
-    // Reseta o ultimo botão apertado nas perguntas
-    ultimoApertado = nullptr;
-
     mostrarTelaAnterior();
 }
 
@@ -922,17 +992,12 @@ void MainWindow::on_pushButton_proximo_pergunta_clicked()
 {
     salvarResposta();
     mostrarProximaTela();
-
-    // Reseta o ultimo botão apertado nas perguntas
-    ultimoApertado = nullptr;
 }
 
 void MainWindow::on_radioButton_resposta1_clicked()
 {
     if(ultimoApertado == ui->radioButton_resposta1){
-        ui->radioButton_resposta1->setAutoExclusive(false);
-        ui->radioButton_resposta1->setChecked(false);
-        ui->radioButton_resposta1->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_resposta1);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_resposta1;
@@ -942,9 +1007,7 @@ void MainWindow::on_radioButton_resposta1_clicked()
 void MainWindow::on_radioButton_resposta2_clicked()
 {
     if(ultimoApertado == ui->radioButton_resposta2){
-        ui->radioButton_resposta2->setAutoExclusive(false);
-        ui->radioButton_resposta2->setChecked(false);
-        ui->radioButton_resposta2->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_resposta2);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_resposta2;
@@ -954,9 +1017,7 @@ void MainWindow::on_radioButton_resposta2_clicked()
 void MainWindow::on_radioButton_resposta3_clicked()
 {
     if(ultimoApertado == ui->radioButton_resposta3){
-        ui->radioButton_resposta3->setAutoExclusive(false);
-        ui->radioButton_resposta3->setChecked(false);
-        ui->radioButton_resposta3->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_resposta3);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_resposta3;
@@ -966,9 +1027,7 @@ void MainWindow::on_radioButton_resposta3_clicked()
 void MainWindow::on_radioButton_resposta4_clicked()
 {
     if(ultimoApertado == ui->radioButton_resposta4){
-        ui->radioButton_resposta4->setAutoExclusive(false);
-        ui->radioButton_resposta4->setChecked(false);
-        ui->radioButton_resposta4->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_resposta4);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_resposta4;
@@ -977,7 +1036,7 @@ void MainWindow::on_radioButton_resposta4_clicked()
 
 // ***** ADICIONAR PERGUNTA *********************************************
 
-void MainWindow::on_pushButton_inicial_adicionar_pergunta_clicked()
+void MainWindow::on_pushButton_inicio_adicionar_pergunta_clicked()
 {
     if(todosCamposPreenchidos()){
         if(mostrarConfirmarSairPergunta()){
@@ -1010,9 +1069,7 @@ void MainWindow::on_pushButton_salvar_pergunta_clicked()
 void MainWindow::on_radioButton_opcao1_clicked()
 {
     if(ultimoApertado == ui->radioButton_opcao1){
-        ui->radioButton_opcao1->setAutoExclusive(false);
-        ui->radioButton_opcao1->setChecked(false);
-        ui->radioButton_opcao1->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_opcao1);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_opcao1;
@@ -1022,9 +1079,7 @@ void MainWindow::on_radioButton_opcao1_clicked()
 void MainWindow::on_radioButton_opcao2_clicked()
 {
     if(ultimoApertado == ui->radioButton_opcao2){
-        ui->radioButton_opcao2->setAutoExclusive(false);
-        ui->radioButton_opcao2->setChecked(false);
-        ui->radioButton_opcao2->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_opcao2);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_opcao2;
@@ -1034,9 +1089,7 @@ void MainWindow::on_radioButton_opcao2_clicked()
 void MainWindow::on_radioButton_opcao3_clicked()
 {
     if(ultimoApertado == ui->radioButton_opcao3){
-        ui->radioButton_opcao3->setAutoExclusive(false);
-        ui->radioButton_opcao3->setChecked(false);
-        ui->radioButton_opcao3->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_opcao3);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_opcao3;
@@ -1046,9 +1099,7 @@ void MainWindow::on_radioButton_opcao3_clicked()
 void MainWindow::on_radioButton_opcao4_clicked()
 {
     if(ultimoApertado == ui->radioButton_opcao4){
-        ui->radioButton_opcao4->setAutoExclusive(false);
-        ui->radioButton_opcao4->setChecked(false);
-        ui->radioButton_opcao4->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_opcao4);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_opcao4;
@@ -1057,7 +1108,7 @@ void MainWindow::on_radioButton_opcao4_clicked()
 
 // ***** EDITAR PERGUNTA *********************************************
 
-void MainWindow::on_pushButton_inicial_editar_pergunta_clicked()
+void MainWindow::on_pushButton_inicio_editar_pergunta_clicked()
 {
     if(todosCamposPreenchidosEditada()){
         if(mostrarConfirmarSairPergunta()){
@@ -1090,9 +1141,7 @@ void MainWindow::on_pushButton_salvar_pergunta_editada_clicked()
 void MainWindow::on_radioButton_editar_opcao1_clicked()
 {
     if(ultimoApertado == ui->radioButton_editar_opcao1){
-        ui->radioButton_editar_opcao1->setAutoExclusive(false);
-        ui->radioButton_editar_opcao1->setChecked(false);
-        ui->radioButton_editar_opcao1->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_editar_opcao1);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_editar_opcao1;
@@ -1102,9 +1151,7 @@ void MainWindow::on_radioButton_editar_opcao1_clicked()
 void MainWindow::on_radioButton_editar_opcao2_clicked()
 {
     if(ultimoApertado == ui->radioButton_editar_opcao2){
-        ui->radioButton_editar_opcao2->setAutoExclusive(false);
-        ui->radioButton_editar_opcao2->setChecked(false);
-        ui->radioButton_editar_opcao2->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_editar_opcao2);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_editar_opcao2;
@@ -1114,9 +1161,7 @@ void MainWindow::on_radioButton_editar_opcao2_clicked()
 void MainWindow::on_radioButton_editar_opcao3_clicked()
 {
     if(ultimoApertado == ui->radioButton_editar_opcao3){
-        ui->radioButton_editar_opcao3->setAutoExclusive(false);
-        ui->radioButton_editar_opcao3->setChecked(false);
-        ui->radioButton_editar_opcao3->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_editar_opcao3);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_editar_opcao3;
@@ -1126,9 +1171,7 @@ void MainWindow::on_radioButton_editar_opcao3_clicked()
 void MainWindow::on_radioButton_editar_opcao4_clicked()
 {
     if(ultimoApertado == ui->radioButton_editar_opcao4){
-        ui->radioButton_editar_opcao4->setAutoExclusive(false);
-        ui->radioButton_editar_opcao4->setChecked(false);
-        ui->radioButton_editar_opcao4->setAutoExclusive(true);
+        desmarcarOpcao(ui->radioButton_editar_opcao4);
         ultimoApertado = nullptr;
     }else{
         ultimoApertado = ui->radioButton_editar_opcao4;

@@ -22,7 +22,7 @@ QJsonArray Sequencia::getSequencia(){
 }
 
 QJsonObject Sequencia::getItem(int index){
-    if(index < 0 || index >= this->array->size()){
+    if(!ehIndiceValido(index)){
         return QJsonObject();
     }
 
@@ -57,7 +57,7 @@ QString Sequencia::valorChaveNoIndexAtual(QString chave){
 }
 
 QString Sequencia::valorItem(int index){
-    if(index < 0 || index >= this->array->size()){
+    if(!ehIndiceValido(index)){
         return QString();
     }
 
@@ -79,7 +79,7 @@ QString Sequencia::valorItemNoIndexAtual(){
 
 TipoItem Sequencia::tipoItem(int index){
 
-    if(index < 0 || index >= this->array->size()){
+    if(!ehIndiceValido(index)){
         return TipoItem::Indefinido;
     }
 
@@ -100,6 +100,14 @@ TipoItem Sequencia::tipoItemNoIndexAtual(){
 }
 
 // **** ÍNDICE ************************************************
+
+bool Sequencia::ehIndiceValido(int index){
+    if(index < 0 || index >= this->array->size()){
+        return false;
+    }
+
+    return true;
+}
 
 void Sequencia::resetarIndice(){
     this->indiceAtual = 0;
@@ -125,6 +133,21 @@ bool Sequencia::indiceAnterior(){
 
     this->indiceAtual--;
     return true;
+}
+
+void Sequencia::alterarIndice(int index, int novoIndex){
+    // Verifica se os índices são válidos
+    if(!ehIndiceValido(index) || !ehIndiceValido(novoIndex)){
+        return;
+    }
+
+    // Transfere o objeto
+    QJsonValue valorObjeto = this->array->at(index);
+
+    array->removeAt(index);
+    array->insert(novoIndex, valorObjeto);
+
+    qDebug() << "[Sequencia][OK] Item movido do index" << index << "para" << novoIndex;
 }
 
 int Sequencia::calcularNovoId(){
@@ -156,6 +179,11 @@ int Sequencia::calcularNovoId(){
 }
 
 // **** MANIPULAÇÃO DE ITENS ************************************************
+
+void Sequencia::limpar(){
+    delete this->array;
+    this->array = new QJsonArray;
+}
 
 void Sequencia::carregarDoArquivo(QString nomeArquivo){
 

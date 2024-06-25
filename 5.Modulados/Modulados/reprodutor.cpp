@@ -12,6 +12,10 @@ Reprodutor::Reprodutor(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // Icones
+    ui->pushButton_passarVideo->setIcon(QIcon("assets/icones/reprodutor/proximo/proximo-preto.png"));
+    ui->pushButton_voltarVideo->setIcon(QIcon("assets/icones/reprodutor/anterior/anterior-preto.png"));
+
     // Conexões
     //connect(ui->pushButton_video_tocar, &QPushButton::clicked, player, &QMediaPlayer::play);
     //connect(ui->pushButton_video_parar, &QPushButton::clicked, player, &QMediaPlayer::pause);
@@ -40,6 +44,7 @@ Reprodutor::~Reprodutor()
 void Reprodutor::tocarVideo(){
     if(videoParado){
         // Troca o ícone do reprodutor
+        ui->pushButton_video_tocar->setIcon(QIcon("assets/icones/reprodutor/play/play-preto.png"));
 
         player->play();
         videoParado = false;
@@ -51,6 +56,7 @@ void Reprodutor::tocarVideo(){
 void Reprodutor::pararVideo(){
     if(!videoParado){
         // Trocar o ícone do reprodutor
+        ui->pushButton_video_tocar->setIcon(QIcon("assets/icones/reprodutor/pause/pause-preto.png"));
 
         player->pause();
         videoParado = true;
@@ -106,3 +112,4 @@ void Reprodutor::on_pushButton_video_tocar_clicked()
         pararVideo();
     }
 }
+

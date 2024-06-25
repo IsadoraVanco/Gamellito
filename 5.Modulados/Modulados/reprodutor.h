@@ -20,7 +20,6 @@ class Reprodutor : public QWidget
 {
     Q_OBJECT
 
-    // Por ser widget, não aceita slots
 public:
 
     /* ************************************************************

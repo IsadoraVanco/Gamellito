@@ -96,8 +96,20 @@ public:
      */
     TipoItem tipoItem(int index);
 
+    /**
+     * @brief Calcula um Id para o novo item da lista
+     * @return O novo Id
+     */
+    int calcularNovoId();
 
     // **** ÍNDICE ************************************************
+
+    /**
+     * @brief Verifica se um índice é válido para o array
+     * @param index O index a ser analisado
+     * @return true caso seja válido, false para caso contrário
+     */
+    bool ehIndiceValido(int index);
 
     /**
      * @brief Modifica o índice atual para o início
@@ -121,12 +133,18 @@ public:
     bool indiceAnterior();
 
     /**
-     * @brief Calcula um Id para o novo item da lista
-     * @return O novo Id
+     * @brief Altera a posição de um elemento
+     * @param index O index atual
+     * @param novoIndex O novo index do elemento
      */
-    int calcularNovoId();
+    void alterarIndice(int index, int novoIndex);
 
     // **** MANIPULAÇÃO DE ITENS ************************************************
+
+    /**
+     * @brief Limpa toda a sequência
+     */
+    void limpar();
 
     /**
      * @brief Carrega a sequência armazenada no arquivo

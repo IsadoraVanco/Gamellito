@@ -10,6 +10,9 @@
 // Para os botões
 #include <QRadioButton>
 
+// Para os campos de texto
+#include <QTextEdit>
+
 #include "reprodutor.h"
 #include "arquivos.h"
 #include "senha.h"
@@ -24,15 +27,15 @@ QT_END_NAMESPACE
  * DEFINIÇÕES
  *************************************************************/
 
-// Páginas do programa
+// Páginas do programa (importante estar na ordem)
 enum class Pagina{
-    Inicial,    // 0
-    Sobre,      // 1
-    Configurar, // 2
-    ConfigurarPerfil, // 3
-    Video,      // 4
-    Pergunta,   // 5
-    AdicionarPergunta,   //6
+    Inicial,            // 0
+    Sobre,              // 1
+    Configurar,         // 2
+    ConfigurarPerfil,   // 3
+    Video,              // 4
+    Pergunta,           // 5
+    AdicionarPergunta,  // 6
     EditarPergunta      // 7
 };
 
@@ -69,6 +72,14 @@ private slots:
     void configurarTelas();
 
     /* ************************************************************
+     * CONFIGURAR TELAS
+     *************************************************************/
+
+    void configurarElementosMenu();
+
+    void configurarElementosTelaConfigurar();
+
+    /* ************************************************************
      * ICONES
      *************************************************************/
 
@@ -88,16 +99,21 @@ private slots:
      */
     void configurarArquivoGeral();
 
+    /**
+     * @brief Mostra uma caixa de diálogo para confirmar uma ação
+     * @param titulo O título da caixa
+     * @param texto O texto da caixa
+     * @return true caso seja confirmado, false para caso contrário
+     */
+    bool mostrarConfirmar(QString titulo, QString texto);
+
     // ***** SEQUÊNCIAS *********************************************
 
     void carregarSequencias();
 
-    /**
-     * @brief Mostra uma caixa de diálogo para confirmar a exclusão
-     * de um item da sequência.
-     * @return true caso confirme, false para caso contrárioS
-     */
-    bool mostrarConfirmarRemoverItem();
+    void removerItemSelecionado();
+
+    void editarItemSelecionado();
 
     // ***** TELAS *********************************************
 
@@ -111,6 +127,22 @@ private slots:
 
     void configurarTelaPergunta(QJsonObject objetoAtual);
 
+    // ***** CONFIGURAR PERFIL *********************************************
+
+    // ***** PERGUNTA *********************************************
+
+    /**
+     * @brief Desmarca a opção do botão
+     * @param btn O endereço do botão que será alterado
+     */
+    void desmarcarOpcao(QRadioButton *btn);
+
+    /**
+     * @brief Limpa o campo de texto
+     * @param campo O endereço do campo de texto
+     */
+    void limparTexto(QTextEdit *campo);
+
     // ***** ADICIONAR PERGUNTA *********************************************
 
     bool mostrarConfirmarSairPergunta();
@@ -121,16 +153,16 @@ private slots:
     void limparCamposPergunta();
 
     /**
-     * @brief Verifica se existem campos que não foram preenchidos no fomulário
-     * @return True caso exista algum campo vazio, false para caso contrário
-     */
-    bool existemCamposVazios();
-
-    /**
      * @brief Verifica se todos os campos foram preenchidos no formulário
      * @return True caso todos estejam preenchidos, false para caso contrário
      */
     bool todosCamposPreenchidos();
+
+    /**
+     * @brief Verifica se existem campos que não foram preenchidos no fomulário
+     * @return True caso exista algum campo vazio, false para caso contrário
+     */
+    bool existemCamposVazios();
 
     /**
      * @brief Adiciona uma pergunta na sequência do perfil selecionado
@@ -169,10 +201,6 @@ private slots:
      */
     void configurarPerfis();
 
-    void removerItemSelecionado();
-
-    void editarItemSelecionado();
-
     /**
      * @brief Atualiza a lista do perfil atual no widget de seleção.
      */
@@ -198,11 +226,6 @@ private slots:
     void on_pushButton_iniciar_clicked();
 
     /**
-     * @brief Mostra a página de "sobre o programa"
-     */
-    void on_pushButton_sobre_clicked();
-
-    /**
      * @brief Manipula o som ambiente do menu
      */
     void on_pushButton_som_clicked();
@@ -211,29 +234,19 @@ private slots:
 
     // ***** SOBRE *********************************************
 
-    /**
-     * @brief Volta para o início do menu
-     */
-    void on_pushButton_voltar_sobre_clicked();
-
     // ***** CONFIGURAR *********************************************
-
-    /**
-     * @brief Altera a página para a de Configurar Perfil
-     */
-    void on_pushButton_configurar_perfil_clicked();
-
-    // ***** CONFIGURAR PERFIL *********************************************
-
-    /**
-     * @brief Volta para o início do menu
-     */
-    void on_pushButton_voltar_configurar_clicked();
 
     /**
      * @brief Altera a senha de acesso às configurações
      */
     void on_pushButton_alterar_senha_clicked();
+
+    /**
+     * @brief Salva um vídeo nas pastas de backup do perfil selecionado
+     */
+    void on_pushButton_salvar_video_clicked();
+
+    // ***** CONFIGURAR PERFIL *********************************************
 
     /**
      * @brief Adiciona um vídeo na sequência selecionada
@@ -246,11 +259,6 @@ private slots:
     void on_pushButton_adicionar_pergunta_clicked();
 
     /**
-     * @brief Salva um vídeo nas pastas de backup do perfil selecionado
-     */
-    void on_pushButton_salvar_video_clicked();
-
-    /**
      * @brief Edita um item da sequência selecionada
      */
     void on_pushButton_editarItem_clicked();
@@ -259,6 +267,21 @@ private slots:
      * @brief Remove um item da sequência selecionada
      */
     void on_pushButton_removerItem_clicked();
+
+    /**
+     * @brief Move um item da lista para cima
+     */
+    void on_pushButton_mover_cima_clicked();
+
+    /**
+     * @brief Move um item da lista para baixo
+     */
+    void on_pushButton_mover_baixo_clicked();
+
+    /**
+     * @brief Limpa uma sequência de perfil
+     */
+    void on_pushButton_limpar_sequencia_clicked();
 
     // ***** REPRODUTOR *********************************************
 
@@ -270,7 +293,7 @@ private slots:
 
     // ***** PERGUNTA *********************************************
 
-    void on_pushButton_pergunta_inicio_clicked();
+    void on_pushButton_inicio_pergunta_clicked();
 
     void on_pushButton_voltar_pergunta_clicked();
 
@@ -286,7 +309,7 @@ private slots:
 
     // ***** ADICIONAR PERGUNTA *********************************************
 
-    void on_pushButton_inicial_adicionar_pergunta_clicked();
+    void on_pushButton_inicio_adicionar_pergunta_clicked();
 
     void on_pushButton_voltar_adicionar_pergunta_clicked();
 
@@ -302,7 +325,7 @@ private slots:
 
     // ***** EDITAR PERGUNTA *********************************************
 
-    void on_pushButton_inicial_editar_pergunta_clicked();
+    void on_pushButton_inicio_editar_pergunta_clicked();
 
     void on_pushButton_voltar_editar_pergunta_clicked();
 
