@@ -138,7 +138,7 @@ void MainWindow::configurarElementosMenu(){
 
     ui->pushButton_configurar->setIcon(QIcon("assets/icones/configuracoes/configuracoes-preto.png"));
 
-    ui->pushButton_trocar_perfis->setIcon(QIcon("assets/icones/perfil/perfil-preto.png"));
+//    ui->pushButton_trocar_perfis->setIcon(QIcon("assets/icones/perfil/perfil-preto.png"));
 }
 
 void MainWindow::configurarElementosTelaConfigurar(){
@@ -739,6 +739,8 @@ void MainWindow::carregarListaPerfilAtual(){
 }
 
 void MainWindow::selecionarPerfil(QString nomePerfil){
+    int index = 0;
+
     // Percorre o mapeamento procurando o perfil selecionado
     for(const auto& user : perfis){
         Perfil *perfil = user.second;
@@ -751,22 +753,72 @@ void MainWindow::selecionarPerfil(QString nomePerfil){
             // Carrega a sequência na lista de itens aparentes
             carregarListaPerfilAtual();
 
-            qDebug() << "[Main][INFO] Perfil selecionado:" << nomePerfil;
+            int tamanho = ui->comboBox_selecionar_perfis_inicio->count();
 
+            // Adiciona no seletor do inicio
+            if(nome == "Profissional"){
+                bool encontrou = false;
+
+                // Procura se o perfil do Profissional está no seletor do inicio
+                for(int i = 0; i < tamanho; i++){
+                    QString nomeSelecao = ui->comboBox_configurar_perfis->itemText(i);
+
+                    if(nomeSelecao == "Profissional"){
+                        encontrou = true;
+                        break;
+                    }
+                }
+
+                if(!encontrou){
+                    ui->comboBox_selecionar_perfis_inicio->addItem(QIcon("assets/icones/perfil/" + nome + ".png"), nome);
+                    ui->comboBox_selecionar_perfis_inicio->setItemData(tamanho, "", Qt::DisplayRole);
+                }
+            }else{ // Retira do seletor do inicio
+
+                // Procura se existe um item para o profissional e o retira
+                for(int i = 0; i < tamanho; i++){
+                    QString nomeSelecao = ui->comboBox_configurar_perfis->itemText(i);
+
+                    if(nomeSelecao == "Profissional"){
+                        ui->comboBox_selecionar_perfis_inicio->removeItem(i);
+                        break;
+                    }
+                }
+            }
+
+            qDebug() << "[Main][INFO] Perfil selecionado:" << nomePerfil;
             break;
         }
+        index++;
     }
+
+    // Atualiza o item selecionado nos seletores
+    ui->comboBox_configurar_perfis->setCurrentText(nomePerfil);
+    ui->comboBox_perfis->setCurrentText(nomePerfil);
+    ui->comboBox_selecionar_perfis_inicio->setCurrentIndex(index);
 }
 
 void MainWindow::adicionarPerfisParaSelecao(){
+    int index = 0;
+
     // Percorre todo o mapeamento adicionando os perfis no widget
     for(const auto& user : perfis){
+
         Perfil *perfil = user.second;
 
         QString nome = perfil->nome;
 
         ui->comboBox_perfis->addItem(nome);
         ui->comboBox_configurar_perfis->addItem(nome);
+
+        // Não adiciona o profissional no seletor do inicio
+        if(nome != "Profissional"){
+            // O ícone do perfil deve ser o mesmo da estrutura
+            ui->comboBox_selecionar_perfis_inicio->addItem(QIcon("assets/icones/perfil/" + nome + ".png"), nome);
+            ui->comboBox_selecionar_perfis_inicio->setItemData(index, "", Qt::DisplayRole);
+        }
+
+        index++;
     }
 
     // Evento para quando selecionar outro perfil
@@ -776,6 +828,11 @@ void MainWindow::adicionarPerfisParaSelecao(){
                          });
 
     QObject::connect(ui->comboBox_configurar_perfis, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                         [&](int index) {
+                            selecionarPerfil(ui->comboBox_perfis->itemText(index));
+                         });
+
+    QObject::connect(ui->comboBox_selecionar_perfis_inicio, QOverload<int>::of(&QComboBox::currentIndexChanged),
                          [&](int index) {
                             selecionarPerfil(ui->comboBox_perfis->itemText(index));
                          });
@@ -822,8 +879,6 @@ void MainWindow::on_pushButton_configurar_clicked()
 }
 
 // ***** SOBRE *********************************************
-
-
 
 // ***** CONFIGURAR *********************************************
 
