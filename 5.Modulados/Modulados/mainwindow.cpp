@@ -22,12 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Verifica o arquivo de configurações gerais
     configurarArquivoGeral();
 
-    // Faz a configuração dos atributos dos perfis
-    configurarPerfis();
-
-    // Configura os perfis para selecionar no widget
-    adicionarPerfisParaSelecao();
-
     // Coloca os elementos nas telas
     configurarTelas();
 
@@ -76,80 +70,75 @@ void MainWindow::mostrarTela(Pagina tipo){
     ultimoApertado = nullptr;
 }
 
-void MainWindow::configurarTelas(){
+/* ************************************************************
+ * CONFIGURAR TELAS
+ *************************************************************/
 
-    // icone do botão de som
+void MainWindow::configurarTelas(){
+    // Configura os elementos das telas
+    configurarElementosTelaMenu();
+    configurarElementosTelaConfigurar();
+    configurarElementosTelaReprodutor();
+    configurarElementosTelaPergunta();
+
+    // Icones
+    adicionarIconesPaginaInicial();
+    adicionarIconesVoltar();
+    adicionarIconesProximo();
     atualizarIconeSom();
 
-    // Design do menu
-    configurarElementosMenu();
+    // Faz a configuração dos atributos dos perfis
+    configurarPerfis();
 
-    // Design das configurações
-    configurarElementosTelaConfigurar();
+    // Configura os perfis para selecionar no widget
+    adicionarPerfisParaSelecao();
+}
 
-    // Reprodutor
+void MainWindow::configurarElementosTelaMenu(){
+    // Adiciona a imagem do menu
+    ui->label_imagemMenu->setPixmap(QPixmap("assets/gamellito.png"));
+
+    ui->pushButton_configurar->setIcon(QIcon("assets/icones/configuracoes/configuracoes-preto.png"));
+}
+
+void MainWindow::configurarElementosTelaConfigurar(){
+    ui->pushButton_sair->setIcon(QIcon("assets/icones/sair/sair-preto.png"));
+    ui->pushButton_sair_2->setIcon(QIcon("assets/icones/sair/sair-preto.png"));
+
+    ui->pushButton_editarItem->setIcon(QIcon("assets/icones/lapis/lapis-preto.png"));
+    ui->pushButton_removerItem->setIcon(QIcon("assets/icones/lixeira/lixeira-preto.png"));
+    ui->pushButton_mover_cima->setIcon(QIcon("assets/icones/seta/cima/seta-cima-preto.png"));
+    ui->pushButton_mover_baixo->setIcon(QIcon("assets/icones/seta/baixo/seta-baixo-preto.png"));
+}
+
+void MainWindow::configurarElementosTelaReprodutor(){
     if(!ui->widget_reprodutor){
-        qDebug() << "[Main] [ERRO] Widget de vídeo não encontrado ou é nullptr";
-        return; // Saia da função para evitar o travamento
+        qDebug() << "[Main][ERRO] Widget de vídeo não encontrado ou é nullptr";
+        return; // Sai da função para evitar o travamento
     }else{
-        qDebug() << "[Main] [OK] Widget de vídeo encontrado";
-
         // Verificar se o widget_reprodutor possui um layout
         if (!ui->widget_reprodutor->layout()) {
             // Se não houver layout, crie um QVBoxLayout
             QVBoxLayout *layoutReprodutor = new QVBoxLayout(ui->widget_reprodutor);
             ui->widget_reprodutor->setLayout(layoutReprodutor);
-            qDebug() << "[Main] [OK] Layout para o vídeo criado";
         }
 
         reprodutor = new Reprodutor(ui->widget_reprodutor);
         ui->widget_reprodutor->layout()->addWidget(reprodutor);
-
-        qDebug() << "[Main] [OK] Configuração do vídeo concluída";
     }
+}
 
-    //reprodutor = new Reprodutor(ui->reprodutor);
-    //QVBoxLayout *layoutReprodutor = new QVBoxLayout(ui->reprodutor);
-    //ui->reprodutor->setLayout(layoutReprodutor);
-    //layoutReprodutor->addWidget(reprodutor);
+void MainWindow::configurarElementosTelaPergunta(){
 
-    // Configura os RadioButtons para edição de pergunta
     QString estiloRadioButton = "QRadioButton{ color: black; }"
                                     "QRadioButton::indicator { width: 30px; height: 30px; }"
                                     "QRadioButton::indicator:checked { background-color: light-blue;}";
+
     ui->radioButton_opcao1->setStyleSheet(estiloRadioButton);
     ui->radioButton_opcao2->setStyleSheet(estiloRadioButton);
     ui->radioButton_opcao3->setStyleSheet(estiloRadioButton);
     ui->radioButton_opcao4->setStyleSheet(estiloRadioButton);
-
-    // Adiciona as páginas dinamicamente, passando o index da stack e o widget a ser adicionado
-    //ui->stackedWidget->insertWidget(Pagina::Configurar, widget);
-
 }
-
-/* ************************************************************
- * CONFIGURAR TELAS
- *************************************************************/
-
-void MainWindow::configurarElementosMenu(){
-
-    // Adiciona a imagem do menu
-    ui->label_imagemMenu->setPixmap(QPixmap("assets/gamellito.png"));
-
-    ui->pushButton_configurar->setIcon(QIcon("assets/icones/configuracoes/configuracoes-preto.png"));
-
-//    ui->pushButton_trocar_perfis->setIcon(QIcon("assets/icones/perfil/perfil-preto.png"));
-}
-
-void MainWindow::configurarElementosTelaConfigurar(){
-
-    ui->pushButton_sair->setIcon(QIcon("assets/icones/sair/sair-preto.png"));
-    ui->pushButton_sair_2->setIcon(QIcon("assets/icones/sair/sair-preto.png"));
-
-    ui->pushButton_editarItem->setIcon(QIcon("assets/icones/editar/editar-preto.png"));
-    ui->pushButton_removerItem->setIcon(QIcon("assets/icones/lixeira/lixeira-preto.png"));
-}
-
 
 /* ************************************************************
  * ICONES
@@ -161,6 +150,35 @@ void MainWindow::atualizarIconeSom(){
     }else{
         ui->pushButton_som->setIcon(QIcon("assets/icones/som/com-som-preto.png"));
     }
+}
+
+void MainWindow::adicionarIconesPaginaInicial(){
+    QIcon iconePaginaInicial("assets/icones/pagina-inicial/pagina-inicial-preto.png");
+
+    ui->pushButton_inicio_configurar->setIcon(iconePaginaInicial);
+    ui->pushButton_inicio_configurar_perfil->setIcon(iconePaginaInicial);
+    ui->pushButton_inicio_reprodutor->setIcon(iconePaginaInicial);
+    ui->pushButton_inicio_pergunta->setIcon(iconePaginaInicial);
+    ui->pushButton_inicio_editar_pergunta->setIcon(iconePaginaInicial);
+    ui->pushButton_inicio_adicionar_pergunta->setIcon(iconePaginaInicial);
+}
+
+void MainWindow::adicionarIconesVoltar(){
+    QIcon iconeVoltar("assets/icones/voltar/voltar-preto.png");
+
+    ui->pushButton_voltar_configurar_perfil->setIcon(iconeVoltar);
+    ui->pushButton_voltar_reprodutor->setIcon(iconeVoltar);
+    ui->pushButton_voltar_pergunta->setIcon(iconeVoltar);
+    ui->pushButton_voltar_adicionar_pergunta->setIcon(iconeVoltar);
+    ui->pushButton_voltar_editar_pergunta->setIcon(iconeVoltar);
+    ui->pushButton_voltar_sobre->setIcon(iconeVoltar);
+}
+
+void MainWindow::adicionarIconesProximo(){
+    QIcon iconeProximo("assets/icones/proximo/proximo-preto.png");
+
+    ui->pushButton_proximo_pergunta->setIcon(iconeProximo);
+    ui->pushButton_proximo_reprodutor->setIcon(iconeProximo);
 }
 
 /* ************************************************************

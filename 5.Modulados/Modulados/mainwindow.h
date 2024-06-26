@@ -69,15 +69,19 @@ private slots:
      */
     void mostrarTela(Pagina tipo);
 
-    void configurarTelas();
-
     /* ************************************************************
      * CONFIGURAR TELAS
      *************************************************************/
 
-    void configurarElementosMenu();
+    void configurarTelas();
+
+    void configurarElementosTelaMenu();
 
     void configurarElementosTelaConfigurar();
+
+    void configurarElementosTelaReprodutor();
+
+    void configurarElementosTelaPergunta();
 
     /* ************************************************************
      * ICONES
@@ -87,6 +91,21 @@ private slots:
      * @brief Atualiza o ícone do botão de som do menu
      */
     void atualizarIconeSom();
+
+    /**
+     * @brief Adiciona os icones de voltar à página inicial
+     */
+    void adicionarIconesPaginaInicial();
+
+    /**
+     * @brief Adiciona os icones de voltar à página anterior
+     */
+    void adicionarIconesVoltar();
+
+    /**
+     * @brief Adiciona os ícones de avançar para a próxima página
+     */
+    void adicionarIconesProximo();
 
     /* ************************************************************
      * GERENCIAMENTO DAS CONFIGURAÇÕES

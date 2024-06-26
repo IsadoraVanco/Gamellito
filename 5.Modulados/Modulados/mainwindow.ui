@@ -353,6 +353,9 @@ QPushButton:hover {
 	height: 40px;
 }</string>
           </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QComboBox::AdjustToContents</enum>
+          </property>
           <property name="iconSize">
            <size>
             <width>40</width>
@@ -414,7 +417,7 @@ QPushButton:pressed {
 }</string>
             </property>
             <property name="text">
-             <string>VOLTAR</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -879,7 +882,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>HOME</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -1107,7 +1110,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>VOLTAR</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -1207,7 +1210,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>HOME</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -1563,7 +1566,7 @@ QPushButton:hover {
 }</string>
             </property>
             <property name="text">
-             <string>^</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -1597,7 +1600,7 @@ QPushButton:hover {
 }</string>
             </property>
             <property name="text">
-             <string>v</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -1781,7 +1784,7 @@ QPushButton:pressed {
 }</string>
             </property>
             <property name="text">
-             <string>HOME</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -1855,7 +1858,7 @@ QPushButton:pressed {
 }</string>
             </property>
             <property name="text">
-             <string>VOLTAR</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -1912,7 +1915,7 @@ QPushButton:pressed {
 }</string>
             </property>
             <property name="text">
-             <string>PRÓXIMO</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -1985,7 +1988,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>PRÓXIMO</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -2029,7 +2032,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>HOME</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -2336,7 +2339,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>VOLTAR</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -2842,7 +2845,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>HOME</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -2878,7 +2881,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>VOLTAR</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -2944,7 +2947,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>VOLTAR</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -2974,7 +2977,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>HOME</string>
+           <string/>
           </property>
          </widget>
         </item>
