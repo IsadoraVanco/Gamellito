@@ -253,6 +253,11 @@ private slots:
 
     // ***** SOBRE *********************************************
 
+    /**
+     * @brief Mostra a versão do Qt utilizada no programa
+     */
+    void on_pushButton_versao_qt_clicked();
+
     // ***** CONFIGURAR *********************************************
 
     /**

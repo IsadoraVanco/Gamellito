@@ -898,6 +898,11 @@ void MainWindow::on_pushButton_configurar_clicked()
 
 // ***** SOBRE *********************************************
 
+void MainWindow::on_pushButton_versao_qt_clicked()
+{
+    QMessageBox::aboutQt(this, "Sobre a ferramenta");
+}
+
 // ***** CONFIGURAR *********************************************
 
 void MainWindow::on_pushButton_alterar_senha_clicked()
