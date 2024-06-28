@@ -16,16 +16,9 @@ Reprodutor::Reprodutor(QWidget *parent) :
     ui->pushButton_passarVideo->setIcon(QIcon("assets/icones/reprodutor/proximo/proximo-preto.png"));
     ui->pushButton_voltarVideo->setIcon(QIcon("assets/icones/reprodutor/anterior/anterior-preto.png"));
 
-    // Conexões
-    //connect(ui->pushButton_video_tocar, &QPushButton::clicked, player, &QMediaPlayer::play);
-    //connect(ui->pushButton_video_parar, &QPushButton::clicked, player, &QMediaPlayer::pause);
-
-    //connect(ui->pushButton_video_parar, &QPushButton::clicked, this, SLOT(pararVideo()));
-    //connect(ui->pushButton_video_tocar, &QPushButton::clicked, this, SLOT(tocarVideo()));
-
-    // Conectar o sinal mediaStatusChanged() para uma função de tratamento
-    //connect(player, &QMediaPlayer::mediaStatusChanged, this, &Reprodutor::verificarStatusMedia);
-
+    // Valores do volume
+    ui->horizontalSlider_volume->setMinimum(0);
+    ui->horizontalSlider_volume->setMaximum(100);
 }
 
 /* ************************************************************
@@ -38,71 +31,165 @@ Reprodutor::~Reprodutor()
 }
 
 /* ************************************************************
- * REPRODUÇÃO DO VÍDEO
+ * AUXILIAR
  *************************************************************/
 
-void Reprodutor::tocarVideo(){
-    if(videoParado){
-        // Troca o ícone do reprodutor
-        ui->pushButton_video_tocar->setIcon(QIcon("assets/icones/reprodutor/play/play-preto.png"));
+QString Reprodutor::converterTempoEmTexto(qint64 tempo){
 
-        player->play();
-        videoParado = false;
+    // Tempo está em milissegundos
+    qint64 horas = (tempo / 1000) / 3600;
+    qint64 minutos = ((tempo / 1000) % 3600) / 60;
+    qint64 segundos = (tempo / 1000) % 60;
 
-        qDebug() << "[Reprodutor] [INFO] Video tocando";
+    QTime tempoCalculado(horas, minutos, segundos);
+
+    QString formato = "";
+
+    if(horas > 0){
+        formato = "hh:mm:ss";
+    }else{
+        formato = "mm:ss";
+    }
+
+    return tempoCalculado.toString(formato);
+}
+
+/* ************************************************************
+ * WIDGETS
+ *************************************************************/
+
+void Reprodutor::alterarEstado(QMediaPlayer::MediaStatus status){
+    if(status == QMediaPlayer::EndOfMedia){
+        pararVideo();
+        ui->pushButton_video_tocar->setIcon(QIcon("assets/icones/reprodutor/restart/restart-preto.png"));
     }
 }
 
+void Reprodutor::alterarDuracaoMaxima(int64_t duracao){
+    // Altera o widget que marca o tempo total do vídeo
+    QString tempo = converterTempoEmTexto(duracao);
+    ui->label_tempo_final->setText(tempo);
+
+    // Configura o widget de tempo
+    int64_t duracaoMaxima = duracao / periodoTempo;
+    ui->horizontalSlider_tempo->setMinimum(0);
+    ui->horizontalSlider_tempo->setMaximum(duracaoMaxima);
+
+    // Volta para o inicio quando acabar
+    ui->horizontalSlider_tempo->setRange(0, duracaoMaxima);
+
+    qDebug() << "[Reprodutor][INFO] Duração máxima alterada:" << tempo;
+}
+
+void Reprodutor::alterarWidgetTempo(int64_t valor){
+    // Altera o widget que marca o tempo atual do vídeo em texto
+    QString tempo = converterTempoEmTexto(valor);
+    ui->label_tempo_atual->setText(tempo);
+
+    // Altera o widget que mostra o tempo no slider
+    ui->horizontalSlider_tempo->setValue(valor / periodoTempo);
+}
+
+/* ************************************************************
+ * REPRODUÇÃO DO VÍDEO
+ *************************************************************/
+
+void Reprodutor::alterarTempoVideo(int posicao){
+    player->setPosition(posicao * periodoTempo);
+}
+
+void Reprodutor::tocarVideo(){
+    ui->pushButton_video_tocar->setIcon(QIcon("assets/icones/reprodutor/pause/pause-preto.png"));
+
+    player->play();
+    videoParado = false;
+
+    qDebug() << "[Reprodutor][INFO] Video tocando";
+}
+
 void Reprodutor::pararVideo(){
-    if(!videoParado){
-        // Trocar o ícone do reprodutor
-        ui->pushButton_video_tocar->setIcon(QIcon("assets/icones/reprodutor/pause/pause-preto.png"));
+    ui->pushButton_video_tocar->setIcon(QIcon("assets/icones/reprodutor/play/play-preto.png"));
 
-        player->pause();
-        videoParado = true;
+    player->pause();
+    videoParado = true;
 
-        qDebug() << "[Reprodutor] [INFO] Video parado";
-    }
+    qDebug() << "[Reprodutor][INFO] Video parado";
 }
 
 void Reprodutor::configurarVideo(QString caminhoVideo){
 
-    // Obter o caminho absoluto do arquivo
+    // Obtem o caminho absoluto do arquivo
     QString caminhoAbsoluto = QFileInfo(caminhoVideo).absoluteFilePath();
-
-    // Criar a URL a partir do caminho absoluto
     QUrl url = QUrl::fromLocalFile(caminhoAbsoluto);
 
     player = new QMediaPlayer;
-
     player->setMedia(url);
 
-    // Crie um QGraphicsVideoItem
+    // Saída de vídeo do player
     videoItem = new QGraphicsVideoItem;
-
-    // Defina o QGraphicsVideoItem como a saída de vídeo do player
     player->setVideoOutput(videoItem);
 
-    // Crie um QGraphicsScene e adicione o QGraphicsVideoItem a ele
     scene = new QGraphicsScene;
     scene->addItem(videoItem);
-
-    // Defina a QGraphicsScene para o seu QGraphicsView
     ui->graficosVideo->setScene(scene);
 
-    // Defina o tamanho do QGraphicsVideoItem para o tamanho do QGraphicsView
+    // Atualiza o tamanho do vídeo
     videoItem->setSize(ui->graficosVideo->size());
-
-    qDebug() << "[Reprodutor] [INFO] Tamanho da janela " << ui->graficosVideo->height() << ui->graficosVideo->width();
-
     ui->graficosVideo->viewport()->update();
 
-    qDebug() << "[Reprodutor] [INFO] Configuração pronta para " << caminhoVideo;
+    // Configura o som
+    ui->horizontalSlider_volume->setValue(50);
+    alterarVolume(50);
+
+    // Conexões
+    connect(player, &QMediaPlayer::durationChanged, this, &Reprodutor::alterarDuracaoMaxima);
+    connect(player, &QMediaPlayer::positionChanged, this, &Reprodutor::alterarWidgetTempo);
+    connect(player, &QMediaPlayer::mediaStatusChanged, this, &Reprodutor::alterarEstado);
+    connect(ui->horizontalSlider_volume, &QSlider::valueChanged, this, &Reprodutor::alterarVolume);
+    connect(ui->horizontalSlider_tempo, &QSlider::sliderMoved, this, &Reprodutor::alterarTempoVideo);
+
+    qDebug() << "[Reprodutor][INFO] Configuração pronta para" << caminhoVideo;
+}
+
+/* ************************************************************
+ * SOM DO VÍDEO
+ *************************************************************/
+
+void Reprodutor::mutarSom(){
+    ui->pushButton_volume->setIcon(QIcon("assets/icones/som/sem-som-preto.png"));
+
+    somMutado = true;
+    player->setMuted(somMutado);
+
+    qDebug() << "[Reprodutor][INFO] Som mutado";
+}
+
+void Reprodutor::reproduzirSom(){
+    ui->pushButton_volume->setIcon(QIcon("assets/icones/som/com-som-preto.png"));
+
+    somMutado = false;
+    player->setMuted(somMutado);
+
+    qDebug() << "[Reprodutor][INFO] Som tocando";
+}
+
+void Reprodutor::alterarVolume(int valor){
+    if(valor <= 0){
+        mutarSom();
+    }else{
+        if(somMutado){
+            reproduzirSom();
+        }
+
+        player->setVolume(valor);
+    }
 }
 
 /* ************************************************************
  * AÇÕES
  *************************************************************/
+
+// ***** VIDEO **************************************************
 
 void Reprodutor::on_pushButton_video_tocar_clicked()
 {
@@ -113,3 +200,25 @@ void Reprodutor::on_pushButton_video_tocar_clicked()
     }
 }
 
+void Reprodutor::on_pushButton_voltarVideo_clicked()
+{
+    int posicao = ui->horizontalSlider_tempo->value() - (tempoAcao / periodoTempo);
+    alterarTempoVideo(posicao);
+}
+
+void Reprodutor::on_pushButton_passarVideo_clicked()
+{
+    int posicao = ui->horizontalSlider_tempo->value() + (tempoAcao / periodoTempo);
+    alterarTempoVideo(posicao);
+}
+
+// ***** SOM **************************************************
+
+void Reprodutor::on_pushButton_volume_clicked()
+{
+    if(somMutado){
+        reproduzirSom();
+    }else{
+        mutarSom();
+    }
+}
