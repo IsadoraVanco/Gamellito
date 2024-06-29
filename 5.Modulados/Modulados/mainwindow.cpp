@@ -129,7 +129,15 @@ void MainWindow::configurarElementosTelaReprodutor(){
 }
 
 void MainWindow::configurarElementosTelaPergunta(){
+    // Pergunta
+    QString estiloPergunta = "QRadioButton{font-size:14px;font-weight: bold;background-color: #9ED125; border-radius: 10px; min-width: 220px;min-height: 60px;} QRadioButton::checked{background-color: #789d1c;}";
 
+    ui->radioButton_resposta1->setStyleSheet(estiloPergunta);
+    ui->radioButton_resposta2->setStyleSheet(estiloPergunta);
+    ui->radioButton_resposta3->setStyleSheet(estiloPergunta);
+    ui->radioButton_resposta4->setStyleSheet(estiloPergunta);
+
+    // Adicionar pergunta
     QString estiloRadioButton = "QRadioButton{ color: black; }"
                                     "QRadioButton::indicator { width: 30px; height: 30px; }"
                                     "QRadioButton::indicator:checked { background-color: light-blue;}";
@@ -138,6 +146,10 @@ void MainWindow::configurarElementosTelaPergunta(){
     ui->radioButton_opcao2->setStyleSheet(estiloRadioButton);
     ui->radioButton_opcao3->setStyleSheet(estiloRadioButton);
     ui->radioButton_opcao4->setStyleSheet(estiloRadioButton);
+
+    QIcon salvar("assets/icones/salvar/salvar-preto.png");
+    ui->pushButton_salvar_pergunta->setIcon(salvar);
+    ui->pushButton_salvar_pergunta_editada->setIcon(salvar);
 }
 
 /* ************************************************************
@@ -393,6 +405,77 @@ void MainWindow::desmarcarOpcao(QRadioButton *btn){
 
 void MainWindow::limparTexto(QTextEdit *campo){
     campo->setText("");
+}
+
+int MainWindow::verificarRespostaSelecionada(){
+    // Verifica se alguma resposta foi selecionada
+    int selecionada = 0;
+
+    if(ui->radioButton_resposta1->isChecked()){
+        selecionada = 1;
+    }else if(ui->radioButton_resposta2->isChecked()){
+        selecionada = 2;
+    }else if(ui->radioButton_resposta3->isChecked()){
+        selecionada = 3;
+    }else if(ui->radioButton_resposta4->isChecked()){
+        selecionada = 4;
+    }
+
+    return selecionada;
+}
+
+void MainWindow::salvarResposta(){
+
+    int selecionada = verificarRespostaSelecionada();
+
+    if(selecionada <= 0){
+        return;
+    }
+
+    // Salva a resposta no arquivo
+    arquivos->salvarResposta(perfis[perfilAtual]->sequencia->getItemNoIndexAtual(), selecionada, perfis[perfilAtual]->arquivos.respostas);
+}
+
+void MainWindow::atualizarBotaoConfirmar(){
+    int correta = perfis[perfilAtual]->sequencia->getRespostaCorretaNoIndiceAtual();
+
+    if(confirmarResposta && correta > 0){
+        ui->pushButton_proximo_pergunta->setIcon(QIcon("assets/icones/salvar/salvar-preto.png"));
+    }else{
+        ui->pushButton_proximo_pergunta->setIcon(QIcon("assets/icones/proximo/proximo-preto.png"));
+    }
+}
+
+void MainWindow::mostrarRespostaCorreta(){
+    int correta = perfis[perfilAtual]->sequencia->getRespostaCorretaNoIndiceAtual();
+    int respondida = verificarRespostaSelecionada();
+
+    QString estilo = "QRadioButton{font-size:14px;font-weight: bold;background-color: red; border-radius: 10px; min-width: 220px;min-height: 60px;}";
+
+    if(correta == respondida){
+        estilo = "QRadioButton{font-size:14px;font-weight: bold;background-color: green; border-radius: 10px; min-width: 220px;min-height: 60px;}";
+    }
+
+    switch(correta){
+        case 1:
+            ui->radioButton_resposta1->setStyleSheet(estilo);
+        break;
+
+        case 2:
+            ui->radioButton_resposta2->setStyleSheet(estilo);
+        break;
+
+        case 3:
+            ui->radioButton_resposta3->setStyleSheet(estilo);
+        break;
+
+        case 4:
+            ui->radioButton_resposta4->setStyleSheet(estilo);
+        break;
+    }
+
+    confirmarResposta = false;
+    atualizarBotaoConfirmar();
 }
 
 // ***** ADICIONAR PERGUNTA *********************************************
@@ -681,37 +764,6 @@ bool MainWindow::existemCamposVaziosEditada(){
     }
 
     return false;
-}
-
-// ***** PERGUNTA *********************************************
-
-int MainWindow::verificarRespostaSelecionada(){
-    // Verifica se alguma resposta foi selecionada
-    int selecionada = 0;
-
-    if(ui->radioButton_resposta1->isChecked()){
-        selecionada = 1;
-    }else if(ui->radioButton_resposta2->isChecked()){
-        selecionada = 2;
-    }else if(ui->radioButton_resposta3->isChecked()){
-        selecionada = 3;
-    }else if(ui->radioButton_resposta4->isChecked()){
-        selecionada = 4;
-    }
-
-    return selecionada;
-}
-
-void MainWindow::salvarResposta(){
-
-    int selecionada = verificarRespostaSelecionada();
-
-    if(selecionada <= 0){
-        return;
-    }
-
-    // Salva a resposta no arquivo
-    arquivos->salvarResposta(perfis[perfilAtual]->sequencia->getItemNoIndexAtual(), selecionada, perfis[perfilAtual]->arquivos.respostas);
 }
 
 // ***** PERFIS *********************************************
@@ -1068,8 +1120,13 @@ void MainWindow::on_pushButton_voltar_pergunta_clicked()
 
 void MainWindow::on_pushButton_proximo_pergunta_clicked()
 {
-    salvarResposta();
-    mostrarProximaTela();
+    if(confirmarResposta){
+        mostrarRespostaCorreta();
+    }else{
+        salvarResposta();
+        configurarElementosTelaPergunta();
+        mostrarProximaTela();
+    }
 }
 
 void MainWindow::on_radioButton_resposta1_clicked()
@@ -1077,9 +1134,13 @@ void MainWindow::on_radioButton_resposta1_clicked()
     if(ultimoApertado == ui->radioButton_resposta1){
         desmarcarOpcao(ui->radioButton_resposta1);
         ultimoApertado = nullptr;
+        confirmarResposta = false;
     }else{
         ultimoApertado = ui->radioButton_resposta1;
+        confirmarResposta = true;
     }
+
+    atualizarBotaoConfirmar();
 }
 
 void MainWindow::on_radioButton_resposta2_clicked()
@@ -1087,9 +1148,13 @@ void MainWindow::on_radioButton_resposta2_clicked()
     if(ultimoApertado == ui->radioButton_resposta2){
         desmarcarOpcao(ui->radioButton_resposta2);
         ultimoApertado = nullptr;
+        confirmarResposta = false;
     }else{
         ultimoApertado = ui->radioButton_resposta2;
+        confirmarResposta = true;
     }
+
+    atualizarBotaoConfirmar();
 }
 
 void MainWindow::on_radioButton_resposta3_clicked()
@@ -1097,9 +1162,13 @@ void MainWindow::on_radioButton_resposta3_clicked()
     if(ultimoApertado == ui->radioButton_resposta3){
         desmarcarOpcao(ui->radioButton_resposta3);
         ultimoApertado = nullptr;
+        confirmarResposta = false;
     }else{
         ultimoApertado = ui->radioButton_resposta3;
+        confirmarResposta = true;
     }
+
+    atualizarBotaoConfirmar();
 }
 
 void MainWindow::on_radioButton_resposta4_clicked()
@@ -1107,9 +1176,13 @@ void MainWindow::on_radioButton_resposta4_clicked()
     if(ultimoApertado == ui->radioButton_resposta4){
         desmarcarOpcao(ui->radioButton_resposta4);
         ultimoApertado = nullptr;
+        confirmarResposta = false;
     }else{
         ultimoApertado = ui->radioButton_resposta4;
+        confirmarResposta = true;
     }
+
+    atualizarBotaoConfirmar();
 }
 
 // ***** ADICIONAR PERGUNTA *********************************************

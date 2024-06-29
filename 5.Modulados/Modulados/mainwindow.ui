@@ -60,7 +60,7 @@
        <number>1</number>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="inicio">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -2462,7 +2462,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>SALVAR</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -3063,7 +3063,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>SALVAR</string>
+           <string/>
           </property>
          </widget>
         </item>

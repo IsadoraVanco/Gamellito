@@ -162,6 +162,21 @@ private slots:
      */
     void limparTexto(QTextEdit *campo);
 
+    /**
+     * @brief Verifica qual resposta foi selecionada
+     * @return O número da resposta selecionada
+     */
+    int verificarRespostaSelecionada();
+
+    /**
+     * @brief Salva a resposta escolhida em um arquivo
+     */
+    void salvarResposta();
+
+    void atualizarBotaoConfirmar();
+
+    void mostrarRespostaCorreta();
+
     // ***** ADICIONAR PERGUNTA *********************************************
 
     bool mostrarConfirmarSairPergunta();
@@ -199,19 +214,6 @@ private slots:
     bool todosCamposPreenchidosEditada();
 
     bool existemCamposVaziosEditada();
-
-    // ***** PERGUNTA *********************************************
-
-    /**
-     * @brief Verifica qual resposta foi selecionada
-     * @return O número da resposta selecionada
-     */
-    int verificarRespostaSelecionada();
-
-    /**
-     * @brief Salva a resposta escolhida em um arquivo
-     */
-    void salvarResposta();
 
     // ***** PERFIS *********************************************
 
@@ -408,6 +410,7 @@ private:
     // ***** BOTÕES *********************************************
 
     QRadioButton *ultimoApertado = nullptr;
+    bool confirmarResposta = false;
 
 };
 #endif // MAINWINDOW_H
