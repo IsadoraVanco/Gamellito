@@ -109,22 +109,33 @@ A pasta `assets` contém sons, ícones e fotos da aplicação.
     Menu:
     - [Iniciar do Menu](https://br.freepik.com/icone/jogar-circulo_10435870#fromView=image_search_similar&page=1&position=10&uuid=40e7a8b3-175f-43da-9d45-47ff17ad6399)
     - [Configurações](https://br.freepik.com/icone/chave-inglesa_11270131)
-    - [Informações](https://br.freepik.com/icone/informacoes_3916699#fromView=search&page=1&position=7&uuid=736630dc-7ab3-4b4b-842a-2bb19c458c58)
     - [Perfil](https://br.freepik.com/icone/utilizador_3917711)
     - [Perfil com círculo](https://br.freepik.com/icone/usuario-circulo_9821492#fromView=search&page=1&position=48&uuid=3b1aacdf-4a1f-4407-b3a1-7a4417d6fa92)
 
     Geral:
-    - [Home](https://www.freepik.com/icon/home_1946436#fromView=search&page=1&position=1&uuid=df718193-70a8-4e6c-bbb2-cfdbf124f5f0)
+    - [Página Inicial](https://www.freepik.com/icon/home_1946436#fromView=search&page=1&position=1&uuid=df718193-70a8-4e6c-bbb2-cfdbf124f5f0)
     - [Voltar](https://www.freepik.com/icon/back_9126101#fromView=search&page=1&position=65&uuid=bf37574f-28a7-48f9-829d-081313cd83f3)
     - [Próximo](https://www.freepik.com/icon/right-arrow_9125994#fromView=resource_detail&position=44)
-    - [Lixeira](https://br.freepik.com/icone/lixo_3917378#fromView=search&page=1&position=0&uuid=f109c5d2-09ce-4fec-a0f1-a15a1aac6a9a)
-    - [Seta](https://br.freepik.com/icone/caret-up_3916917#fromView=search&page=1&position=2&uuid=ac09fa06-c342-4946-8d95-d4c28a6a72ef)
     - [Sair](https://br.freepik.com/icone/relogio-seis_7602707)
+    - [Salvar](https://br.freepik.com/icone/caixa-selecao_3917750#fromView=search&page=1&position=3&uuid=b8b8ac32-bd83-475d-9b65-63c5d7f3bb70)
     
+    Configurar:
+    - [Informações](https://br.freepik.com/icone/informacoes_3916699#fromView=search&page=1&position=7&uuid=736630dc-7ab3-4b4b-842a-2bb19c458c58)
+    - [Pergunta](https://br.freepik.com/icone/pergunta-area-transferencia_16542674#fromView=search&page=1&position=18&uuid=01bb0d42-8e24-47a5-b501-52f14a167f5f)
+    - [Vídeo](https://br.freepik.com/icone/filme-camera_10435999#fromView=search&page=1&position=23&uuid=bece77bf-d700-4e19-812b-a0a5a07d6ab8)
+    - [Seta](https://br.freepik.com/icone/caret-up_3916917#fromView=search&page=1&position=2&uuid=ac09fa06-c342-4946-8d95-d4c28a6a72ef)
+    - [Lixeira](https://br.freepik.com/icone/lixo_3917378#fromView=search&page=1&position=0&uuid=f109c5d2-09ce-4fec-a0f1-a15a1aac6a9a)
+
     Reprodutor:
     - [Com som](freepik.com/icon/volume_727269#fromView=search&page=1&position=2&uuid=a5f213c1-6501-4e0d-9c22-7edddaeb7029)
     - [Sem som](https://www.freepik.com/icon/mute_727240#fromView=search&page=1&position=3&uuid=a5f213c1-6501-4e0d-9c22-7edddaeb7029)
     - [Adiantar](https://br.freepik.com/icone/simbolo-seta-avanco-rapido_27284#fromView=resource_detail&position=59)
+    - [Restart](https://br.freepik.com/icone/vire-esquerda_7435121#fromView=search&page=1&position=12&uuid=3ee0056c-0f2b-42b2-bbc0-b4b82166d552)
+
+    Perfil:
+    - [Paciente](https://www.freepik.com/icon/child-head_5069208#fromView=search&page=1&position=19&uuid=8a66575b-5afa-40d8-8a66-9fd2ae96faf)
+    - [Responsável](https://www.freepik.com/icon/employees-woman-man_14644111#fromView=search&page=1&position=2&uuid=899689b3-c351-4c56-9fc2-7ecf6fde1d39)
+    - [Profissional](https://www.freepik.com/icon/user-md_9856423#fromView=search&page=1&position=0&uuid=76dafb05-1ebf-48a2-b2a6-517200676704)
 
 ### Sequências
 As sequências dos perfis são representadas por arquivos .json, e dentro deles, estão estruturados objetos Json para representar um item. Os itens são representados da seguinte maneira:
