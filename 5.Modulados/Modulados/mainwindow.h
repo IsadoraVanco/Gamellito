@@ -384,9 +384,10 @@ private:
 
     // ***** CONFIGURAÇÕES *********************************************
 
-    // Senha para as configurações
+    // Gerenciador das senhas
     Senha *senha = new Senha(this);
 
+    // Gerenciador dos arquivos
     Arquivos *arquivos = new Arquivos(this);
 
     // ***** SEQUÊNCIA *********************************************

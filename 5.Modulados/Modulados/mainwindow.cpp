@@ -205,7 +205,7 @@ void MainWindow::adicionarIconesProximo(){
 // ***** GERAL *********************************************
 
 void MainWindow::configurarArquivoGeral(){
-    if(!Arquivos::arquivoExiste(ARQUIVO_CONFIGURACAO_GERAL)){
+    if(!arquivos->arquivoExiste(ARQUIVO_CONFIGURACAO_GERAL)){
         // Lê uma nova senha válida
         QString input = senha->definirSenha("Olá profissional! Vamos definir sua senha? Ela será necessária para as configurações do programa e para a troca de usuário");
 
@@ -222,10 +222,10 @@ void MainWindow::configurarArquivoGeral(){
         senha->carregarSenha();
 
         // Aumenta o número de "visitas"
-        Arquivos::aumentarVisitas();
+        arquivos->aumentarVisitas();
 
         // Altera a data da última visita
-        Arquivos::atualizarUltimoAcesso();
+        arquivos->atualizarUltimoAcesso();
     }
 }
 
@@ -338,6 +338,10 @@ void MainWindow::carregarTelaAtual(){
         configurarTelaVideo(objetoJson);
     }else if(tipo == TipoItem::Pergunta){
         configurarTelaPergunta(objetoJson);
+        configurarElementosTelaPergunta();
+        confirmarResposta = false;
+        atualizarBotaoConfirmar();
+
         mostrarTela(Pagina::Pergunta);
     }
 }
@@ -941,7 +945,7 @@ void MainWindow::adicionarPerfisParaSelecao(){
 
 void MainWindow::on_pushButton_iniciar_clicked()
 {
-    Arquivos::aumentarReproducoes();
+    arquivos->aumentarReproducoes();
 
     perfis[perfilAtual]->sequencia->resetarIndice();
 
@@ -1154,11 +1158,12 @@ void MainWindow::on_pushButton_voltar_pergunta_clicked()
 
 void MainWindow::on_pushButton_proximo_pergunta_clicked()
 {
-    if(confirmarResposta){
+    int correta = perfis[perfilAtual]->sequencia->getRespostaCorretaNoIndiceAtual();
+
+    if(confirmarResposta && correta > 0){
         mostrarRespostaCorreta();
     }else{
         salvarResposta();
-        configurarElementosTelaPergunta();
         mostrarProximaTela();
     }
 }
