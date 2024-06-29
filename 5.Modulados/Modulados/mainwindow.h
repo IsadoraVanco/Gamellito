@@ -6,6 +6,7 @@
 
 // Para a lista da sequência
 #include <QListWidget>
+#include <QList>
 
 // Para os botões
 #include <QRadioButton>
@@ -147,6 +148,11 @@ private slots:
     void configurarTelaPergunta(QJsonObject objetoAtual);
 
     // ***** CONFIGURAR PERFIL *********************************************
+
+    /**
+     * @brief Gera os relatórios com respostas dos perfis
+     */
+    void gerarRelatorios();
 
     // ***** PERGUNTA *********************************************
 

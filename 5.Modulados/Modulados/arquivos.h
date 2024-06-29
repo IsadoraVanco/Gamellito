@@ -1,11 +1,15 @@
 #ifndef ARQUIVOS_H
 #define ARQUIVOS_H
 
+// Caixas de diálogo
 #include <QDialog>
 #include <QInputDialog>
 
 // Para a String
 #include <QString>
+
+// Manipulação de arquivos
+#include <QFile>
 
 // Para o JSON
 #include <QJsonArray>
@@ -30,10 +34,6 @@ typedef struct{
     QString backups;
 }structPastas;
 
-namespace Ui {
-class Senha;
-}
-
 class Arquivos : public QDialog
 {
     Q_OBJECT
@@ -55,13 +55,45 @@ public:
      * AUXILIARES
      *************************************************************/
 
+    /**
+     * @brief Retorna a data atual em texto
+     * @return A data em texto
+     */
     static QString carregarDataAtual();
+
+    /**
+     * @brief Retira caracteres de um texto
+     * @param texto O texto a ser analisado
+     * @param caractere O caractere que vamos retirar
+     * @return O texto convertido
+     */
+    QString retirarCaracteres(QString texto, QString caractere);
 
     /* ************************************************************
      * PASTAS
      *************************************************************/
 
-    static void criarPasta(QString nomePasta);
+    /**
+     * @brief Cria uma pasta
+     * @param nomePasta O nome da nova pasta em relação ao diretório
+     * do programa
+     */
+    void criarPasta(QString nomePasta);
+
+    /**
+     * @brief Abre uma caixa de diálogo para selecionar uma pasta
+     * do sistema
+     * @return O caminho completo da pasta selecionada, ou nulo caso
+     * não seja selecionado
+     */
+    QString selecionarPasta();
+
+    /**
+     * @brief Conserta um caminho caso não esteja no formato correto
+     * @param caminho O caminho para consertar
+     * @return O caminho correto
+     */
+    QString consertarCaminhoPasta(QString caminho);
 
     /* ************************************************************
      * BACKUP DE VÍDEO
@@ -70,14 +102,15 @@ public:
     /**
      * @brief Abre uma caixa de diálogo para selecionar um vídeo
      * dos arquivos locais
-     * @return O nome do arquivo escolhido
+     * @return O caminho completo do arquivo selecionado, ou nulo
+     * caso não seja selecionado
      */
     QString selecionarVideo();
 
     /**
      * @brief Salva um vídeo nas pastas de backup
-     * @param pasta Nome da pasta final
-     * @return O nome do arquivo salvo
+     * @param pasta Nome da pasta onde o vídeo será guardado
+     * @return O nome do arquivo salvo, ou nulo caso não salve
      */
     QString salvarVideoBackup(QString pasta);
 
@@ -86,18 +119,31 @@ public:
      *************************************************************/
 
     /**
-     * @brief Verifica se o arquivo de existe, se não, exibe uma mensagem de erro
+     * @brief Verifica se o arquivo existe
      * @arg pathArquivo O caminho completo do arquivo
-     * @return True caso exista, False caso contrário
+     * @return true caso exista, false caso contrário
      */
     static bool arquivoExiste(QString pathArquivo);
+
+    /**
+     * @brief Abre um arquivo para escrita
+     * @param pathArquivo O caminho completo do arquivo a ser aberto
+     * @return O endereço do arquivo, ou nulo caso haja erro
+     */
+    QFile *abrirArquivoEscrita(QString pathArquivo);
+
+    /**
+     * @brief Fecha o arquivo aberto
+     * @param arquivo O endereço do arquivo aberto
+     */
+    void fecharArquivo(QFile *arquivo);
 
     /**
      * @brief Cria um arquivo dado todo seu caminho
      * @param pathArquivo O caminho completo do arquivo
      * @return True caso a operação tenha sido concluída, false para caso contrário
      */
-    static bool criarArquivo(QString pathArquivo);
+    bool criarArquivo(QString pathArquivo);
 
     /**
      * @brief Inicializa o arquivo caso ele não exista
@@ -105,15 +151,27 @@ public:
      * @return True caso o arquivo foi inicializado corretamente, False
      * para caso contrário
      */
-    static bool inicializarArquivo(QString pathArquivo);
+    bool inicializarArquivo(QString pathArquivo);
 
     /**
-     * @brief
-     * @param fonte
-     * @param destino
-     * @return
+     * @brief Copia um arquivo para uma pasta de destino
+     * @param fonte O caminho completo de arquivo fonte
+     * @param destino O caminho completo do arquivo destino
+     * @return true caso a operação tenha sucesso, false para caso contrário
      */
-    static bool copiarArquivo(QString fonte, QString destino);
+    bool copiarArquivo(QString fonte, QString destino);
+
+    /* ************************************************************
+     * ARQUIVO CSV
+     *************************************************************/
+
+    /**
+     * @brief Gera uma planilha CSV com os dados do arquivo de respostas mencionado
+     * @param nomePerfil Nome do perfil que será o nome do arquivo
+     * @param nomeArquivoRespostas Nome do arquivo de respostas fonte
+     * @param pastaDestino A pasta de destino do arquivo
+     */
+    void gerarCSV(QString nomePerfil, QString nomeArquivoRespostas, QString pastaDestino);
 
     /* ************************************************************
      * ARQUIVOS JSON

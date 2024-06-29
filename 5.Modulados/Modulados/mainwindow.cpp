@@ -109,6 +109,8 @@ void MainWindow::configurarElementosTelaConfigurar(){
     ui->pushButton_removerItem->setIcon(QIcon("assets/icones/lixeira/lixeira-preto.png"));
     ui->pushButton_mover_cima->setIcon(QIcon("assets/icones/seta/cima/seta-cima-preto.png"));
     ui->pushButton_mover_baixo->setIcon(QIcon("assets/icones/seta/baixo/seta-baixo-preto.png"));
+
+    connect(ui->pushButton_gerar_relatorio, &QPushButton::clicked, this, [this](){gerarRelatorios();});
 }
 
 void MainWindow::configurarElementosTelaReprodutor(){
@@ -394,6 +396,26 @@ void MainWindow::configurarTelaPergunta(QJsonObject objetoAtual){
 }
 
 // ***** CONFIGURAR PERFIL *********************************************
+
+void MainWindow::gerarRelatorios(){
+    // Escolhe a pasta de destino
+    QString pastaEscolhida = arquivos->selecionarPasta();
+
+    if(pastaEscolhida.isEmpty()){
+        return;
+    }
+
+    // Percorre os perfis existentes
+    for(const auto& user : perfis){
+        Perfil *perfil = user.second;
+
+        arquivos->gerarCSV(perfil->nome, perfil->arquivos.respostas, pastaEscolhida);
+    }
+
+    arquivos->atualizarUltimaExportacao();
+
+    QMessageBox::about(this, "Relatório gerado", "O relatório de cada perfil foi gerado na pasta selecionada");
+}
 
 // ***** PERGUNTA *********************************************
 

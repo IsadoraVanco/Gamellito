@@ -2,7 +2,6 @@
 
 // Manipulação de diretório e arquivo
 #include <QtCore>
-#include <QFile>
 
 // Escolha de arquivo
 #include <QFileDialog>
@@ -15,6 +14,7 @@
 
 // Para a manipulação de data e hora
 #include <QDateTime>
+
 
 /* ************************************************************
  * CONSTRUTOR
@@ -42,23 +42,39 @@ QString Arquivos::carregarDataAtual(){
     return dataHoraFormatada;
 }
 
+QString Arquivos::retirarCaracteres(QString texto, QString caractere){
+    texto.remove(caractere);
+    return texto;
+}
+
 /* ************************************************************
  * PASTAS
  *************************************************************/
 
 void Arquivos::criarPasta(QString nomePasta){
-
-    // Verificar se a pasta já existe
     if(QDir(nomePasta).exists()){
-        qDebug() << "[Arquivos][INFO] A pasta" << nomePasta << "já existe";
+        qDebug() << "[Arquivos][INFO] A pasta existe:" << nomePasta;
 
     }else{
-        if(QDir().mkdir(nomePasta)){
-            qDebug() << "[Arquivos][OK] Pasta" << nomePasta << "criada com sucesso.";
-        }else{
-            qDebug() << "[Arquivos][ERRO] Falha ao criar a pasta" << nomePasta;
+        if(!QDir().mkdir(nomePasta)){
+            qDebug() << "[Arquivos][ERRO] Falha ao criar a pasta:" << nomePasta;
         }
     }
+}
+
+QString Arquivos::selecionarPasta(){
+    QString pastaSelecionada = QFileDialog::getExistingDirectory(nullptr, "Selecione uma pasta", "");
+
+    return pastaSelecionada;
+}
+
+QString Arquivos::consertarCaminhoPasta(QString caminho){
+    // Adiciona uma barra no final se não houver
+    if(!caminho.endsWith(QDir::separator())){
+        caminho += QDir::separator();
+    }
+
+    return caminho;
 }
 
 /* ************************************************************
@@ -66,12 +82,7 @@ void Arquivos::criarPasta(QString nomePasta){
  *************************************************************/
 
 QString Arquivos::selecionarVideo(){
-    QString diretorioInicial = QDir::homePath();
-
-    // Adiciona uma barra no final se não houver
-    if (!diretorioInicial.endsWith(QDir::separator())) {
-        diretorioInicial += QDir::separator();
-    }
+    QString diretorioInicial = consertarCaminhoPasta(QDir::homePath());
 
     QString caminhoArquivo = QFileDialog::getOpenFileName(this, tr("Selecione o video"), diretorioInicial, tr("MP4 (*.mp4);; MKV (*.mkv)"));
 
@@ -83,7 +94,7 @@ QString Arquivos::salvarVideoBackup(QString pasta){
     QString caminhoArquivo = selecionarVideo();
 
     // Verifica se o arquivo foi escolhido e existe
-    if(caminhoArquivo == "" || !arquivoExiste(caminhoArquivo)){
+    if(caminhoArquivo.isEmpty() || !arquivoExiste(caminhoArquivo)){
         return QString();
     }
 
@@ -101,12 +112,12 @@ QString Arquivos::salvarVideoBackup(QString pasta){
     // Monta o caminho completo de destino
     QString destinoCompleto = pastaPerfil + nomeArquivo;
 
-    if(Arquivos::copiarArquivo(caminhoArquivo, destinoCompleto)) {
+    if(copiarArquivo(caminhoArquivo, destinoCompleto)){
         QMessageBox::about(this, "Arquivo copiado", "Arquivo copiado para o backup!");
         qDebug() << "[Arquivos][OK] Arquivo copiado com sucesso:" << caminhoArquivo;
     }else{
-        //QMessageBox::critical(this, "ERRO", "Erro ao copiar o arquivo para o backup. Por favor, tente novamente.");
-        QMessageBox::about(this, "Arquivo duplicado", "O arquivo já está no backup");
+//        QMessageBox::critical(this, "ERRO", "Erro ao copiar o arquivo para o backup. Por favor, tente novamente.");
+//        QMessageBox::about(this, "Arquivo duplicado", "O arquivo já está no backup");
         qDebug() << "[Arquivos][ERRO] Falha ao copiar o arquivo:" << caminhoArquivo;
     }
 
@@ -122,26 +133,42 @@ bool Arquivos::arquivoExiste(QString pathArquivo){
     QFile arquivo(QDir::current().absoluteFilePath(pathArquivo));
 
     if(!arquivo.exists()){
-        qDebug() << "[Arquivos][ERRO] O arquivo" << pathArquivo << "não existe!";
+        qDebug() << "[Arquivos][ERRO] O arquivo NÃO existe:" << pathArquivo;
         return false;
     }
 
-    qDebug() << "[Arquivos][OK] O arquivo" << pathArquivo << "existe!";
     return true;
 }
 
+QFile *Arquivos::abrirArquivoEscrita(QString pathArquivo){
+    QFile *arquivo = new QFile(QDir::current().absoluteFilePath(pathArquivo));
+
+    if(arquivo->open(QIODevice::WriteOnly | QIODevice::Text)){
+        return arquivo;
+    }else{
+        qDebug() << "[Arquivos][ERRO] Falha ao abrir arquivo para escrita:" << pathArquivo;
+        return nullptr;
+    }
+}
+
+void Arquivos::fecharArquivo(QFile *arquivo){
+    arquivo->close();
+    delete arquivo;
+}
+
 bool Arquivos::criarArquivo(QString pathArquivo){
-    QFile arquivo(QDir::current().absoluteFilePath(pathArquivo));
+    QFile *arquivo = abrirArquivoEscrita(pathArquivo);
 
     // Caso haja erro ao criar o arquivo
-    if(!arquivo.open(QIODevice::WriteOnly | QIODevice::Text)){
+    if(!arquivo){
         qDebug() << "[Arquivos][ERRO] Erro ao criar arquivo:" << pathArquivo;
         return false;
     }
 
-    qDebug() << "[Arquivos][OK] Arquivo" << pathArquivo << "criado!";
-    arquivo.close();
+    // Fecha o arquivo
+    fecharArquivo(arquivo);
 
+    qDebug() << "[Arquivos][OK] Arquivo criado:" << pathArquivo;
     return true;
 }
 
@@ -156,12 +183,86 @@ bool Arquivos::inicializarArquivo(QString pathArquivo){
 }
 
 bool Arquivos::copiarArquivo(QString fonte, QString destino){
-
     return QFile::copy(fonte, destino);
 }
 
 /* ************************************************************
- * ARQUIVOS JSON
+ * ARQUIVO CSV
+ *************************************************************/
+
+void Arquivos::gerarCSV(QString nomePerfil, QString nomeArquivoRespostas, QString pastaDestino){
+
+    // Importa o array do arquivo de sequência
+    QString caminhoCompletoRespostas = pastas.configuracoes + '/' + nomeArquivoRespostas;
+    QJsonArray respostas = converterJsonParaArray(caminhoCompletoRespostas);
+
+    if(respostas.isEmpty()){
+        return;
+    }
+
+    // Cria um novo arquivo
+    QString nomeArquivo = "relatorio" + nomePerfil + ".csv";
+    QString caminhoDestino = pastaDestino + "/" + nomeArquivo;
+    QFile *arquivoCSV = abrirArquivoEscrita(caminhoDestino);
+
+    if(arquivoCSV == nullptr){
+        qDebug() << "[Arquivos][ERRO] Falha ao gerar relatório" << nomeArquivo;
+        return;
+    }
+
+    // Coloca os cabeçalhos
+    QTextStream out(arquivoCSV);
+    out << "Perfil: ;" << nomePerfil << "\n";
+    out << "Data: ;" << carregarDataAtual() << "\n\n";
+
+    out << "Pergunta; Resposta1; Quantidade respondida1; "
+           "Resposta2; Quantidade respondida2; "
+           "Resposta3; Quantidade respondida3; "
+           "Resposta4; Quantidade respondida4; Correta\n";
+
+    // Percorre as respostas
+    for(int i = 0; i < respostas.size(); i++){
+        QJsonObject item = respostas.at(i).toObject();
+
+        // Transforma o texto
+        QString texto = retirarCaracteres(item["pergunta"].toString(), "\n");
+        texto = retirarCaracteres(texto, ";");
+        out << texto << ";";
+
+        texto = retirarCaracteres(item["resposta1"].toString(), "\n");
+        texto = retirarCaracteres(texto, ";");
+        out << texto << ";";
+
+        out << item["qtd1"].toInt() << ";";
+
+        texto = retirarCaracteres(item["resposta2"].toString(), "\n");
+        texto = retirarCaracteres(texto, ";");
+        out << texto << ";";
+
+        out << item["qtd2"].toInt() << ";";
+
+        texto = retirarCaracteres(item["resposta3"].toString(), "\n");
+        texto = retirarCaracteres(texto, ";");
+        out << texto << ";";
+
+        out << item["qtd3"].toInt() << ";";
+
+        texto = retirarCaracteres(item["resposta4"].toString(), "\n");
+        texto = retirarCaracteres(texto, ";");
+        out << texto << ";";
+
+        out << item["qtd4"].toInt() << ";";
+        out << item["correta"].toInt() << "\n";
+    }
+
+    // Fecha o arquivo
+    fecharArquivo(arquivoCSV);
+
+    qDebug() << "[Arquivos][OK] Relatório gerado:" << nomeArquivo;
+}
+
+/* ************************************************************
+ * ARQUIVO JSON
  *************************************************************/
 
 QString Arquivos::carregarPropriedadeJson(QString pathArquivo, QString propriedade){
@@ -249,7 +350,7 @@ QJsonArray Arquivos::converterJsonParaArray(QString pathArquivoJson){
 
     // Caso haja erro para abrir o arquivo
     if (!arquivo.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug() << "[Arquivos] [ERRO] Falha ao abrir arquivo JSON para conversão para Array:" << pathArquivoJson;
+        qDebug() << "[Arquivos][ERRO] Falha ao abrir arquivo JSON para converter para Array:" << pathArquivoJson;
         return QJsonArray();
     }
 
@@ -387,7 +488,7 @@ void Arquivos::atualizarUltimaExportacao(){
     if(escreverObjetoJson(objetoJson, ARQUIVO_CONFIGURACAO_GERAL)) {
         qDebug() << "[Arquivos] [OK] Data da última exportação atualizado";
     } else {
-        qDebug() << "[Arquivos] [ERRO] Falha ao atualizar a data da última exportação";
+        qDebug() << "[Arquivos][ERRO] Falha ao atualizar a data da última exportação";
     }
 }
 
@@ -409,9 +510,9 @@ void Arquivos::alterarSenha(QString novaSenha){
 
     // Salva o Json modificado de volta no arquivo
     if(escreverObjetoJson(objetoJson, ARQUIVO_CONFIGURACAO_GERAL)) {
-        qDebug() << "[Arquivos] [OK] Senha atualizada";
+        qDebug() << "[Arquivos][OK] Senha atualizada";
     } else {
-        qDebug() << "[Arquivos] [ERRO] Falha ao atualizar a senha";
+        qDebug() << "[Arquivos][ERRO] Falha ao atualizar a senha";
     }
 }
 
