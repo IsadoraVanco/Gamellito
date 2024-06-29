@@ -315,6 +315,11 @@ private slots:
      */
     void on_pushButton_limpar_sequencia_clicked();
 
+    /**
+     * @brief Limpa as respostas de um perfil
+     */
+    void on_pushButton_limpar_respostas_clicked();
+
     // ***** REPRODUTOR *********************************************
 
     void on_pushButton_inicio_reprodutor_clicked();

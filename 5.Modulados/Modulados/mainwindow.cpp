@@ -105,6 +105,9 @@ void MainWindow::configurarElementosTelaConfigurar(){
     ui->pushButton_sair->setIcon(QIcon("assets/icones/sair/sair-preto.png"));
     ui->pushButton_sair_2->setIcon(QIcon("assets/icones/sair/sair-preto.png"));
 
+    ui->pushButton_sobre->setIcon(QIcon("assets/icones/informacoes/informacoes-borda.png"));
+    ui->pushButton_adicionar_pergunta->setIcon(QIcon("assets/icones/pergunta/pergunta-preto.png"));
+    ui->pushButton_adicionar_video->setIcon(QIcon("assets/icones/video/video-preto.png"));
     ui->pushButton_editarItem->setIcon(QIcon("assets/icones/lapis/lapis-preto.png"));
     ui->pushButton_removerItem->setIcon(QIcon("assets/icones/lixeira/lixeira-preto.png"));
     ui->pushButton_mover_cima->setIcon(QIcon("assets/icones/seta/cima/seta-cima-preto.png"));
@@ -1098,6 +1101,15 @@ void MainWindow::on_pushButton_limpar_sequencia_clicked()
             // Atualizar o arquivo
             arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.sequencia);
         }
+    }
+}
+
+void MainWindow::on_pushButton_limpar_respostas_clicked()
+{
+    bool confirmar = mostrarConfirmar("Certeza que quer limpar as respostas?", "As respostas armazenadas deste perfil serão limpas e não é possível desfazer esta ação. Deseja continuar?");
+
+    if(confirmar){
+        arquivos->limparRespostas(perfis[perfilAtual]->arquivos.respostas);
     }
 }
 

@@ -659,3 +659,17 @@ void Arquivos::salvarResposta(QJsonObject objetoPergunta, int selecionada, QStri
 
     qDebug() << "[Arquivos][OK] A resposta foi salva no arquivo";
 }
+
+void Arquivos::limparRespostas(QString nomeArquivoRespostas){
+
+    // Carrega as respostas do perfil
+    QString caminhoCompletoRespostas = pastas.configuracoes + '/' + nomeArquivoRespostas;
+    QJsonArray respostas = converterJsonParaArray(caminhoCompletoRespostas);
+
+    if(!respostas.isEmpty()){
+        QMessageBox::about(this, "Respostas apagadas", "As respostas deste perfil foram apagadas com sucesso. A partir de agora, as respostas estão novamente sendo computadas.");
+    }
+
+    // Cria um arquivo vazio
+    criarArquivo(caminhoCompletoRespostas);
+}

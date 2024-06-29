@@ -285,6 +285,12 @@ public:
 
     void salvarResposta(QJsonObject objetoJson, int selecionada, QString nomeArquivo);
 
+    /**
+     * @brief Limpa as respostas armazenadas de um perfil
+     * @param nomeArquivoRespostas Nome do arquivo que contém as respostas
+     */
+    void limparRespostas(QString nomeArquivoRespostas);
+
     // Nome das pastas (por enquanto, publico)
     structPastas pastas = {"configuracoes", "backups"};
 private:

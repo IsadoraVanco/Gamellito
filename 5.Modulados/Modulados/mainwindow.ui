@@ -60,7 +60,7 @@
        <number>1</number>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="inicio">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -813,7 +813,7 @@ QPushButton:pressed {
          </widget>
         </item>
         <item row="8" column="3">
-         <widget class="QPushButton" name="pushButton_sobre">
+         <widget class="QPushButton" name="pushButton_gerar_relatorio">
           <property name="cursor">
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
@@ -837,7 +837,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>SOBRE O PROGRAMA</string>
+           <string>GERAR RELATÓRIO</string>
           </property>
          </widget>
         </item>
@@ -847,12 +847,12 @@ QPushButton:pressed {
            <enum>Qt::Vertical</enum>
           </property>
           <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
+           <enum>QSizePolicy::MinimumExpanding</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>40</height>
+            <height>120</height>
            </size>
           </property>
          </spacer>
@@ -893,6 +893,12 @@ QPushButton:pressed {
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>60</height>
+           </size>
           </property>
           <property name="cursor">
            <cursorShape>PointingHandCursor</cursorShape>
@@ -971,6 +977,41 @@ margin: 10px;</string>
           </item>
          </layout>
         </item>
+        <item row="0" column="4" alignment="Qt::AlignRight|Qt::AlignTop">
+         <widget class="QPushButton" name="pushButton_sobre">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: #FF7439;
+	border-radius: 20px;
+	border: none;
+	color: #fff;
+	min-width: 40px;
+	min-height: 40px;
+	font-weight: bold;
+}
+
+QPushButton:hover {
+	background-color: #c8592d;
+}
+
+QPushButton:pressed {
+	background-color: #c8592d;
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="configurar_perfil">
@@ -1024,7 +1065,7 @@ margin: 10px;</string>
          </spacer>
         </item>
         <item row="7" column="1">
-         <widget class="QPushButton" name="pushButton_gerar_relatorio">
+         <widget class="QPushButton" name="pushButton_limpar_respostas">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -1070,7 +1111,7 @@ QPushButton:pressed {
 }</string>
           </property>
           <property name="text">
-           <string>GERAR RELATÓRIO</string>
+           <string>LIMPAR RESPOSTAS</string>
           </property>
          </widget>
         </item>
@@ -1423,7 +1464,7 @@ QPushButton:hover {
 }</string>
             </property>
             <property name="text">
-             <string>+ V</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -1476,7 +1517,7 @@ QPushButton:hover {
 }</string>
             </property>
             <property name="text">
-             <string>+ P</string>
+             <string/>
             </property>
            </widget>
           </item>
