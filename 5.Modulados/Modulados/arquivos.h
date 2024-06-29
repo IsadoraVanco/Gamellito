@@ -59,7 +59,7 @@ public:
      * @brief Retorna a data atual em texto
      * @return A data em texto
      */
-    static QString carregarDataAtual();
+    QString carregarDataAtual();
 
     /**
      * @brief Retira caracteres de um texto
@@ -123,7 +123,7 @@ public:
      * @arg pathArquivo O caminho completo do arquivo
      * @return true caso exista, false caso contrário
      */
-    static bool arquivoExiste(QString pathArquivo);
+    bool arquivoExiste(QString pathArquivo);
 
     /**
      * @brief Abre um arquivo para escrita
@@ -177,29 +177,12 @@ public:
      * ARQUIVOS JSON
      *************************************************************/
 
-    /**
-     * @brief
-     * @param pathArquivo
-     * @param propriedade
-     * @return
-     */
     static QString carregarPropriedadeJson(QString pathArquivo, QString propriedade);
 
-    /**
-     * @brief
-     * @param jsonObject
-     * @param propriedade
-     * @param novoValor
-     */
-    static void modificarPropriedade(QJsonObject &jsonObject, QString propriedade, QString novoValor);
+    void modificarPropriedade(QJsonObject &jsonObject, QString propriedade, QString novoValor);
 
     // **** OBJETO ************************************************
 
-    /**
-     * @brief
-     * @param pathArquivo
-     * @return
-     */
     static QJsonObject carregarObjetoJson(QString pathArquivo);
 
     /**
@@ -217,14 +200,14 @@ public:
      * @param pathArquivoJson O caminho completo do arquivo
      * @return O array de JSON
      */
-    static QJsonArray converterJsonParaArray(QString pathArquivoJson);
+    QJsonArray converterJsonParaArray(QString pathArquivoJson);
 
     /**
      * @brief Escreve os objetos JSON do array no arquivo .json
      * @param pathArquivoJson O caminho completo do arquivo .json
      * @param arrayJson O array de objetos JSON
      */
-    static void escreverArrayJson(QString pathArquivoJson, QJsonArray arrayJson);
+    void escreverArrayJson(QString pathArquivoJson, QJsonArray arrayJson);
 
     /* ************************************************************
      * ARQUIVO DE CONFIGURAÇÃO GERAL
@@ -239,16 +222,15 @@ public:
 
     // **** VISITAS ************************************************
 
+    void aumentarVisitas();
 
-    static void aumentarVisitas();
+    void aumentarReproducoes();
 
-    static void aumentarReproducoes();
-
-    static void atualizarUltimoAcesso();
+    void atualizarUltimoAcesso();
 
     // **** EXPORTAÇÃO ************************************************
 
-    static void atualizarUltimaExportacao();
+    void atualizarUltimaExportacao();
 
     // **** SENHA ************************************************
 
@@ -276,8 +258,7 @@ public:
 
     // **** VIDEO ************************************************
 
-
-    static QJsonArray adicionarVideo(QString caminhoDestino, QString nomeArquivo);
+    QJsonArray adicionarVideo(QString caminhoDestino, QString nomeArquivo);
 
     // **** PERGUNTA ************************************************
 

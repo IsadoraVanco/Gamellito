@@ -210,11 +210,17 @@ void Arquivos::gerarCSV(QString nomePerfil, QString nomeArquivoRespostas, QStrin
         return;
     }
 
-    // Coloca os cabeçalhos
+    // Abre o arquivo de configurações
+    QJsonObject configuracoes = carregarObjetoJson(ARQUIVO_CONFIGURACAO_GERAL);
+
+    // Informações importantes
     QTextStream out(arquivoCSV);
     out << "Perfil: ;" << nomePerfil << "\n";
-    out << "Data: ;" << carregarDataAtual() << "\n\n";
+    out << "Data da exportação: ;" << carregarDataAtual() << "\n";
+    out << "Número de acessos ao programa: ;" << configuracoes["numeroAcessos"].toString() << "\n";
+    out << "Número de acessos à sequência: ;" << configuracoes["numeroReproducoes"].toString() << "\n\n";
 
+    // Coloca os cabeçalhos
     out << "Pergunta; Resposta1; Quantidade respondida1; "
            "Resposta2; Quantidade respondida2; "
            "Resposta3; Quantidade respondida3; "
@@ -496,7 +502,7 @@ void Arquivos::atualizarUltimaExportacao(){
 
 QString Arquivos::carregarSenha(){
     // Carrega a senha do arquivo
-    QString senhaArquivo = Arquivos::carregarPropriedadeJson(ARQUIVO_CONFIGURACAO_GERAL, "senha");
+    QString senhaArquivo = carregarPropriedadeJson(ARQUIVO_CONFIGURACAO_GERAL, "senha");
 
     return senhaArquivo;
 }
@@ -645,7 +651,7 @@ void Arquivos::salvarResposta(QJsonObject objetoPergunta, int selecionada, QStri
         int valor = objeto[qtd].toInt();
         objeto[qtd] = valor + 1;
 
-        qDebug() << "valor " + QString::number(valor);
+//        qDebug() << "valor " + QString::number(valor);
 
         // O objeto do array não pode ser modificado diretamente,
         // por isso, retira o item e o reinsere modificado
