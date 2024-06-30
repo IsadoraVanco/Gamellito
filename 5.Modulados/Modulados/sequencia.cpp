@@ -110,7 +110,7 @@ bool Sequencia::ehIndiceValido(int index){
 }
 
 void Sequencia::resetarIndice(){
-    this->indiceAtual = 0;
+    this->indiceAtual = -1;
 }
 
 bool Sequencia::proximoIndice(){

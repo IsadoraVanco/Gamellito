@@ -8,9 +8,11 @@
 #include <QtMultimedia/QAudio>
 #include <QtMultimediaWidgets/QVideoWidget>
 #include <QtMultimedia/QtMultimedia>
+#include <QGraphicsVideoItem>
+
+// Para diretório
 #include <QtCore>
 #include <QtGui>
-#include <QGraphicsVideoItem>
 
 namespace Ui {
 class Reprodutor;

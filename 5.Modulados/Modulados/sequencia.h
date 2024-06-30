@@ -283,7 +283,7 @@ public:
 
 private:
     // Marca qual o índice do elemento atual da sequência
-    int indiceAtual = 0;
+    int indiceAtual = -1;
 
     QJsonArray *array;
 

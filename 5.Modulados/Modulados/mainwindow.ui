@@ -33,6 +33,24 @@
     <string notr="true">background: qlineargradient(spread:pad, x1:0.605, y1:0.374591, x2:0.094, y2:0.125, stop:0 rgba(251, 254, 12, 255), stop:1 rgba(255, 116, 57, 255))</string>
    </property>
    <layout class="QGridLayout" name="gridLayout">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetNoConstraint</enum>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="enabled">
@@ -48,7 +66,8 @@
        <bool>true</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">margin: 0;</string>
+       <string notr="true">margin: 0;
+padding: 0;</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -60,8 +79,54 @@
        <number>1</number>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
+      <widget class="QWidget" name="ociosa">
+       <property name="styleSheet">
+        <string notr="true">margin: 0;
+padding: 0;</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetNoConstraint</enum>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QWidget" name="widget_tela_ociosa" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>600</width>
+            <height>400</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">margin: 0;
+padding: 0;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="inicio">
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="4" column="3">
@@ -896,7 +961,7 @@ QPushButton:pressed {
           </property>
           <property name="minimumSize">
            <size>
-            <width>100</width>
+            <width>120</width>
             <height>60</height>
            </size>
           </property>

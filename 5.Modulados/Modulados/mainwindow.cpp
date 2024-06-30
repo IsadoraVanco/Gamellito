@@ -26,27 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
     configurarTelas();
 
     // Vai para a tela inicial
-    mostrarTela(Pagina::Inicial);
+    mostrarTelaInicial();
 
-    // Configura o som ambiente
-    somAmbiente->configurar("som-ambiente.wav");
-    somAmbiente->ligar();
-
-    // Conexões - sair do programa
-    connect(ui->pushButton_sair, SIGNAL(clicked()), this, SLOT(close()));
-    connect(ui->pushButton_sair_2, SIGNAL(clicked()), this, SLOT(close()));
-
-    // Conexões - voltar para o início
-    connect(ui->pushButton_inicio_configurar, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Inicial); });
-    connect(ui->pushButton_inicio_configurar_perfil, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Inicial); });
-
-    // Conexões - trocar páginas
-    connect(ui->pushButton_voltar_sobre, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Configurar); });
-
-    connect(ui->pushButton_configurar_perfil, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::ConfigurarPerfil); });
-    connect(ui->pushButton_sobre, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Sobre); });
-
-    connect(ui->pushButton_voltar_configurar_perfil, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Configurar); });
+    // Configura o temporizador
+    configurarTemporizador();
 }
 
 /* ************************************************************
@@ -56,6 +39,38 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+/* ************************************************************
+ * TEMPORIZADOR
+ *************************************************************/
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event){
+    if(event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonPress ||
+        event->type() == QEvent::KeyPress){
+
+        // Reinicia o temporizador
+        contador->start(tempoOcioso);
+
+        if(ocioso){
+            carregarTelaAtual();
+        }
+
+        ocioso = false;
+    }
+
+    return QMainWindow::eventFilter(obj, event);
+}
+
+void MainWindow::configurarTemporizador(){
+    contador = new QTimer(this);
+    contador->setInterval(tempoOcioso);
+
+    connect(contador, &QTimer::timeout, this, &MainWindow::mostrarTelaOciosa);
+    contador->start();
+
+    // Instala o filtro de eventos para monitorar eventos de interação do usuário
+    qApp->installEventFilter(this);
 }
 
 /* ************************************************************
@@ -70,15 +85,48 @@ void MainWindow::mostrarTela(Pagina tipo){
     ultimoApertado = nullptr;
 }
 
+void MainWindow::mostrarTelaInicial(){
+    perfis[perfilAtual]->sequencia->resetarIndice();
+
+    // Configura o som ambiente
+    somAmbiente->configurar("som-ambiente.wav");
+    somAmbiente->ligar();
+    atualizarIconeSom();
+
+    mostrarTela(Pagina::Inicial);
+}
+
+void MainWindow::mostrarTelaOciosa(){
+    if(perfis[perfilAtual]->sequencia->tipoItemNoIndexAtual() != TipoItem::Video){
+
+        if(arquivos->arquivoExiste("assets/videos/tela-ociosa.mp4")){
+            mostrarTela(Pagina::Ociosa);
+            videoOcioso->configurarVideo("assets/videos/tela-ociosa.mp4");
+        }
+
+        contador->stop();
+        ocioso = true;
+    }
+}
+
 /* ************************************************************
  * CONFIGURAR TELAS
  *************************************************************/
 
 void MainWindow::configurarTelas(){
+    // Configura as margens e o espaçamento do layout da QMainWindow
+    if (QLayout *layout = centralWidget()->layout()) {
+        layout->setContentsMargins(0, 0, 0, 0);
+        layout->setSpacing(0);
+    }
+    ui->stackedWidget->layout()->setContentsMargins(0, 0, 0, 0);
+    ui->stackedWidget->layout()->setSpacing(0);
+
     // Configura os elementos das telas
     configurarElementosTelaMenu();
     configurarElementosTelaConfigurar();
     configurarElementosTelaReprodutor();
+    configurarElementosTelaOciosa();
     configurarElementosTelaPergunta();
 
     // Icones
@@ -113,6 +161,23 @@ void MainWindow::configurarElementosTelaConfigurar(){
     ui->pushButton_mover_cima->setIcon(QIcon("assets/icones/seta/cima/seta-cima-preto.png"));
     ui->pushButton_mover_baixo->setIcon(QIcon("assets/icones/seta/baixo/seta-baixo-preto.png"));
 
+    // Conexões - sair do programa
+    connect(ui->pushButton_sair, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->pushButton_sair_2, SIGNAL(clicked()), this, SLOT(close()));
+
+    // Conexões - voltar para o início
+    connect(ui->pushButton_inicio_configurar, &QPushButton::clicked, this, [this](){ mostrarTelaInicial(); });
+    connect(ui->pushButton_inicio_configurar_perfil, &QPushButton::clicked, this, [this](){ mostrarTelaInicial(); });
+
+    // Conexões - trocar páginas
+    connect(ui->pushButton_voltar_sobre, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Configurar); });
+
+    connect(ui->pushButton_configurar_perfil, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::ConfigurarPerfil); });
+    connect(ui->pushButton_sobre, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Sobre); });
+
+    connect(ui->pushButton_voltar_configurar_perfil, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Configurar); });
+
+    // Conexões - Ação
     connect(ui->pushButton_gerar_relatorio, &QPushButton::clicked, this, [this](){gerarRelatorios();});
 }
 
@@ -130,6 +195,23 @@ void MainWindow::configurarElementosTelaReprodutor(){
 
         reprodutor = new Reprodutor(ui->widget_reprodutor);
         ui->widget_reprodutor->layout()->addWidget(reprodutor);
+    }
+}
+
+void MainWindow::configurarElementosTelaOciosa(){
+    if(!ui->widget_tela_ociosa){
+        qDebug() << "[Main][ERRO] Widget de vídeo ocioso não encontrado ou é nullptr";
+        return; // Sai da função para evitar o travamento
+    }else{
+        // Verificar se o widget_reprodutor possui um layout
+        if (!ui->widget_tela_ociosa->layout()) {
+            // Se não houver layout, crie um QVBoxLayout
+            QVBoxLayout *layoutReprodutor = new QVBoxLayout(ui->widget_tela_ociosa);
+            ui->widget_tela_ociosa->setLayout(layoutReprodutor);
+        }
+
+        videoOcioso = new Video(ui->widget_tela_ociosa);
+        ui->widget_tela_ociosa->layout()->addWidget(videoOcioso);
     }
 }
 
@@ -330,7 +412,6 @@ void MainWindow::editarItemSelecionado(){
 void MainWindow::carregarTelaAtual(){
 
     QJsonObject objetoJson = perfis[perfilAtual]->sequencia->getItemNoIndexAtual();
-
     TipoItem tipo = perfis[perfilAtual]->sequencia->tipoItemNoIndexAtual();
 
     if(tipo == TipoItem::Video){
@@ -343,6 +424,8 @@ void MainWindow::carregarTelaAtual(){
         atualizarBotaoConfirmar();
 
         mostrarTela(Pagina::Pergunta);
+    }else if(tipo == TipoItem::Indefinido){
+        mostrarTela(Pagina::Inicial);
     }
 }
 
@@ -350,10 +433,7 @@ void MainWindow::mostrarProximaTela(){
     if(perfis[perfilAtual]->sequencia->proximoIndice()){
         carregarTelaAtual();
     }else{
-        somAmbiente->ligar();
-        atualizarIconeSom();
-
-        mostrarTela(Pagina::Inicial);
+        mostrarTelaInicial();
     }
 }
 
@@ -361,10 +441,7 @@ void MainWindow::mostrarTelaAnterior(){
     if(perfis[perfilAtual]->sequencia->indiceAnterior()){
         carregarTelaAtual();
     }else{
-        somAmbiente->ligar();
-        atualizarIconeSom();
-
-        mostrarTela(Pagina::Inicial);
+        mostrarTelaInicial();
     }
 }
 
@@ -948,6 +1025,7 @@ void MainWindow::on_pushButton_iniciar_clicked()
     arquivos->aumentarReproducoes();
 
     perfis[perfilAtual]->sequencia->resetarIndice();
+    perfis[perfilAtual]->sequencia->proximoIndice();
 
     if(perfis[perfilAtual]->sequencia->estaVazia()){
         // Exibe mensagem de erro
@@ -1122,11 +1200,7 @@ void MainWindow::on_pushButton_limpar_respostas_clicked()
 void MainWindow::on_pushButton_inicio_reprodutor_clicked()
 {
     reprodutor->pararVideo();
-
-    somAmbiente->ligar();
-    atualizarIconeSom();
-
-    mostrarTela(Pagina::Inicial);
+    mostrarTelaInicial();
 }
 
 void MainWindow::on_pushButton_voltar_reprodutor_clicked()
@@ -1145,10 +1219,7 @@ void MainWindow::on_pushButton_proximo_reprodutor_clicked()
 
 void MainWindow::on_pushButton_inicio_pergunta_clicked()
 {
-    mostrarTela(Pagina::Inicial);
-
-    somAmbiente->ligar();
-    atualizarIconeSom();
+    mostrarTelaInicial();
 }
 
 void MainWindow::on_pushButton_voltar_pergunta_clicked()

@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
+// Para texto
 #include <QString>
 
 // Para a lista da sequência
@@ -14,11 +16,18 @@
 // Para os campos de texto
 #include <QTextEdit>
 
+// Para monitorar eventos
+#include <QEvent>
+
+// Para controlar tempo
+#include <QTimer>
+
 #include "reprodutor.h"
 #include "arquivos.h"
 #include "senha.h"
 #include "somambiente.h"
 #include "perfil.h"
+#include "video.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,14 +39,15 @@ QT_END_NAMESPACE
 
 // Páginas do programa (importante estar na ordem)
 enum class Pagina{
-    Inicial,            // 0
-    Sobre,              // 1
-    Configurar,         // 2
-    ConfigurarPerfil,   // 3
-    Video,              // 4
-    Pergunta,           // 5
-    AdicionarPergunta,  // 6
-    EditarPergunta      // 7
+    Ociosa,             // 0
+    Inicial,            // 1
+    Sobre,              // 2
+    Configurar,         // 3
+    ConfigurarPerfil,   // 4
+    Video,              // 5
+    Pergunta,           // 6
+    AdicionarPergunta,  // 7
+    EditarPergunta      // 8
 };
 
 class MainWindow : public QMainWindow
@@ -61,6 +71,14 @@ public:
 private slots:
 
     /* ************************************************************
+     * TEMPORIZADOR
+     *************************************************************/
+
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
+    void configurarTemporizador();
+
+    /* ************************************************************
      * GERENCIAMENTO DE TELAS
      *************************************************************/
 
@@ -69,6 +87,10 @@ private slots:
      * @param tipo A tela que será mostrada
      */
     void mostrarTela(Pagina tipo);
+
+    void mostrarTelaInicial();
+
+    void mostrarTelaOciosa();
 
     /* ************************************************************
      * CONFIGURAR TELAS
@@ -81,6 +103,8 @@ private slots:
     void configurarElementosTelaConfigurar();
 
     void configurarElementosTelaReprodutor();
+
+    void configurarElementosTelaOciosa();
 
     void configurarElementosTelaPergunta();
 
@@ -390,6 +414,10 @@ private:
     // Gerenciador dos arquivos
     Arquivos *arquivos = new Arquivos(this);
 
+    QTimer *contador;
+    int tempoOcioso = 10 * 1000; // Em milissegundos
+    bool ocioso = false;
+
     // ***** SEQUÊNCIA *********************************************
 
     // Marca qual o perfil atual da sequência
@@ -414,6 +442,9 @@ private:
 
     // O reprodutor de vídeo
     Reprodutor *reprodutor;
+
+    // Tela ociosa
+    Video *videoOcioso;
 
     // ***** SOM AMBIENTE *********************************************
 

@@ -57,11 +57,18 @@ set(PROJECT_SOURCES
 #        listaitens.cpp
 #        listaitens.ui
 
-#        sequencia.h
-#        sequencia.cpp
+        sequencia.h
+        sequencia.cpp
 
         somambiente.h
         somambiente.cpp
+
+        perfil.h
+        perfil.cpp
+
+        video.h
+        video.cpp
+        video.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
