@@ -194,6 +194,11 @@ public:
      */
     void removerItem(int index);
 
+    /**
+     * @brief Remove um item no índice atual
+     */
+    void removerItemNoIndiceAtual();
+
     // **** CONSULTA DE ITENS ************************************************
 
     /**

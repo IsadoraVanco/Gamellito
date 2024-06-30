@@ -278,6 +278,10 @@ void Sequencia::removerItem(int index){
     qDebug() << "[Sequência][OK] O item foi removido da sequência";
 }
 
+void Sequencia::removerItemNoIndiceAtual(){
+    removerItem(indiceAtual);
+}
+
 // **** CONSULTA DE ITENS ************************************************
 
 bool Sequencia::ehPergunta(int index){

@@ -164,10 +164,10 @@ private slots:
     void mostrarTelaAnterior();
 
     /**
-     * @brief Configura e carrega a tela de reprodutor
-     * @param objetoAtual O objeto do indice atual da sequência
+     * @brief Configura o video para reproduzir
+     * @param caminhoVideo O caminho do arquivo a ser reproduzido
      */
-    void configurarTelaVideo(QJsonObject objetoAtual);
+    void configurarTelaVideo(QString caminhoVideo);
 
     /**
      * @brief Configura e carrega a tela de pergunta

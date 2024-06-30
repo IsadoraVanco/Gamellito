@@ -254,8 +254,26 @@ void MainWindow::carregarTelaAtual(){
     TipoItem tipo = perfis[perfilAtual]->sequencia->tipoItemNoIndexAtual();
 
     if(tipo == TipoItem::Video){
-        mostrarTela(Pagina::Video);
-        configurarTelaVideo(objetoJson);
+        QString nomeVideo = perfis[perfilAtual]->sequencia->valorItemNoIndexAtual();
+        QString caminhoVideo = arquivos->pastas.backups + '/' + perfis[perfilAtual]->arquivos.pasta + '/' + nomeVideo;
+
+        if(arquivos->arquivoExiste(caminhoVideo)){
+            mostrarTela(Pagina::Video);
+            configurarTelaVideo(caminhoVideo);
+        }else{
+            // Remove o item da lista
+            perfis[perfilAtual]->sequencia->removerItemNoIndiceAtual();
+
+            // Atualiza a lista do widget
+            carregarListaPerfilAtual();
+
+            // Atualiza o arquivo
+            arquivos->salvarSequenciaNoArquivo(perfis[perfilAtual]->sequencia->getSequencia(), perfis[perfilAtual]->arquivos.sequencia);
+
+            qDebug() << "[Main][INFO] Video não encontrado removido da sequência:" << caminhoVideo;
+            // Carrega a proxima pagina
+            carregarTelaAtual();
+        }
     }else if(tipo == TipoItem::Pergunta){
         configurarTelaPergunta(objetoJson);
         configurarElementosTelaPergunta();
@@ -284,13 +302,7 @@ void MainWindow::mostrarTelaAnterior(){
     }
 }
 
-void MainWindow::configurarTelaVideo(QJsonObject objetoAtual){
-
-    QString nomeVideo = perfis[perfilAtual]->sequencia->valorItemNoIndexAtual();
-
-    // Reproduz o video que está no backup do perfil
-    QString caminhoVideo = arquivos->pastas.backups + '/' + perfis[perfilAtual]->arquivos.pasta + '/' + nomeVideo;
-
+void MainWindow::configurarTelaVideo(QString caminhoVideo){
     reprodutor->configurarVideo(caminhoVideo);
     reprodutor->tocarVideo();
 }
