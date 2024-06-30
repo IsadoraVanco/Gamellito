@@ -217,6 +217,10 @@ void Reprodutor::on_pushButton_passarVideo_clicked()
 void Reprodutor::on_pushButton_volume_clicked()
 {
     if(somMutado){
+        if(ui->horizontalSlider_volume->value() <= 0){
+            ui->horizontalSlider_volume->setValue(30);
+        }
+
         reproduzirSom();
     }else{
         mutarSom();
