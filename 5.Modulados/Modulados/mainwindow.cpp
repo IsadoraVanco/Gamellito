@@ -42,74 +42,6 @@ MainWindow::~MainWindow()
 }
 
 /* ************************************************************
- * TEMPORIZADOR
- *************************************************************/
-
-bool MainWindow::eventFilter(QObject *obj, QEvent *event){
-    if(event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonPress ||
-        event->type() == QEvent::KeyPress){
-
-        // Reinicia o temporizador
-        contador->start(tempoOcioso);
-
-        if(ocioso){
-            carregarTelaAtual();
-        }
-
-        ocioso = false;
-    }
-
-    return QMainWindow::eventFilter(obj, event);
-}
-
-void MainWindow::configurarTemporizador(){
-    contador = new QTimer(this);
-    contador->setInterval(tempoOcioso);
-
-    connect(contador, &QTimer::timeout, this, &MainWindow::mostrarTelaOciosa);
-    contador->start();
-
-    // Instala o filtro de eventos para monitorar eventos de interação do usuário
-    qApp->installEventFilter(this);
-}
-
-/* ************************************************************
- * GERENCIAMENTO DE TELAS
- *************************************************************/
-
-void MainWindow::mostrarTela(Pagina tipo){
-    // Converte o enum para int e carrega a página
-    ui->stackedWidget->setCurrentIndex(static_cast<int>(tipo));
-
-    // Reseta o ultimo botão apertado nas perguntas
-    ultimoApertado = nullptr;
-}
-
-void MainWindow::mostrarTelaInicial(){
-    perfis[perfilAtual]->sequencia->resetarIndice();
-
-    // Configura o som ambiente
-    somAmbiente->configurar("som-ambiente.wav");
-    somAmbiente->ligar();
-    atualizarIconeSom();
-
-    mostrarTela(Pagina::Inicial);
-}
-
-void MainWindow::mostrarTelaOciosa(){
-    if(perfis[perfilAtual]->sequencia->tipoItemNoIndexAtual() != TipoItem::Video){
-
-        if(arquivos->arquivoExiste("assets/videos/tela-ociosa.mp4")){
-            mostrarTela(Pagina::Ociosa);
-            videoOcioso->configurarVideo("assets/videos/tela-ociosa.mp4");
-        }
-
-        contador->stop();
-        ocioso = true;
-    }
-}
-
-/* ************************************************************
  * CONFIGURAR TELAS
  *************************************************************/
 
@@ -166,8 +98,8 @@ void MainWindow::configurarElementosTelaConfigurar(){
     connect(ui->pushButton_sair_2, SIGNAL(clicked()), this, SLOT(close()));
 
     // Conexões - voltar para o início
-    connect(ui->pushButton_inicio_configurar, &QPushButton::clicked, this, [this](){ mostrarTelaInicial(); });
-    connect(ui->pushButton_inicio_configurar_perfil, &QPushButton::clicked, this, [this](){ mostrarTelaInicial(); });
+    connect(ui->pushButton_inicio_configurar, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Inicial); });
+    connect(ui->pushButton_inicio_configurar_perfil, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Inicial); });
 
     // Conexões - trocar páginas
     connect(ui->pushButton_voltar_sobre, &QPushButton::clicked, this, [this](){ mostrarTela(Pagina::Configurar); });
@@ -278,6 +210,144 @@ void MainWindow::adicionarIconesProximo(){
 
     ui->pushButton_proximo_pergunta->setIcon(iconeProximo);
     ui->pushButton_proximo_reprodutor->setIcon(iconeProximo);
+}
+
+/* ************************************************************
+ * GERENCIAMENTO DE TELAS
+ *************************************************************/
+
+void MainWindow::mostrarTela(Pagina tipo){
+    // Converte o enum para int e carrega a página
+    ui->stackedWidget->setCurrentIndex(static_cast<int>(tipo));
+
+    // Reseta o ultimo botão apertado nas perguntas
+    ultimoApertado = nullptr;
+}
+
+void MainWindow::mostrarTelaInicial(){
+    perfis[perfilAtual]->sequencia->resetarIndice();
+
+    // Configura o som ambiente
+    somAmbiente->configurar("som-ambiente.wav");
+    somAmbiente->ligar();
+    atualizarIconeSom();
+
+    mostrarTela(Pagina::Inicial);
+}
+
+void MainWindow::mostrarTelaOciosa(){
+    if(perfis[perfilAtual]->sequencia->tipoItemNoIndexAtual() != TipoItem::Video){
+
+        if(arquivos->arquivoExiste("assets/videos/tela-ociosa.mp4")){
+            mostrarTela(Pagina::Ociosa);
+            videoOcioso->configurarVideo("assets/videos/tela-ociosa.mp4");
+        }
+
+        contador->stop();
+        ocioso = true;
+    }
+}
+
+void MainWindow::carregarTelaAtual(){
+
+    QJsonObject objetoJson = perfis[perfilAtual]->sequencia->getItemNoIndexAtual();
+    TipoItem tipo = perfis[perfilAtual]->sequencia->tipoItemNoIndexAtual();
+
+    if(tipo == TipoItem::Video){
+        mostrarTela(Pagina::Video);
+        configurarTelaVideo(objetoJson);
+    }else if(tipo == TipoItem::Pergunta){
+        configurarTelaPergunta(objetoJson);
+        configurarElementosTelaPergunta();
+        confirmarResposta = false;
+        atualizarBotaoConfirmar();
+
+        mostrarTela(Pagina::Pergunta);
+    }else if(tipo == TipoItem::Indefinido){
+        mostrarTela(Pagina::Inicial);
+    }
+}
+
+void MainWindow::mostrarProximaTela(){
+    if(perfis[perfilAtual]->sequencia->proximoIndice()){
+        carregarTelaAtual();
+    }else{
+        mostrarTelaInicial();
+    }
+}
+
+void MainWindow::mostrarTelaAnterior(){
+    if(perfis[perfilAtual]->sequencia->indiceAnterior()){
+        carregarTelaAtual();
+    }else{
+        mostrarTelaInicial();
+    }
+}
+
+void MainWindow::configurarTelaVideo(QJsonObject objetoAtual){
+
+    QString nomeVideo = perfis[perfilAtual]->sequencia->valorItemNoIndexAtual();
+
+    // Reproduz o video que está no backup do perfil
+    QString caminhoVideo = arquivos->pastas.backups + '/' + perfis[perfilAtual]->arquivos.pasta + '/' + nomeVideo;
+
+    reprodutor->configurarVideo(caminhoVideo);
+    reprodutor->tocarVideo();
+}
+
+void MainWindow::configurarTelaPergunta(QJsonObject objetoAtual){
+    // Muda as configurações da pergunta do questionário
+    QString pergunta = perfis[perfilAtual]->sequencia->getPerguntaNoIndiceAtual();
+    ui->label_pergunta->setText(pergunta);
+
+    // Muda as respostas
+    QString opcao1 = perfis[perfilAtual]->sequencia->getOpcao1NoIndiceAtual();
+    ui->radioButton_resposta1->setText(opcao1);
+    desmarcarOpcao(ui->radioButton_resposta1);
+
+    QString opcao2 = perfis[perfilAtual]->sequencia->getOpcao2NoIndiceAtual();
+    ui->radioButton_resposta2->setText(opcao2);
+    desmarcarOpcao(ui->radioButton_resposta2);
+
+    QString opcao3 = perfis[perfilAtual]->sequencia->getOpcao3NoIndiceAtual();
+    ui->radioButton_resposta3->setText(opcao3);
+    desmarcarOpcao(ui->radioButton_resposta3);
+
+    QString opcao4 = perfis[perfilAtual]->sequencia->getOpcao4NoIndiceAtual();
+    ui->radioButton_resposta4->setText(opcao4);
+    desmarcarOpcao(ui->radioButton_resposta4);
+}
+
+/* ************************************************************
+ * TEMPORIZADOR
+ *************************************************************/
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event){
+    if(event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonPress ||
+        event->type() == QEvent::KeyPress){
+
+        // Reinicia o temporizador
+        contador->start(tempoOcioso);
+
+        if(ocioso){
+            carregarTelaAtual();
+        }
+
+        ocioso = false;
+    }
+
+    return QMainWindow::eventFilter(obj, event);
+}
+
+void MainWindow::configurarTemporizador(){
+    contador = new QTimer(this);
+    contador->setInterval(tempoOcioso);
+
+    connect(contador, &QTimer::timeout, this, &MainWindow::mostrarTelaOciosa);
+    contador->start();
+
+    // Instala o filtro de eventos para monitorar eventos de interação do usuário
+    qApp->installEventFilter(this);
 }
 
 /* ************************************************************
@@ -407,78 +477,6 @@ void MainWindow::editarItemSelecionado(){
     }
 }
 
-// ***** TELAS *********************************************
-
-void MainWindow::carregarTelaAtual(){
-
-    QJsonObject objetoJson = perfis[perfilAtual]->sequencia->getItemNoIndexAtual();
-    TipoItem tipo = perfis[perfilAtual]->sequencia->tipoItemNoIndexAtual();
-
-    if(tipo == TipoItem::Video){
-        mostrarTela(Pagina::Video);
-        configurarTelaVideo(objetoJson);
-    }else if(tipo == TipoItem::Pergunta){
-        configurarTelaPergunta(objetoJson);
-        configurarElementosTelaPergunta();
-        confirmarResposta = false;
-        atualizarBotaoConfirmar();
-
-        mostrarTela(Pagina::Pergunta);
-    }else if(tipo == TipoItem::Indefinido){
-        mostrarTela(Pagina::Inicial);
-    }
-}
-
-void MainWindow::mostrarProximaTela(){
-    if(perfis[perfilAtual]->sequencia->proximoIndice()){
-        carregarTelaAtual();
-    }else{
-        mostrarTelaInicial();
-    }
-}
-
-void MainWindow::mostrarTelaAnterior(){
-    if(perfis[perfilAtual]->sequencia->indiceAnterior()){
-        carregarTelaAtual();
-    }else{
-        mostrarTelaInicial();
-    }
-}
-
-void MainWindow::configurarTelaVideo(QJsonObject objetoAtual){
-
-    QString nomeVideo = perfis[perfilAtual]->sequencia->valorItemNoIndexAtual();
-
-    // Reproduz o video que está no backup do perfil
-    QString caminhoVideo = arquivos->pastas.backups + '/' + perfis[perfilAtual]->arquivos.pasta + '/' + nomeVideo;
-
-    reprodutor->configurarVideo(caminhoVideo);
-    reprodutor->tocarVideo();
-}
-
-void MainWindow::configurarTelaPergunta(QJsonObject objetoAtual){
-    // Muda as configurações da pergunta do questionário
-    QString pergunta = perfis[perfilAtual]->sequencia->getPerguntaNoIndiceAtual();
-    ui->label_pergunta->setText(pergunta);
-
-    // Muda as respostas
-    QString opcao1 = perfis[perfilAtual]->sequencia->getOpcao1NoIndiceAtual();
-    ui->radioButton_resposta1->setText(opcao1);
-    desmarcarOpcao(ui->radioButton_resposta1);
-
-    QString opcao2 = perfis[perfilAtual]->sequencia->getOpcao2NoIndiceAtual();
-    ui->radioButton_resposta2->setText(opcao2);
-    desmarcarOpcao(ui->radioButton_resposta2);
-
-    QString opcao3 = perfis[perfilAtual]->sequencia->getOpcao3NoIndiceAtual();
-    ui->radioButton_resposta3->setText(opcao3);
-    desmarcarOpcao(ui->radioButton_resposta3);
-
-    QString opcao4 = perfis[perfilAtual]->sequencia->getOpcao4NoIndiceAtual();
-    ui->radioButton_resposta4->setText(opcao4);
-    desmarcarOpcao(ui->radioButton_resposta4);
-}
-
 // ***** CONFIGURAR PERFIL *********************************************
 
 void MainWindow::gerarRelatorios(){
@@ -513,26 +511,9 @@ void MainWindow::limparTexto(QTextEdit *campo){
     campo->setText("");
 }
 
-int MainWindow::verificarRespostaSelecionada(){
-    // Verifica se alguma resposta foi selecionada
-    int selecionada = 0;
-
-    if(ui->radioButton_resposta1->isChecked()){
-        selecionada = 1;
-    }else if(ui->radioButton_resposta2->isChecked()){
-        selecionada = 2;
-    }else if(ui->radioButton_resposta3->isChecked()){
-        selecionada = 3;
-    }else if(ui->radioButton_resposta4->isChecked()){
-        selecionada = 4;
-    }
-
-    return selecionada;
-}
-
 void MainWindow::salvarResposta(){
 
-    int selecionada = verificarRespostaSelecionada();
+    int selecionada = verificarRespostaSelecionada(ui->radioButton_resposta1, ui->radioButton_resposta2, ui->radioButton_resposta3, ui->radioButton_resposta4);
 
     if(selecionada <= 0){
         return;
@@ -554,7 +535,7 @@ void MainWindow::atualizarBotaoConfirmar(){
 
 void MainWindow::mostrarRespostaCorreta(){
     int correta = perfis[perfilAtual]->sequencia->getRespostaCorretaNoIndiceAtual();
-    int respondida = verificarRespostaSelecionada();
+    int respondida = verificarRespostaSelecionada(ui->radioButton_resposta1, ui->radioButton_resposta2, ui->radioButton_resposta3, ui->radioButton_resposta4);
 
     QString estilo = "QRadioButton{font-size:14px;font-weight: bold;background-color: red; border-radius: 10px; min-width: 220px;min-height: 60px;}";
 
@@ -584,6 +565,82 @@ void MainWindow::mostrarRespostaCorreta(){
     atualizarBotaoConfirmar();
 }
 
+int MainWindow::verificarRespostaSelecionada(QRadioButton *opcao1, QRadioButton *opcao2, QRadioButton *opcao3, QRadioButton *opcao4){
+    // Verifica se alguma resposta foi selecionada
+    int selecionada = 0;
+
+    if(opcao1->isChecked()){
+        selecionada = 1;
+    }else if(opcao2->isChecked()){
+        selecionada = 2;
+    }else if(opcao3->isChecked()){
+        selecionada = 3;
+    }else if(opcao4->isChecked()){
+        selecionada = 4;
+    }
+
+    return selecionada;
+}
+
+bool MainWindow::existeCamposPreenchidos(QTextEdit *pergunta, QTextEdit *resposta1, QTextEdit *resposta2, QTextEdit *resposta3, QTextEdit *resposta4){
+    QString perguntaTexto = pergunta->toPlainText();
+    if(!perguntaTexto.isEmpty()){
+        return true;
+    }
+
+    QString opcao1 = resposta1->toPlainText();
+    if(!opcao1.isEmpty()){
+        return true;
+    }
+
+    QString opcao2 = resposta2->toPlainText();
+    if(!opcao2.isEmpty()){
+        return true;
+    }
+
+    QString opcao3 = resposta3->toPlainText();
+    if(!opcao3.isEmpty()){
+        return true;
+    }
+
+    QString opcao4 = resposta4->toPlainText();
+    if(!opcao4.isEmpty()){
+        return true;
+    }
+
+    return false;
+}
+
+bool MainWindow::existemCamposVazios(QTextEdit *pergunta, QTextEdit *resposta1, QTextEdit *resposta2, QTextEdit *resposta3, QTextEdit *resposta4){
+
+    QString perguntaTexto = pergunta->toPlainText();
+    if(perguntaTexto.isEmpty()){
+        return true;
+    }
+
+    QString opcao1 = resposta1->toPlainText();
+    if(opcao1.isEmpty()){
+        return true;
+    }
+
+    QString opcao2 = resposta2->toPlainText();
+    if(opcao2.isEmpty()){
+        return true;
+    }
+
+    QString opcao3 = resposta3->toPlainText();
+    if(opcao3.isEmpty()){
+        return true;
+    }
+
+    QString opcao4 = resposta4->toPlainText();
+    if(opcao4.isEmpty()){
+        return true;
+    }
+
+    return false;
+}
+
 // ***** ADICIONAR PERGUNTA *********************************************
 
 bool MainWindow::mostrarConfirmarSairPergunta(){
@@ -606,74 +663,10 @@ void MainWindow::limparCamposPergunta(){
     desmarcarOpcao(ui->radioButton_opcao4);
 }
 
-bool MainWindow::todosCamposPreenchidos(){
-    QString pergunta = ui->textEdit_pergunta->toPlainText();
-    if(pergunta != ""){
-        return true;
-    }
-
-    QString opcao1 = ui->textEdit_opcao1->toPlainText();
-    if(opcao1 != ""){
-        return true;
-    }
-
-    QString opcao2 = ui->textEdit_opcao2->toPlainText();
-    if(opcao2 != ""){
-        return true;
-    }
-
-    QString opcao3 = ui->textEdit_opcao3->toPlainText();
-    if(opcao3 != ""){
-        return true;
-    }
-
-    QString opcao4 = ui->textEdit_opcao4->toPlainText();
-    if(opcao4 != ""){
-        return true;
-    }
-
-    return false;
-}
-
-bool MainWindow::existemCamposVazios(){
-
-    QString pergunta = ui->textEdit_pergunta->toPlainText();
-    if(pergunta == ""){
-        qDebug() << "[Main][ERRO] O campo de pergunta está vazio";
-        return true;
-    }
-
-    QString opcao1 = ui->textEdit_opcao1->toPlainText();
-    if(opcao1 == ""){
-        qDebug() << "[Main][ERRO] O campo da opção 1 está vazio";
-        return true;
-    }
-
-    QString opcao2 = ui->textEdit_opcao2->toPlainText();
-    if(opcao2 == ""){
-        qDebug() << "[Main][ERRO] O campo da opção 2 está vazio";
-        return true;
-    }
-
-    QString opcao3 = ui->textEdit_opcao3->toPlainText();
-    if(opcao3 == ""){
-        qDebug() << "[Main][ERRO] O campo da opção 3 está vazio";
-        return true;
-    }
-
-    QString opcao4 = ui->textEdit_opcao4->toPlainText();
-    if(opcao4 == ""){
-        qDebug() << "[Main][ERRO] O campo da opção 4 está vazio";
-        return true;
-    }
-
-    return false;
-}
-
 bool MainWindow::salvarNovaPergunta(){
 
     // Verifica se todos os campos foram preenchidos
-    if(existemCamposVazios()){
+    if(existemCamposVazios(ui->textEdit_pergunta, ui->textEdit_opcao1, ui->textEdit_opcao2, ui->textEdit_opcao3, ui->textEdit_opcao4)){
         QMessageBox::about(this, "Campos vazios", "Existem campos que estão vazios. Por favor, complete-os antes de salvar.");
 
         return false;
@@ -764,7 +757,7 @@ void MainWindow::carregarEdicaoPergunta(){
 bool MainWindow::salvarPerguntaEditada(){
 
     // Verifica se todos os campos foram preenchidos
-    if(existemCamposVaziosEditada()){
+    if(existemCamposVazios(ui->textEdit_editar_pergunta, ui->textEdit_editar_opcao1, ui->textEdit_editar_opcao2, ui->textEdit_editar_opcao3, ui->textEdit_editar_opcao4)){
         QMessageBox::about(this, "Campos vazios", "Existem campos que estão vazios. Por favor, complete-os antes de salvar.");
         return false;
     }
@@ -806,70 +799,6 @@ bool MainWindow::salvarPerguntaEditada(){
     qDebug() << "[Main][OK] Pergunta editada na sequência";
 
     return true;
-}
-
-bool MainWindow::todosCamposPreenchidosEditada(){
-    QString pergunta = ui->textEdit_editar_pergunta->toPlainText();
-    if(pergunta != ""){
-        return true;
-    }
-
-    QString opcao1 = ui->textEdit_editar_opcao1->toPlainText();
-    if(opcao1 != ""){
-        return true;
-    }
-
-    QString opcao2 = ui->textEdit_editar_opcao2->toPlainText();
-    if(opcao2 != ""){
-        return true;
-    }
-
-    QString opcao3 = ui->textEdit_editar_opcao3->toPlainText();
-    if(opcao3 != ""){
-        return true;
-    }
-
-    QString opcao4 = ui->textEdit_editar_opcao4->toPlainText();
-    if(opcao4 != ""){
-        return true;
-    }
-
-    return false;
-}
-
-bool MainWindow::existemCamposVaziosEditada(){
-
-    QString pergunta = ui->textEdit_editar_pergunta->toPlainText();
-    if(pergunta == ""){
-        qDebug() << "[Main][ERRO] O campo de pergunta editada está vazio";
-        return true;
-    }
-
-    QString opcao1 = ui->textEdit_editar_opcao1->toPlainText();
-    if(opcao1 == ""){
-        qDebug() << "[Main][ERRO] O campo da opção 1 editada está vazio";
-        return true;
-    }
-
-    QString opcao2 = ui->textEdit_editar_opcao2->toPlainText();
-    if(opcao2 == ""){
-        qDebug() << "[Main][ERRO] O campo da opção 2 editada está vazio";
-        return true;
-    }
-
-    QString opcao3 = ui->textEdit_editar_opcao3->toPlainText();
-    if(opcao3 == ""){
-        qDebug() << "[Main][ERRO] O campo da opção 3 editada está vazio";
-        return true;
-    }
-
-    QString opcao4 = ui->textEdit_editar_opcao4->toPlainText();
-    if(opcao4 == ""){
-        qDebug() << "[Main][ERRO] O campo da opção 4 editada está vazio";
-        return true;
-    }
-
-    return false;
 }
 
 // ***** PERFIS *********************************************
@@ -1299,7 +1228,7 @@ void MainWindow::on_radioButton_resposta4_clicked()
 
 void MainWindow::on_pushButton_inicio_adicionar_pergunta_clicked()
 {
-    if(todosCamposPreenchidos()){
+    if(existeCamposPreenchidos(ui->textEdit_pergunta, ui->textEdit_opcao1, ui->textEdit_opcao2, ui->textEdit_opcao3, ui->textEdit_opcao4)){
         if(mostrarConfirmarSairPergunta()){
             mostrarTela(Pagina::Inicial);
         }
@@ -1310,7 +1239,7 @@ void MainWindow::on_pushButton_inicio_adicionar_pergunta_clicked()
 
 void MainWindow::on_pushButton_voltar_adicionar_pergunta_clicked()
 {
-    if(todosCamposPreenchidos()){
+    if(existeCamposPreenchidos(ui->textEdit_pergunta, ui->textEdit_opcao1, ui->textEdit_opcao2, ui->textEdit_opcao3, ui->textEdit_opcao4)){
         if(mostrarConfirmarSairPergunta()){
             mostrarTela(Pagina::ConfigurarPerfil);
         }
@@ -1371,7 +1300,7 @@ void MainWindow::on_radioButton_opcao4_clicked()
 
 void MainWindow::on_pushButton_inicio_editar_pergunta_clicked()
 {
-    if(todosCamposPreenchidosEditada()){
+    if(existeCamposPreenchidos(ui->textEdit_editar_pergunta, ui->textEdit_editar_opcao1, ui->textEdit_editar_opcao2, ui->textEdit_editar_opcao3, ui->textEdit_editar_opcao4)){
         if(mostrarConfirmarSairPergunta()){
             mostrarTela(Pagina::Inicial);
         }
@@ -1382,7 +1311,7 @@ void MainWindow::on_pushButton_inicio_editar_pergunta_clicked()
 
 void MainWindow::on_pushButton_voltar_editar_pergunta_clicked()
 {
-    if(todosCamposPreenchidos()){
+    if(existeCamposPreenchidos(ui->textEdit_editar_pergunta, ui->textEdit_editar_opcao1, ui->textEdit_editar_opcao2, ui->textEdit_editar_opcao3, ui->textEdit_editar_opcao4)){
         if(mostrarConfirmarSairPergunta()){
             mostrarTela(Pagina::ConfigurarPerfil);
         }

@@ -15,15 +15,18 @@ enum class TipoPerfil{
 
 class Perfil{
 public:
+
+    /* ************************************************************
+     * CONSTRUTOR
+     *************************************************************/
+
     Perfil();
 
-    QString capitalizarTexto(QString);
-
-    QString pastaCapitalizada();
+    /* ************************************************************
+     * CONFIGURAÇÕES
+     *************************************************************/
 
     void carregarSequencia();
-
-    // Por enquanto, serão públicos
 
     // Nome do perfil
     QString nome;

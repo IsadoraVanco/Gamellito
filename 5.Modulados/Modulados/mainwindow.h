@@ -71,41 +71,37 @@ public:
 private slots:
 
     /* ************************************************************
-     * TEMPORIZADOR
-     *************************************************************/
-
-    bool eventFilter(QObject *obj, QEvent *event) override;
-
-    void configurarTemporizador();
-
-    /* ************************************************************
-     * GERENCIAMENTO DE TELAS
-     *************************************************************/
-
-    /**
-     * @brief Mostra uma tela definida do programa
-     * @param tipo A tela que será mostrada
-     */
-    void mostrarTela(Pagina tipo);
-
-    void mostrarTelaInicial();
-
-    void mostrarTelaOciosa();
-
-    /* ************************************************************
      * CONFIGURAR TELAS
      *************************************************************/
 
+    /**
+     * @brief Configura todas as telas da aplicação
+     */
     void configurarTelas();
 
+    /**
+     * @brief Configura a tela do menu inicial
+     */
     void configurarElementosTelaMenu();
 
+    /**
+     * @brief Configura as tela de configuração
+     */
     void configurarElementosTelaConfigurar();
 
+    /**
+     * @brief Configura a tela do reprodutor
+     */
     void configurarElementosTelaReprodutor();
 
+    /**
+     * @brief Configura a tela ociosa
+     */
     void configurarElementosTelaOciosa();
 
+    /**
+     * @brief Configura a tela de pergunta
+     */
     void configurarElementosTelaPergunta();
 
     /* ************************************************************
@@ -133,6 +129,70 @@ private slots:
     void adicionarIconesProximo();
 
     /* ************************************************************
+     * GERENCIAMENTO DE TELAS
+     *************************************************************/
+
+    /**
+     * @brief Mostra uma tela definida do programa
+     * @param tipo A tela que será mostrada
+     */
+    void mostrarTela(Pagina tipo);
+
+    /**
+     * @brief Configura e mostra a tela inicial
+     */
+    void mostrarTelaInicial();
+
+    /**
+     * @brief Mostra a tela ociosa
+     */
+    void mostrarTelaOciosa();
+
+    /**
+     * @brief Carrega a tela no indice atual da sequência
+     */
+    void carregarTelaAtual();
+
+    /**
+     * @brief Carrega a tela do próximo item da sequência
+     */
+    void mostrarProximaTela();
+
+    /**
+     * @brief Carrega a tela do item anterior da sequência
+     */
+    void mostrarTelaAnterior();
+
+    /**
+     * @brief Configura e carrega a tela de reprodutor
+     * @param objetoAtual O objeto do indice atual da sequência
+     */
+    void configurarTelaVideo(QJsonObject objetoAtual);
+
+    /**
+     * @brief Configura e carrega a tela de pergunta
+     * @param objetoAtual O objeto do indice atual da sequência
+     */
+    void configurarTelaPergunta(QJsonObject objetoAtual);
+
+    /* ************************************************************
+     * TEMPORIZADOR
+     *************************************************************/
+
+    /**
+     * @brief Reconhece um evento de interação do usuário
+     * @param obj Objeto que emite o evento
+     * @param event O evento recebido
+     * @return
+     */
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
+    /**
+     * @brief Configura o temporizador para a tela ociosa
+     */
+    void configurarTemporizador();
+
+    /* ************************************************************
      * GERENCIAMENTO DAS CONFIGURAÇÕES
      *************************************************************/
 
@@ -153,23 +213,20 @@ private slots:
 
     // ***** SEQUÊNCIAS *********************************************
 
+    /**
+     * @brief Carrega todas as sequências dos perfis que estão no arquivo
+     */
     void carregarSequencias();
 
+    /**
+     * @brief Remove um item da sequência que foi selecionado na lista
+     */
     void removerItemSelecionado();
 
+    /**
+     * @brief Edita um item da sequência que foi selecionado na lista
+     */
     void editarItemSelecionado();
-
-    // ***** TELAS *********************************************
-
-    void carregarTelaAtual();
-
-    void mostrarProximaTela();
-
-    void mostrarTelaAnterior();
-
-    void configurarTelaVideo(QJsonObject objetoAtual);
-
-    void configurarTelaPergunta(QJsonObject objetoAtual);
 
     // ***** CONFIGURAR PERFIL *********************************************
 
@@ -193,40 +250,64 @@ private slots:
     void limparTexto(QTextEdit *campo);
 
     /**
-     * @brief Verifica qual resposta foi selecionada
-     * @return O número da resposta selecionada
-     */
-    int verificarRespostaSelecionada();
-
-    /**
      * @brief Salva a resposta escolhida em um arquivo
      */
     void salvarResposta();
 
+    /**
+     * @brief Atualiza o botão para confirmar ou não a resposta de uma pergunta
+     */
     void atualizarBotaoConfirmar();
 
+    /**
+     * @brief Mostra qual a resposta correta da pergunta
+     */
     void mostrarRespostaCorreta();
+
+    /**
+     * @brief Verifica qual opção foi selecionada
+     * @param opcao1 O endereço do item 1
+     * @param opcao2 O endereço do item 2
+     * @param opcao3 O endereço do item 3
+     * @param opcao4 O endereço do item 4
+     * @return O número identificador da opção selecionada
+     */
+    int verificarRespostaSelecionada(QRadioButton *opcao1, QRadioButton *opcao2, QRadioButton *opcao3, QRadioButton *opcao4);
+
+    /**
+     * @brief Verifica se existe algum campo preenchido
+     * @param pergunta O campo de pergunta
+     * @param resposta1 O campo da resposta 1
+     * @param resposta2 O campo da resposta 2
+     * @param resposta3 O campo da resposta 3
+     * @param resposta4 O campo da resposta 4
+     * @return true caso exista algum preenchido, false para caso contrário
+     */
+    bool existeCamposPreenchidos(QTextEdit *pergunta, QTextEdit *resposta1, QTextEdit *resposta2, QTextEdit *resposta3, QTextEdit *resposta4);
+
+    /**
+     * @brief Verifica se existe algum campo vazio
+     * @param pergunta O campo de pergunta
+     * @param resposta1 O campo da resposta 1
+     * @param resposta2 O campo da resposta 2
+     * @param resposta3 O campo da resposta 3
+     * @param resposta4 O campo da resposta 4
+     * @return true caso exista algum, false para caso contrário
+     */
+    bool existemCamposVazios(QTextEdit *pergunta, QTextEdit *resposta1, QTextEdit *resposta2, QTextEdit *resposta3, QTextEdit *resposta4);
 
     // ***** ADICIONAR PERGUNTA *********************************************
 
+    /**
+     * @brief Mostra uma caixa de diálogo para confirmar a saída da nova pergunta
+     * @return true caso confirme, false para caso contrário
+     */
     bool mostrarConfirmarSairPergunta();
 
     /**
      * @brief Retira todo texto ou seleção feita no formulário de perguntas
      */
     void limparCamposPergunta();
-
-    /**
-     * @brief Verifica se todos os campos foram preenchidos no formulário
-     * @return True caso todos estejam preenchidos, false para caso contrário
-     */
-    bool todosCamposPreenchidos();
-
-    /**
-     * @brief Verifica se existem campos que não foram preenchidos no fomulário
-     * @return True caso exista algum campo vazio, false para caso contrário
-     */
-    bool existemCamposVazios();
 
     /**
      * @brief Adiciona uma pergunta na sequência do perfil selecionado
@@ -237,13 +318,16 @@ private slots:
 
     // ***** EDITAR PERGUNTA *********************************************
 
+    /**
+     * @brief Carrega a tela de edição de pergunta
+     */
     void carregarEdicaoPergunta();
 
+    /**
+     * @brief Salva a pergunta editada
+     * @return true caso salve, false para caso contrário
+     */
     bool salvarPerguntaEditada();
-
-    bool todosCamposPreenchidosEditada();
-
-    bool existemCamposVaziosEditada();
 
     // ***** PERFIS *********************************************
 
@@ -274,6 +358,9 @@ private slots:
 
     // ***** INICIAR *********************************************
 
+    /**
+     * @brief Inicia a sequência do perfil
+     */
     void on_pushButton_iniciar_clicked();
 
     /**
@@ -281,6 +368,9 @@ private slots:
      */
     void on_pushButton_som_clicked();
 
+    /**
+     * @brief Mostra a tela de configurações
+     */
     void on_pushButton_configurar_clicked();
 
     // ***** SOBRE *********************************************
@@ -346,58 +436,130 @@ private slots:
 
     // ***** REPRODUTOR *********************************************
 
+    /**
+     * @brief Volta para a tela inicial
+     */
     void on_pushButton_inicio_reprodutor_clicked();
 
+    /**
+     * @brief Volta para a tela anterior
+     */
     void on_pushButton_voltar_reprodutor_clicked();
 
+    /**
+     * @brief Passa para a próxima tela
+     */
     void on_pushButton_proximo_reprodutor_clicked();
 
     // ***** PERGUNTA *********************************************
 
+    /**
+     * @brief Volta para a tela inicial
+     */
     void on_pushButton_inicio_pergunta_clicked();
 
+    /**
+     * @brief Volta para a tela anterior
+     */
     void on_pushButton_voltar_pergunta_clicked();
 
+    /**
+     * @brief Passa para a próxima tela
+     */
     void on_pushButton_proximo_pergunta_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 1 da pergunta
+     */
     void on_radioButton_resposta1_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 2 da pergunta
+     */
     void on_radioButton_resposta2_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 3 da pergunta
+     */
     void on_radioButton_resposta3_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 4 da pergunta
+     */
     void on_radioButton_resposta4_clicked();
 
     // ***** ADICIONAR PERGUNTA *********************************************
 
+    /**
+     * @brief Volta para a tela inicial
+     */
     void on_pushButton_inicio_adicionar_pergunta_clicked();
 
+    /**
+     * @brief Volta para a tela de configurações
+     */
     void on_pushButton_voltar_adicionar_pergunta_clicked();
 
+    /**
+     * @brief Salva uma pergunta na sequência do perfil atual
+     */
     void on_pushButton_salvar_pergunta_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 1 da adição de pergunta
+     */
     void on_radioButton_opcao1_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 2 da adição de pergunta
+     */
     void on_radioButton_opcao2_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 3 da adição de pergunta
+     */
     void on_radioButton_opcao3_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 4 da adição de pergunta
+     */
     void on_radioButton_opcao4_clicked();
 
     // ***** EDITAR PERGUNTA *********************************************
 
+    /**
+     * @brief Volta para a tela inicial
+     */
     void on_pushButton_inicio_editar_pergunta_clicked();
 
+    /**
+     * @brief Volta para a tela de configurações
+     */
     void on_pushButton_voltar_editar_pergunta_clicked();
 
+    /**
+     * @brief Salva uma pergunta editada na sequência do perfil atual
+     */
     void on_pushButton_salvar_pergunta_editada_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 1 da edição de pergunta
+     */
     void on_radioButton_editar_opcao1_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 2 da edição de pergunta
+     */
     void on_radioButton_editar_opcao2_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 3 da edição de pergunta
+     */
     void on_radioButton_editar_opcao3_clicked();
 
+    /**
+     * @brief Marca ou desmarca a opção 4 da edição de pergunta
+     */
     void on_radioButton_editar_opcao4_clicked();
 
 private:
