@@ -7,6 +7,12 @@ Sequencia::Sequencia(){
     array = new QJsonArray();
 }
 
+// **** DESTRUTOR ************************************************
+
+Sequencia::~Sequencia(){
+    delete array;
+}
+
 // **** BÁSICOS ************************************************
 
 bool Sequencia::estaVazia(){

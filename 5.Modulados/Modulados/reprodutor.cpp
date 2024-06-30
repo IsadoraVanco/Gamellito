@@ -28,6 +28,10 @@ Reprodutor::Reprodutor(QWidget *parent) :
 Reprodutor::~Reprodutor()
 {
     delete ui;
+    delete player;
+    delete videoItem;
+    delete videoWidget;
+    delete scene;
 }
 
 /* ************************************************************

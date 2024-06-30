@@ -39,6 +39,15 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete reprodutor;
+    delete videoOcioso;
+    delete contador;
+    delete somAmbiente;
+    delete paciente;
+    delete responsavel;
+    delete profissional;
+    delete arquivos;
+    delete senha;
 }
 
 /* ************************************************************

@@ -123,7 +123,7 @@ public:
      * @arg pathArquivo O caminho completo do arquivo
      * @return true caso exista, false caso contrário
      */
-    bool arquivoExiste(QString pathArquivo);
+    static bool arquivoExiste(QString pathArquivo);
 
     /**
      * @brief Abre um arquivo para escrita

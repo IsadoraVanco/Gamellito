@@ -22,6 +22,9 @@ Video::Video(QWidget *parent) :
 Video::~Video()
 {
     delete ui;
+    delete player;
+    delete videoItem;
+    delete scene;
 }
 
 /* ************************************************************
