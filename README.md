@@ -163,6 +163,28 @@ As sequências dos perfis são representadas por arquivos .json, e dentro deles,
 }
 ```
 
+### Como compilar?
+Para compilar o código para outra máquina, é necessário ter instalado algumas bibliotecas:
+```
+qtbase5-dev
+cmake
+build-essential
+```
+
+No **Linux**, é possível instalar via `apt`.
+
+Após instala-las, copie os arquivos de um projeto (.h .cpp ui e cmake) para a sua máquina (não esqueça da pasta de assets). Depois, na pasta do projeto, abra o terminal e utilize o Cmake para criar o Makefile:
+```
+cmake .
+```
+
+Depois disso, um arquivo Makefile será criado, então, é só executá-lo para gerar o executável do programa:
+```
+make
+```
+
+Assim, seu executável está pronto!
+
 ## 3. Hardware
 Por enquanto, a máquina foi desbloqueada para utilizar sistemas operacionais. Procuro por sistemas Linux que são leves o suficientes para a máquina Dino.
 
@@ -185,3 +207,4 @@ Irei guardar cada teste para caso precise testar em um novo sistema operacional,
 2. **PaginasDinamicas** -> Apesar do nome, é um exemplo simples de aplicação que possui elementos estáticos, sem responsividade, mas que navega entre widgets dentro de uma StackedWidgets, sem a necessidade de criar uma nova janela para alterar o conteúdo.
 3. **Menus** -> Um esboço de como imagino a aplicação (com exceção do reprodutor de vídeo), ainda sem as telas dinâmicamente alocadas. Este exemplo possui a navegação entre as telas (em StackedWidgets) e som ambiente no menu. A aplicação é ajustada conforme o tamanho do monitor e sem a barra de título da janela. Tamanho mínimo da tela: 800x600 (SVGA).
 4. **ReprodutorMenu** -> Essa versão é um leve aprimoramento do "Menus". Armazena uma sequência de vídeos escolhidos em um arquivo JSON e reproduz um vídeo (fixo) após clicado o botão "iniciar". Foram testados vídeos em FullHD e HD. 
+5. **Modulados** -> Versão (quase) final do projeto, com sequências de vídeos e perguntas armazenadas e manipuladas. Troca de perfis já pré definidos.
