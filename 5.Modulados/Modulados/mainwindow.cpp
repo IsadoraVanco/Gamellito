@@ -344,11 +344,15 @@ void MainWindow::configurarTelaPergunta(QJsonObject objetoAtual){
  *************************************************************/
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event){
+//    qDebug() << event;
+
     if(event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonPress ||
         event->type() == QEvent::KeyPress){
 
-        // Reinicia o temporizador
-        contador->start(tempoOcioso);
+        if(contador != nullptr){
+            // Reinicia o temporizador
+            contador->start(tempoOcioso);
+        }
 
         if(ocioso){
             carregarTelaAtual();
@@ -363,9 +367,9 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 void MainWindow::configurarTemporizador(){
     contador = new QTimer(this);
     contador->setInterval(tempoOcioso);
+    contador->start();
 
     connect(contador, &QTimer::timeout, this, &MainWindow::mostrarTelaOciosa);
-    contador->start();
 
     // Instala o filtro de eventos para monitorar eventos de interação do usuário
     qApp->installEventFilter(this);

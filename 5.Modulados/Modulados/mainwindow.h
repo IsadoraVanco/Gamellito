@@ -577,7 +577,7 @@ private:
     Arquivos *arquivos = new Arquivos(this);
 
     QTimer *contador;
-    int tempoOcioso = 5 * 60 * 1000; // Em milissegundos
+    int tempoOcioso = 2 * 60 * 1000; // Em milissegundos
     bool ocioso = false;
 
     // ***** SEQUÊNCIA *********************************************

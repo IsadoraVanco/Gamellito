@@ -32,6 +32,9 @@ public:
      * CONFIGURAÇÕES
      *************************************************************/
 
+    /**
+     * @brief Carrega as sequências que estão no arquivo
+     */
     void carregarSequencia();
 
     // Nome do perfil

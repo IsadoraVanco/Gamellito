@@ -41,8 +41,7 @@ public:
      *************************************************************/
 
     /**
-     * @brief Deixa o vídeo em loop
-     * @param status O novo status da mídia
+     * @brief Muda o status da midia
      */
     void mudarStatus(QMediaPlayer::MediaStatus status);
 
@@ -62,6 +61,10 @@ private:
     QGraphicsVideoItem* videoItem;
     QGraphicsScene* scene;
     QMediaPlayer *player;
+    QMediaPlaylist *playlist;
+
+    // Para o arquivo
+    QUrl urlVideo;
 
 };
 

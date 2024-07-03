@@ -1,11 +1,17 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+
+    // Define um icone para o executavel
+    QIcon icon("assets/icones/aplicacao/app.png");
+    a.setWindowIcon(icon);
+    w.setWindowIcon(icon);
 
     // Deixa a tela cheia
     w.setWindowState(Qt::WindowFullScreen);

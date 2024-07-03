@@ -11,6 +11,14 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_CXX_FLAGS "-Wall -pedantic-errors")
+
+# Adicionar o ícone ao projeto
+set(APP_ICON "assets/icones/aplicacao/app.png")
+
+# Configurar o ícone no CMake
+#install(FILES ${APP_ICON} DESTINATION share/icons/hicolor/256x256/apps)
+
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Multimedia REQUIRED)
@@ -69,6 +77,8 @@ set(PROJECT_SOURCES
         video.h
         video.cpp
         video.ui
+
+#        recursos.rc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

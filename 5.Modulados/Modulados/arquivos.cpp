@@ -216,9 +216,9 @@ void Arquivos::gerarCSV(QString nomePerfil, QString nomeArquivoRespostas, QStrin
     // Informações importantes
     QTextStream out(arquivoCSV);
     out << "Perfil: ;" << nomePerfil << "\n";
-    out << "Data da exportação: ;" << carregarDataAtual() << "\n";
-    out << "Número de acessos ao programa: ;" << configuracoes["numeroAcessos"].toString() << "\n";
-    out << "Número de acessos à sequência: ;" << configuracoes["numeroReproducoes"].toString() << "\n\n";
+    out << "Data da exportacao: ;" << carregarDataAtual() << "\n";
+    out << "Numero de acessos ao programa: ;" << configuracoes["numeroAcessos"].toInt() << "\n";
+    out << "Numero de acessos a sequencia: ;" << configuracoes["numeroReproducoes"].toInt() << "\n\n";
 
     // Coloca os cabeçalhos
     out << "Pergunta; Resposta1; Quantidade respondida1; "

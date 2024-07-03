@@ -4,7 +4,7 @@
 // **** CONSTRUTOR ************************************************
 
 Sequencia::Sequencia(){
-    array = new QJsonArray();
+    array = new QJsonArray;
 }
 
 // **** DESTRUTOR ************************************************

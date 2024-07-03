@@ -183,6 +183,10 @@ public:
 
     // **** OBJETO ************************************************
 
+    /**
+     * @brief Carrega um objeto json armazenado em um arquivo
+     * @param pathArquivo O caminho do arquivo
+     */
     static QJsonObject carregarObjetoJson(QString pathArquivo);
 
     /**
@@ -222,20 +226,39 @@ public:
 
     // **** VISITAS ************************************************
 
+    /**
+     * @brief Aumenta o número de visitas no arquivo
+     */
     void aumentarVisitas();
 
+    /**
+     * Aumenta o número de reproduções no arquivo
+     */
     void aumentarReproducoes();
 
+    /**
+     * Atualiza o ultimo acesso ao programa
+     */
     void atualizarUltimoAcesso();
 
     // **** EXPORTAÇÃO ************************************************
 
+    /**
+     * @brief Atualiza a ultima exportação no arquivo
+     */
     void atualizarUltimaExportacao();
 
     // **** SENHA ************************************************
-
+    
+    /**
+     * @brief Carrega a senha que está no arquivo
+     */
     static QString carregarSenha();
 
+    /**
+     * @brief Altera a senha no arquivo
+     * @param novaSenha A nova senha a ser escrita no arquivo
+     */
     static void alterarSenha(QString novaSenha);
 
     /* ************************************************************
@@ -258,12 +281,28 @@ public:
 
     // **** VIDEO ************************************************
 
+    /**
+     * @brief Adiciona um vídeo no arquivo de sequência
+     * @param caminhoDestino O caminho do arquivo
+     * @param nomeArquivo O nome do arquivo de sequência
+     */
     QJsonArray adicionarVideo(QString caminhoDestino, QString nomeArquivo);
 
     // **** PERGUNTA ************************************************
 
+    /**
+     * @brief Verifica se as respostas do objeto json são iguais às do array
+     * @param array O array de sequência
+     * @param obejto O objeto json
+     */
     int encontrarRespostaExistente(QJsonArray array, QJsonObject objeto);
 
+    /**
+     * @brief Salva a resposta no arquivo
+     * @param objetoJson O objeto que representa a pergunta respondida
+     * @param respondida O número da resposta respondida
+     * @param nomeArquivo O nome do arquivo que será escrito a resposta
+     */
     void salvarResposta(QJsonObject objetoJson, int selecionada, QString nomeArquivo);
 
     /**
