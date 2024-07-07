@@ -208,3 +208,4 @@ Irei guardar cada teste para caso precise testar em um novo sistema operacional,
 3. **Menus** -> Um esboço de como imagino a aplicação (com exceção do reprodutor de vídeo), ainda sem as telas dinâmicamente alocadas. Este exemplo possui a navegação entre as telas (em StackedWidgets) e som ambiente no menu. A aplicação é ajustada conforme o tamanho do monitor e sem a barra de título da janela. Tamanho mínimo da tela: 800x600 (SVGA).
 4. **ReprodutorMenu** -> Essa versão é um leve aprimoramento do "Menus". Armazena uma sequência de vídeos escolhidos em um arquivo JSON e reproduz um vídeo (fixo) após clicado o botão "iniciar". Foram testados vídeos em FullHD e HD. 
 5. **Modulados** -> Versão (quase) final do projeto, com sequências de vídeos e perguntas armazenadas e manipuladas. Troca de perfis já pré definidos.
+6. **Gamellito** -> Versão final do projeto com assets corretos e correção de bugs.
