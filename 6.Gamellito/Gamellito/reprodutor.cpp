@@ -69,6 +69,10 @@ void Reprodutor::alterarEstado(QMediaPlayer::MediaStatus status){
 
         ui->pushButton_video_tocar->setStyleSheet(estilo);
     }
+    else
+    {
+//        qDebug() << status;
+    }
 }
 
 void Reprodutor::alterarDuracaoMaxima(int64_t duracao){
@@ -102,6 +106,7 @@ void Reprodutor::alterarWidgetTempo(int64_t valor){
 
 void Reprodutor::alterarTempoVideo(int posicao){
     player->setPosition(posicao * periodoTempo);
+//    qDebug() << posicao;
 }
 
 void Reprodutor::tocarVideo(){
@@ -180,7 +185,9 @@ void Reprodutor::mutarSom(){
     ui->pushButton_volume->setStyleSheet(estilo);
 
     somMutado = true;
-    player->setMuted(somMutado);
+    // A função setMuted causa problemas! :)
+//    player->setMuted(somMutado);
+    player->setVolume(1);
 
     qDebug() << "[Reprodutor][INFO] Som mutado";
 }
@@ -194,7 +201,8 @@ void Reprodutor::reproduzirSom(){
     ui->pushButton_volume->setStyleSheet(estilo);
 
     somMutado = false;
-    player->setMuted(somMutado);
+//    player->setMuted(somMutado);
+    player->setVolume(30);
 
     qDebug() << "[Reprodutor][INFO] Som tocando";
 }
@@ -230,12 +238,14 @@ void Reprodutor::on_pushButton_voltarVideo_clicked()
 {
     int posicao = ui->horizontalSlider_tempo->value() - (tempoAcao / periodoTempo);
     alterarTempoVideo(posicao);
+    qDebug() << "voltar apertado";
 }
 
 void Reprodutor::on_pushButton_passarVideo_clicked()
 {
     int posicao = ui->horizontalSlider_tempo->value() + (tempoAcao / periodoTempo);
     alterarTempoVideo(posicao);
+    qDebug() << "passar apertado";
 }
 
 // ***** SOM **************************************************
