@@ -202,7 +202,7 @@ void Reprodutor::reproduzirSom(){
 
     somMutado = false;
 //    player->setMuted(somMutado);
-    player->setVolume(30);
+    player->setVolume(ui->horizontalSlider_volume->value());
 
     qDebug() << "[Reprodutor][INFO] Som tocando";
 }
