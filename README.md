@@ -271,3 +271,20 @@ Irei guardar cada teste para caso precise testar em um novo sistema operacional,
 4. **ReprodutorMenu** -> Essa versão é um leve aprimoramento do "Menus". Armazena uma sequência de vídeos escolhidos em um arquivo JSON e reproduz um vídeo (fixo) após clicado o botão "iniciar". Foram testados vídeos em FullHD e HD. 
 5. **Modulados** -> Versão (quase) final do projeto, com sequências de vídeos e perguntas armazenadas e manipuladas. Troca de perfis já pré definidos.
 6. **Gamellito** -> Versão final do projeto com assets corretos e correção de bugs.
+
+## 5. Como replicar
+
+1. Compile o arquivo na máquina desejada
+2. Guarde o executável gerado
+3. Para replicar em uma máquina semelhante à máquina alvo da compilação, copie o executável e a pasta de Assets dentro de uma pasta chamada "Gamellito" e no mesmo diretório, copie os arquivos executáveis de instalação. Transfira tudo isso para a nova máquina
+4. Mude o arquivo install_gamellito.sh para executável e rode no terminal, ele é responsável pela instalação do projeto na máquina, as bibliotecas do Qt e os arquivos de inicialização
+
+## 6. Melhorias futuras
+
+* Adicionar vídeo no menu
+* Trocar imagens png por svg
+* Adicionar uma confirmação para sair do programa
+* Adicionar o ícone da palicação corretamente
+* Consertar a fonte do programa
+* Separar as telas em classes diferentes e tentar adicionar as páginas na Stack Widgets de forma dinâmica, atribuindo um nome a cada uma delas. Dessa forma, caso uma página seja trocada de lugar na edição, não afete outras partes do código
+* Adicionar recurso para recuperação de senha
