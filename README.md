@@ -16,17 +16,73 @@ Para esta difícil tarefa, irei utilizar a linguagem **C++** e a biblioteca [**Q
 #### Referências
 Para consultas futuras, aqui estão as documentações de cada classe utilizada:
 
-* [**QMultimedia**](https://doc.qt.io/qt-5/qtmultimedia-index.html)
+(Em geral)
+* [**QString**](https://doc.qt.io/qt-5/qstring.html)
 * [**QWidget**](https://doc.qt.io/qt-5/qwidget.html)
+* [**QMessageBox**](https://doc.qt.io/qt-5/qmessagebox.html)
+* [**QDebug**](https://doc.qt.io/qt-5/qdebug.html)
+* [**QDir**](https://doc.qt.io/qt-5/qdir.html)
+* [**QIcon**](https://doc.qt.io/qt-5/qicon.html)
+
+(Em main.cpp)
+* [**QApplication**](https://doc.qt.io/qt-5/qapplication.html)
+
+(Em arquivos.h/cpp)
+* [**QFileDialog**](https://doc.qt.io/qt-5/qfiledialog.html)
+* [**QFileInfo**](https://doc.qt.io/qt-5/qfileinfo.html)
+* [**QFile**](https://doc.qt.io/qt-5/qfile.html)
+* [**QTextStream**](https://doc.qt.io/qt-5/qtextstream.html)
+* [**QDateTime**](https://doc.qt.io/qt-5/qdatetime.html)
+* [**QJsonDocument**](https://doc.qt.io/qt-5/qjsondocument.html)
+* [**QJsonParseError**](https://doc.qt.io/qt-5/qjsonparseerror.html)
+* [**QJsonArray**](https://doc.qt.io/qt-5/qjsonarray.html)
+* [**QByteArray**](https://doc.qt.io/qt-5/qbytearray.html)
+* [**QJsonObject**](https://doc.qt.io/qt-5/qjsonobject.html)
+
+(Em mainwindow.h/cpp)
+* [**QListWidget**](https://doc.qt.io/qt-5/qlistwidget.html)
+* [**QListWidgetItem**](https://doc.qt.io/qt-5/qlistwidgetitem.html)
+* [**QList**](https://doc.qt.io/qt-5/qlist.html)
+* [**QRadioButton**](https://doc.qt.io/qt-5/qradiobutton.html)
+* [**QPushButton**](https://doc.qt.io/qt-5/qpushbutton.html)
+* [**QTextEdit**](https://doc.qt.io/qt-5/qtextedit.html)
+* [**QEvent**](https://doc.qt.io/qt-5/qevent.html)
+* [**QTimer**](https://doc.qt.io/qt-5/qtimer.html)
+* [**QObject**](https://doc.qt.io/qt-5/qobject.html)
+* [**QVBoxLayout**](https://doc.qt.io/qt-5/qvboxlayout.html)
+
+(Em reprodutor.h/cpp)
+* [**QMediaPlayer**](https://doc.qt.io/qt-5/qmediaplayer.html)
+* [**QAudio**](https://doc.qt.io/qt-5/qaudiooutput.html)
+* [**QVideoWidget**](https://doc.qt.io/qt-5/qvideowidget.html)
+* [**QMultimedia**](https://doc.qt.io/qt-5/qtmultimedia-index.html)
+* [**QGraphicsVideoItem**](https://doc.qt.io/qt-5/qgraphicsvideoitem.html)
+* [**QTime**](https://doc.qt.io/qt-5/qtime.html)
+
+(Em senha.h/cpp)
+* [**QInputDialog**](https://doc.qt.io/qt-5/qinputdialog.html)
+
+(Em sequencia.h/cpp)
+* [**QJsonValue**](https://doc.qt.io/qt-5/qjsonvalue.html)
+
+(Em somambiente.h/cpp)
+* [**QSound**](https://doc.qt.io/qt-5/qsound.html)
+
+(Em video.h/cpp)
 * [**QVideoWidget**](https://doc.qt.io/qt-5/qvideowidget.html)
 * [**QGraphicsVideoItem**](https://doc.qt.io/qt-5/qgraphicsvideoitem.html)
+* [**QGraphicsScene**](https://doc.qt.io/qt-5/qgraphicsscene.html)
+* [**QMultimedia**](https://doc.qt.io/qt-5/qtmultimedia-index.html)
+* [**QMediaPlayer**](https://doc.qt.io/qt-5/qmediaplayer.html)
+* [**QMediaPlaylist**](https://doc.qt.io/qt-5/qmediaplaylist.html)
+* [**QUrl**](https://doc.qt.io/qt-5/qurl.html)
 
 #### Bibliotecas para a reprodução de vídeo
 Existem várias bibliotecas para a reprodução de vídeo em Qt. Abaixo, algumas testadas e seus resultados:
 
 * [**QVideo**](): Não foi possível alterar a dimensão do reprodutor;
-* [**QVideoWidget**](): Altera a dimensão do vídeo, porém, abrindo outra janela.
-* [**QGraphicsVideoItem**](): É possível alterar a dimensão do vídeo, e colocá-lo em um widget, sem a necessidade de abrir outra janela para reproduzir o vídeo. Apesar desses benefícios, o vídeo reproduz travando um pouco (quase impercipitível).
+* [**QVideoWidget**](https://doc.qt.io/qt-5/qvideowidget.html): Altera a dimensão do vídeo, porém, abrindo outra janela.
+* [**QGraphicsVideoItem**](https://doc.qt.io/qt-5/qgraphicsvideoitem.html): É possível alterar a dimensão do vídeo, e colocá-lo em um widget, sem a necessidade de abrir outra janela para reproduzir o vídeo. Apesar desses benefícios, o vídeo reproduz travando um pouco (quase imperceptível).
 
 Outras classes possíveis (mas que não foram testadas):
 
@@ -44,7 +100,7 @@ Cogitei utilizar Docker, mas creio que seria muito para a máquina Dino, além d
 
 Assim como uma casa, um software também precisa de uma planta que foi planejada para poder ser estruturado de forma segura. E para fazer algumas partes do processo, utilizei:
 
-- **Protipagem de telas**: [Figma](https://www.figma.com);
+- **Prototipagem de telas**: [Figma](https://www.figma.com);
 - **Diagrama de caso de uso**: [Lucidchart](https://lucid.app/);
 
 ## 2. Software
@@ -137,6 +193,9 @@ A pasta `assets` contém sons, ícones e fotos da aplicação.
     - [Responsável](https://www.freepik.com/icon/employees-woman-man_14644111#fromView=search&page=1&position=2&uuid=899689b3-c351-4c56-9fc2-7ecf6fde1d39)
     - [Profissional](https://www.freepik.com/icon/user-md_9856423#fromView=search&page=1&position=0&uuid=76dafb05-1ebf-48a2-b2a6-517200676704)
 
+* Fontes:
+    - [Alpha Echo](https://www.dafont.com/pt/alpha-echo.font)
+
 ### Sequências
 As sequências dos perfis são representadas por arquivos .json, e dentro deles, estão estruturados objetos Json para representar um item. Os itens são representados da seguinte maneira:
 
@@ -198,7 +257,10 @@ Testar outros Linux mais leves. OBS: Pode ser que haja incompatiblidade de bibli
 - Xubuntu
 - Puppy Linux
 - AntiX
-- outros...
+- Debian
+- Zorin OS Lite
+- MX Linux
+- Peppermint
 
 ## 4. Testes
 Irei guardar cada teste para caso precise testar em um novo sistema operacional, e assim eu posso comparar cada resultado. Por enquanto, temos:
