@@ -196,6 +196,39 @@ A pasta `assets` contém sons, ícones e fotos da aplicação.
 * Fontes:
     - [Alpha Echo](https://www.dafont.com/pt/alpha-echo.font)
 
+
+* **Estrutura:**
+```
+/assets
+    /botoes
+        /configuracoes
+        /menu
+    /fontes
+        /aplicacao
+        /configuracoes
+        /informacoes
+        /iniciar-menu
+        /lapis
+        /lixeira
+        /opcao
+        /pagina-inicial
+        /perfil
+        /pergunta
+        /proximo
+        /reprodutor
+        /sair
+        /salvar
+        /seta
+        /som
+        /video
+        /voltar
+    /icones
+    /imagens
+    /logos
+    /sons
+    /videos
+```
+
 ### Sequências
 As sequências dos perfis são representadas por arquivos .json, e dentro deles, estão estruturados objetos Json para representar um item. Os itens são representados da seguinte maneira:
 
@@ -284,7 +317,7 @@ Irei guardar cada teste para caso precise testar em um novo sistema operacional,
 * Adicionar vídeo no menu
 * Trocar imagens png por svg
 * Adicionar uma confirmação para sair do programa
-* Adicionar o ícone da palicação corretamente
-* Consertar a fonte do programa
+* Adicionar o ícone da aplicação corretamente. No momento o ícone aparece apenas na notificação
+* Adicionar corretamente a fonte do programa
 * Separar as telas em classes diferentes e tentar adicionar as páginas na Stack Widgets de forma dinâmica, atribuindo um nome a cada uma delas. Dessa forma, caso uma página seja trocada de lugar na edição, não afete outras partes do código
 * Adicionar recurso para recuperação de senha
