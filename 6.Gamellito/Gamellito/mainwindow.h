@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+// Para a fonte
+#include <QFont>
+
 // Para texto
 #include <QString>
 
@@ -71,6 +74,21 @@ public:
 private slots:
 
     /* ************************************************************
+     * CONFIGURAR ESTILO
+     *************************************************************/
+
+    /**
+     * @brief Define a fonte padrão
+     */
+    void definirFontePadrao();
+
+    /**
+     * @brief Configura um widget com a fonte padrão
+     * @param widget O widget que será alterado
+     */
+    void configurarFontePadrao(QWidget *widget);
+
+    /* ************************************************************
      * CONFIGURAR TELAS
      *************************************************************/
 
@@ -80,9 +98,14 @@ private slots:
     void configurarTelas();
 
     /**
-     * @brief Configura as tela de configuração
+     * @brief Configura as telas de configuração
      */
     void configurarElementosTelaConfigurar();
+
+    /**
+     * @brief Configura a tela de sobre
+     */
+    void configurarElementosTelaSobre();
 
     /**
      * @brief Configura a tela do reprodutor
@@ -606,6 +629,9 @@ private:
 
     // Tela ociosa
     Video *videoOcioso;
+
+    // Fonte padrão
+    QFont fontePadrao;
 
     // ***** SOM AMBIENTE *********************************************
 

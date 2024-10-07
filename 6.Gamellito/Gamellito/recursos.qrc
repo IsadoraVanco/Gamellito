@@ -51,6 +51,8 @@
         <file>assets/icones/reprodutor/restart/restart.png</file>
         <file>assets/icones/reprodutor/restart/restart-hover.png</file>
         <file>assets/icones/seta/baixo/seta-baixo-preto.png</file>
+        <file>assets/icones/opcao/opcao-check.png</file>
+        <file>assets/icones/opcao/opcao.png</file>
     </qresource>
     <qresource prefix="/botoes">
         <file>assets/botoes/menu/confimar-hover.png</file>
@@ -76,5 +78,8 @@
     </qresource>
     <qresource prefix="/logos">
         <file>assets/logos/uel.png</file>
+    </qresource>
+    <qresource prefix="/fontes">
+        <file>assets/fontes/alpha_echo.ttf</file>
     </qresource>
 </RCC>

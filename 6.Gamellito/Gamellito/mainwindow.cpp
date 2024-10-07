@@ -51,12 +51,41 @@ MainWindow::~MainWindow()
 }
 
 /* ************************************************************
+ * CONFIGURAR ESTILO
+ *************************************************************/
+
+void MainWindow::definirFontePadrao(){
+    int idFonte = QFontDatabase::addApplicationFont(":/fontes/assets/fontes/alpha_echo.ttf");
+
+    if (idFonte == -1) {
+        qDebug() << "[MainWindow][ERRO] Erro ao carregar a fonte padrão";
+    } else {
+        QStringList nomeFontes = QFontDatabase::applicationFontFamilies(idFonte);
+
+        if (!nomeFontes.isEmpty()) {
+            fontePadrao.setFamily(nomeFontes.at(0));
+
+            qDebug() << "[MainWindow][INFO] Fonte padrão definida: " << nomeFontes;
+        }
+    }
+}
+
+void MainWindow::configurarFontePadrao(QWidget *widget){
+    widget->setFont(fontePadrao);
+}
+
+/* ************************************************************
  * CONFIGURAR TELAS
  *************************************************************/
 
 void MainWindow::configurarTelas(){
+    // Define a fonte padrão
+    definirFontePadrao();
+
     // Configura os elementos das telas
+    configurarFontePadrao(ui->comboBox_selecionar_perfis_inicio);
     configurarElementosTelaConfigurar();
+    configurarElementosTelaSobre();
     configurarElementosTelaReprodutor();
     configurarElementosTelaOciosa();
     configurarElementosTelaPergunta();
@@ -90,7 +119,40 @@ void MainWindow::configurarElementosTelaConfigurar(){
 
     // Conexões - Ação
     connect(ui->pushButton_gerar_relatorio, &QPushButton::clicked, this, [this](){gerarRelatorios();});
+
+    // Define as fontes
+    configurarFontePadrao(ui->label_configurar_perfil);
+    configurarFontePadrao(ui->label_configurar_admin);
+    configurarFontePadrao(ui->label_configurar_selecionar_perfil_2);
+    configurarFontePadrao(ui->comboBox_configurar_perfis);
+
+    configurarFontePadrao(ui->label_configurar_selecionar_perfil);
+    configurarFontePadrao(ui->comboBox_perfis);
+    configurarFontePadrao(ui->listWidget);
+
+    configurarFontePadrao(ui->textEdit_editar_opcao1);
+    configurarFontePadrao(ui->textEdit_editar_opcao2);
+    configurarFontePadrao(ui->textEdit_editar_opcao3);
+    configurarFontePadrao(ui->textEdit_editar_opcao4);
+    configurarFontePadrao(ui->textEdit_editar_pergunta);
+
+    configurarFontePadrao(ui->textEdit_opcao1);
+    configurarFontePadrao(ui->textEdit_opcao2);
+    configurarFontePadrao(ui->textEdit_opcao3);
+    configurarFontePadrao(ui->textEdit_opcao4);
+    configurarFontePadrao(ui->textEdit_pergunta);
 }
+
+void MainWindow::configurarElementosTelaSobre(){
+    configurarFontePadrao(ui->label_sobre_cabecalho);
+    configurarFontePadrao(ui->label_sobre_creditos);
+    configurarFontePadrao(ui->label_sobre_creditos_2);
+    configurarFontePadrao(ui->label_sobre_creditos_3);
+    configurarFontePadrao(ui->label_sobre_apoio);
+    configurarFontePadrao(ui->label_sobre_parceiros);
+    configurarFontePadrao(ui->label_versao_soft);
+}
+
 
 void MainWindow::configurarElementosTelaReprodutor(){
     if(!ui->widget_reprodutor){
@@ -128,7 +190,7 @@ void MainWindow::configurarElementosTelaOciosa(){
 
 void MainWindow::configurarElementosTelaPergunta(){
     // Opções da pergunta da sequência
-    QString estiloFundo = "QRadioButton{ border-image: none; font-size:24px; font-weight: bold; background-color: #ffbe33;"
+    QString estiloFundo = "QRadioButton{ border-image: none; font-size:20px; font-weight: bold; background-color: #ffbe33;"
                             "border: 3px solid  #4466c3; border-radius: 10px; min-width: 220px; min-height: 60px; padding: 7px;}"
                             "QRadioButton::checked{  background-color: #ffa424;}";
 
@@ -136,6 +198,8 @@ void MainWindow::configurarElementosTelaPergunta(){
     atualizarEstiloSeletor(ui->radioButton_resposta2, estiloFundo);
     atualizarEstiloSeletor(ui->radioButton_resposta3, estiloFundo);
     atualizarEstiloSeletor(ui->radioButton_resposta4, estiloFundo);
+
+    configurarFontePadrao(ui->label_pergunta);
 }
 
 /* ************************************************************
@@ -181,6 +245,7 @@ void MainWindow::atualizarEstiloSeletor(QRadioButton *seletor, QString estiloFun
                      "QRadioButton::indicator::checked { image: url(':/icones/assets/icones/opcao/opcao-check.png'); }";
 
     seletor->setStyleSheet(estilo + estiloFundo);
+    configurarFontePadrao(seletor);
 }
 
 /* ************************************************************
@@ -525,13 +590,13 @@ void MainWindow::mostrarRespostaCorreta(){
     int respondida = verificarRespostaSelecionada(ui->radioButton_resposta1, ui->radioButton_resposta2, ui->radioButton_resposta3, ui->radioButton_resposta4);
 
     // Errada
-    QString estiloFundo = "QRadioButton{ border-image: none; font-size:24px; font-weight: bold; background-color: #ff422b;"
+    QString estiloFundo = "QRadioButton{ border-image: none; font-size:20px; font-weight: bold; background-color: #ff422b;"
                             "border: 3px solid  #4466c3; border-radius: 10px; min-width: 220px; min-height: 60px; padding: 7px;}"
                            "QRadioButton::checked{  background-color: #d43421;}";
 
     // Correta
     if(correta == respondida){
-        estiloFundo = "QRadioButton{ border-image: none; font-size:24px; font-weight: bold; background-color: #4cff2b;"
+        estiloFundo = "QRadioButton{ border-image: none; font-size:20px; font-weight: bold; background-color: #4cff2b;"
                         "border: 3px solid  #4466c3; border-radius: 10px; min-width: 220px; min-height: 60px; padding: 7px;}"
                         "QRadioButton::checked{  background-color: #1fb412;}";
     }

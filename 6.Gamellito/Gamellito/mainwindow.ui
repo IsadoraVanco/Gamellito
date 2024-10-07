@@ -79,7 +79,7 @@ padding: 0;</string>
        <number>4</number>
       </property>
       <property name="currentIndex">
-       <number>6</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="ociosa">
        <property name="styleSheet">
@@ -541,7 +541,7 @@ QPushButton:pressed {
          </layout>
         </item>
         <item>
-         <widget class="QLabel" name="label_7">
+         <widget class="QLabel" name="label_sobre_cabecalho">
           <property name="font">
            <font>
             <family>Dyuthi</family>
@@ -582,7 +582,7 @@ color: black;</string>
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label_5">
+           <widget class="QLabel" name="label_sobre_creditos">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
@@ -623,19 +623,14 @@ padding: 4px;</string>
             </property>
             <property name="text">
              <string>AUTORES
-Vânia Vargas 
-Flavio Lanaro
+   Vânia Vargas 
+   Flavio Lanaro
 
 EQUIPE DE PRODUÇÃO
-Vânia Vargas 
+   Vânia Vargas 
 
 EQUIPE DE SAÚDE
-Psicologia: Vânia Vargas 
-ELENCO
-Juliana Valente Camacho Calvo 
-Larissa Rodrigues de Melo
-Rafael Prado de Oliveira
-Sandra Parra Furlanete </string>
+   Psicologia: Vânia Vargas</string>
             </property>
             <property name="textFormat">
              <enum>Qt::PlainText</enum>
@@ -658,7 +653,33 @@ Sandra Parra Furlanete </string>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_6">
+           <widget class="QLabel" name="label_sobre_creditos_3">
+            <property name="styleSheet">
+             <string notr="true">background-color: none;
+border-image: none;
+font-weight: bold;
+font-size: 18px;
+margin: 15px;
+color: black;</string>
+            </property>
+            <property name="text">
+             <string>ELENCO
+   Juliana Valente Camacho Calvo 
+   Larissa Rodrigues de Melo
+   Rafael Prado de Oliveira
+   Sandra Parra Furlanete 
+
+ARTE E DESIGN
+   Rosane Martins
+   Vitor Gabriel dos Santos
+
+FIGURINO
+   Vânia Vargas </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_sobre_creditos_2">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
@@ -688,23 +709,16 @@ margin: 15px;
 color: black;</string>
             </property>
             <property name="text">
-             <string>ARTE E DESIGN
-Rosane Martins
-Vitor Gabriel dos Santos
-
-FIGURINO
-Vânia Vargas 
-
-DESENVOLVIMENTO DO SISTEMA
-Isadora Vanço
-Wesley Attrot
+             <string>DESENVOLVIMENTO DO SISTEMA
+   Isadora Vanço
+   Wesley Attrot
 
 Coordenação geral: Vânia Vargas
 
 REDES SOCIAIS
-Instagram: @gamellito
-YouTube: gamellitodm1
-Tiktok: @gamellito</string>
+   Instagram: @gamellito
+   YouTube: gamellitodm1
+   Tiktok: @gamellito</string>
             </property>
            </widget>
           </item>
@@ -745,7 +759,7 @@ Tiktok: @gamellito</string>
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label_8">
+           <widget class="QLabel" name="label_sobre_apoio">
             <property name="minimumSize">
              <size>
               <width>50</width>
@@ -783,7 +797,7 @@ color: black;</string>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_10">
+           <widget class="QLabel" name="label_sobre_logo_uel">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -840,7 +854,7 @@ width: auto;</string>
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label_11">
+           <widget class="QLabel" name="label_sobre_parceiros">
             <property name="minimumSize">
              <size>
               <width>300</width>
@@ -1111,7 +1125,7 @@ QPushButton:pressed {
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLabel" name="label_2">
+         <widget class="QLabel" name="label_configurar_perfil">
           <property name="font">
            <font>
             <family>Dyuthi</family>
@@ -1349,7 +1363,7 @@ QPushButton:pressed {
         <item row="4" column="1" colspan="3">
          <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="label_configurar_selecionar_perfil_2">
             <property name="font">
              <font>
               <family>Dyuthi</family>
@@ -1473,7 +1487,7 @@ QPushButton:pressed {
          </widget>
         </item>
         <item row="7" column="1">
-         <widget class="QLabel" name="label_4">
+         <widget class="QLabel" name="label_configurar_admin">
           <property name="font">
            <font>
             <family>Dyuthi</family>
@@ -1526,7 +1540,7 @@ color: black;</string>
          </spacer>
         </item>
         <item row="1" column="1">
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="label_configurar_selecionar_perfil">
           <property name="font">
            <font>
             <family>Dyuthi</family>
@@ -1569,7 +1583,7 @@ color: black;</string>
           <property name="font">
            <font>
             <family>Dyuthi</family>
-            <pointsize>20</pointsize>
+            <pointsize>-1</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
@@ -1585,6 +1599,7 @@ color: black;</string>
  	background-color:  #ffbe33;
 	alternate-background-color: #fab32c;
 	padding: 4px; 
+	font-size: 20px;
 }
 
 QListWidget::item{
@@ -2684,7 +2699,7 @@ border-image: none;</string>
              <property name="minimumSize">
               <size>
                <width>240</width>
-               <height>120</height>
+               <height>80</height>
               </size>
              </property>
              <property name="maximumSize">
@@ -2707,7 +2722,7 @@ border-image: none;</string>
              <property name="styleSheet">
               <string notr="true">QRadioButton{
 border-image: none;
-font-size:24px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -2769,7 +2784,7 @@ Sed pretium blandit orci. Ut eu diam at pede suscipit sodales. Aenean</string>
              <property name="minimumSize">
               <size>
                <width>240</width>
-               <height>120</height>
+               <height>80</height>
               </size>
              </property>
              <property name="maximumSize">
@@ -2792,7 +2807,7 @@ Sed pretium blandit orci. Ut eu diam at pede suscipit sodales. Aenean</string>
              <property name="styleSheet">
               <string notr="true">QRadioButton{
 border-image: none;
-font-size:24px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -2850,8 +2865,8 @@ Sed pretium blandit orci. Ut eu diam at pede suscipit sodales. Aenean</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>243</width>
-               <height>120</height>
+               <width>240</width>
+               <height>80</height>
               </size>
              </property>
              <property name="maximumSize">
@@ -2877,7 +2892,7 @@ Sed pretium blandit orci. Ut eu diam at pede suscipit sodales. Aenean</string>
              <property name="styleSheet">
               <string notr="true">QRadioButton{
 border-image: none;
-font-size:24px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -2974,7 +2989,7 @@ Sed pretium blandit orci. Ut eu diam at pede suscipit sodales. Aenean</string>
              <property name="minimumSize">
               <size>
                <width>240</width>
-               <height>120</height>
+               <height>80</height>
               </size>
              </property>
              <property name="maximumSize">
@@ -2997,7 +3012,7 @@ Sed pretium blandit orci. Ut eu diam at pede suscipit sodales. Aenean</string>
              <property name="styleSheet">
               <string notr="true">QRadioButton{
 border-image: none;
-font-size:24px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -3232,7 +3247,7 @@ QPushButton:pressed {
           <property name="styleSheet">
            <string notr="true">border-image: none;
 background-color: white;
-font-size: 24px;
+font-size: 22px;
 color: black;
 border: none;
 border-radius: 10px;
@@ -3483,7 +3498,7 @@ QRadioButton::indicator::checked {
                  <property name="styleSheet">
                   <string notr="true">QTextEdit{
 border-image: none;
-font-size:24px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -3492,6 +3507,7 @@ min-width: 220px;
 min-height: 60px;
 padding: 7px;
 }
+
 
 QScrollBar:vertical {
  	border: none;
@@ -3583,7 +3599,7 @@ QRadioButton::indicator::checked {
                  <property name="styleSheet">
                   <string notr="true">QTextEdit{
 border-image: none;
-font-size:24px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -3613,7 +3629,8 @@ QScrollBar::add-line:vertical {
 
 QScrollBar::sub-line:vertical {
 	height: 0px;
-}</string>
+}
+</string>
                  </property>
                  <property name="placeholderText">
                   <string>Opção 4</string>
@@ -3690,7 +3707,7 @@ QRadioButton::indicator::checked {
                  <property name="styleSheet">
                   <string notr="true">QTextEdit{
 border-image: none;
-font-size:24px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -3799,7 +3816,7 @@ QRadioButton::indicator::checked {
                  <property name="styleSheet">
                   <string notr="true">QTextEdit{
 border-image: none;
-font-size:24px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -3829,7 +3846,8 @@ QScrollBar::add-line:vertical {
 
 QScrollBar::sub-line:vertical {
 	height: 0px;
-}</string>
+}
+</string>
                  </property>
                  <property name="placeholderText">
                   <string>Opção 3</string>
@@ -3914,7 +3932,7 @@ QScrollBar::sub-line:vertical {
            <string notr="true">QTextEdit{
 border-image: none;
 background-color: white;
-font-size: 24px;
+font-size: 22px;
 border: none;
 border-radius: 10px;
 font-weight:bold;
@@ -4168,7 +4186,7 @@ QPushButton:pressed {
            <string notr="true">QTextEdit{
 border-image: none;
 background-color: white;
-font-size: 24px;
+font-size: 22px;
 border: none;
 border-radius: 10px;
 font-weight:bold;
@@ -4316,7 +4334,7 @@ QRadioButton::indicator::checked {
               <property name="styleSheet">
                <string notr="true">QTextEdit{
 border-image: none;
-font-size:22px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -4325,6 +4343,7 @@ min-width: 220px;
 min-height: 60px;
 padding: 7px;
 }
+
 
 QScrollBar:vertical {
  	border: none;
@@ -4345,7 +4364,8 @@ QScrollBar::add-line:vertical {
 
 QScrollBar::sub-line:vertical {
 	height: 0px;
-}</string>
+}
+</string>
               </property>
               <property name="placeholderText">
                <string>Opção 1 </string>
@@ -4409,7 +4429,7 @@ QRadioButton::indicator::checked {
               <property name="styleSheet">
                <string notr="true">QTextEdit{
 border-image: none;
-font-size:22px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -4418,6 +4438,7 @@ min-width: 220px;
 min-height: 60px;
 padding: 7px;
 }
+
 
 QScrollBar:vertical {
  	border: none;
@@ -4438,7 +4459,8 @@ QScrollBar::add-line:vertical {
 
 QScrollBar::sub-line:vertical {
 	height: 0px;
-}</string>
+}
+</string>
               </property>
               <property name="placeholderText">
                <string>Opção 2</string>
@@ -4502,7 +4524,7 @@ QRadioButton::indicator::checked {
               <property name="styleSheet">
                <string notr="true">QTextEdit{
 border-image: none;
-font-size:22px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -4511,6 +4533,7 @@ min-width: 220px;
 min-height: 60px;
 padding: 7px;
 }
+
 
 QScrollBar:vertical {
  	border: none;
@@ -4531,7 +4554,8 @@ QScrollBar::add-line:vertical {
 
 QScrollBar::sub-line:vertical {
 	height: 0px;
-}</string>
+}
+</string>
               </property>
               <property name="placeholderText">
                <string>Opção 3</string>
@@ -4579,7 +4603,7 @@ QRadioButton::indicator::checked {
               <property name="styleSheet">
                <string notr="true">QTextEdit{
 border-image: none;
-font-size:22px;
+font-size:20px;
 font-weight: bold;
 background-color: #ffbe33;
 border: 3px solid  #4466c3;
@@ -4588,6 +4612,7 @@ min-width: 220px;
 min-height: 60px;
 padding: 7px;
 }
+
 
 QScrollBar:vertical {
  	border: none;
@@ -4608,7 +4633,8 @@ QScrollBar::add-line:vertical {
 
 QScrollBar::sub-line:vertical {
 	height: 0px;
-}</string>
+}
+</string>
               </property>
               <property name="placeholderText">
                <string>Opção 4</string>
